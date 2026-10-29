@@ -22,7 +22,7 @@
           </a>
         </li>
         <li>
-          <a href="javascript:void(0)" onclick="closeNavDrawer(); toggleCartDrawer();" style="text-decoration:none; color:var(--text-color); font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:space-between;">
+          <a href="/cart" style="text-decoration:none; color:var(--text-color); font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:space-between;">
             <span>🛍️ Shopping Bag</span>
             <span class="header-badge-pill nav-drawer-cart-count" style="{% if cart.item_count > 0 %}display:inline-flex;{% else %}display:none;{% endif %} position:static;">{{ cart.item_count }}</span>
           </a>

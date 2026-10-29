@@ -162,38 +162,34 @@
 
     if (e) e.preventDefault();
     var btn = document.getElementById('pdpAddToCartBtn');
-    var origTxt = btn ? btn.innerHTML : 'ADD TO BAG 🛍️';
     if (btn) {
       btn.disabled = true;
       btn.innerHTML = 'ADDING TO BAG...';
     }
 
-    if (typeof addToCartAjax === 'function') {
-      addToCartAjax(currentSelectedVariantId, 1)
-        .then(function() {
-          if (btn) {
-            btn.innerHTML = 'ADDED TO BAG ✓';
-            setTimeout(function() {
-              btn.innerHTML = origTxt;
-              btn.disabled = false;
-            }, 1500);
-          }
-        })
-        .catch(function(err) {
-          console.warn('AJAX cart add fallback:', err);
-          if (typeof toggleCartDrawer === 'function') toggleCartDrawer();
-          if (typeof showMeenuToast === 'function') showMeenuToast('Added to Shopping Bag 🛍️');
-          if (btn) {
-            btn.innerHTML = 'ADDED TO BAG ✓';
-            setTimeout(function() {
-              btn.innerHTML = origTxt;
-              btn.disabled = false;
-            }, 1500);
-          }
-        });
-    } else {
-      if (typeof toggleCartDrawer === 'function') toggleCartDrawer();
-    }
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: [{
+          id: currentSelectedVariantId,
+          quantity: 1
+        }]
+      })
+    })
+    .then(function() {
+      window.location.href = '/cart';
+    })
+    .catch(function(err) {
+      console.warn('Cart add notice:', err);
+      var form = document.getElementById('shopifyProductForm');
+      if (form) {
+        form.submit();
+      } else {
+        window.location.href = '/cart';
+      }
+    });
+
     return false;
   }
 </script>

@@ -271,24 +271,7 @@ function formatMoney(cents) {
 }
 
 function toggleCartDrawer() {
-  var drawer = document.getElementById('CartDrawer');
-  var backdrop = document.getElementById('CartBackdrop');
-  var wishDrawer = document.getElementById('wishlistDrawer');
-  var wishBackdrop = document.getElementById('wishlistBackdrop');
-
-  if (wishDrawer && wishDrawer.classList.contains('open')) {
-    wishDrawer.classList.remove('open');
-    if (wishBackdrop) wishBackdrop.classList.remove('open');
-  }
-
-  if (drawer && backdrop) {
-    var willOpen = !drawer.classList.contains('open');
-    drawer.classList.toggle('open');
-    backdrop.classList.toggle('open');
-    if (willOpen) {
-      refreshCartDrawer();
-    }
-  }
+  window.location.href = '/cart';
 }
 
 function refreshCartDrawer() {
