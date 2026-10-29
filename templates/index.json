@@ -1,0 +1,36 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-editorial",
+      "settings": {}
+    },
+    "collection": {
+      "type": "featured-collection",
+      "settings": {}
+    },
+    "values": {
+      "type": "value-props",
+      "settings": {}
+    },
+    "founder": {
+      "type": "founder-story",
+      "settings": {}
+    },
+    "campaign_edit": {
+      "type": "campaign-edit",
+      "settings": {}
+    },
+    "craftsmanship": {
+      "type": "craftsmanship-spotlight",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "campaign_edit",
+    "craftsmanship",
+    "collection",
+    "values",
+    "founder"
+  ]
+}

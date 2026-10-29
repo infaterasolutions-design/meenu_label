@@ -1,0 +1,139 @@
+
+<div class="snitch-login-backdrop" id="accountModalBackdrop" onclick="closeAccountModal(event)">
+  <div class="snitch-login-dialog" onclick="event.stopPropagation()">
+    <!-- Top Action Buttons -->
+    <button class="snitch-dialog-back" onclick="closeAccountModalDirect()" title="Back to Store" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <button class="snitch-dialog-close" onclick="closeAccountModalDirect()" title="Close" aria-label="Close">&times;</button>
+
+    <!-- Left Column: Editorial Campaign -->
+    <div class="snitch-login-campaign">
+      <img src="{{ 'hero_2_gulabi.jpg' | asset_url }}" alt="{{ shop.name }}" class="snitch-campaign-photo">
+      <div class="snitch-campaign-vignette"></div>
+      <div class="snitch-campaign-text">
+        <div class="snitch-campaign-pill">Signature Silhouettes</div>
+        <h2 class="snitch-campaign-headline">
+          WEAR WHAT'S <span class="snitch-headline-accent">TIMELESS</span>
+        </h2>
+        <p class="snitch-campaign-atelier">Chandigarh Atelier &bull; Handcrafted Pure Silks</p>
+      </div>
+    </div>
+
+    <!-- Right Column: Snitch Dark Card -->
+    <div class="snitch-login-content">
+      <div class="snitch-login-card">
+        <!-- Step 1: Mobile Input -->
+        <div id="loginStepPhone">
+          <div class="snitch-brand-block">
+            <h2 class="snitch-brand-title">{{ shop.name | default: 'MEENU LABEL' }}</h2>
+            <div class="snitch-brand-tag">CHANDIGARH &bull; LUXURY ETHNIC</div>
+          </div>
+
+          <label class="snitch-input-heading" for="snitchMobileInput">ENTER MOBILE NUMBER</label>
+          <div class="snitch-input-row" id="snitchPhoneRow">
+            <div class="snitch-cc-badge">+91</div>
+            <input 
+              type="tel" 
+              id="snitchMobileInput" 
+              class="snitch-mobile-field" 
+              placeholder="99999 99999" 
+              maxlength="10" 
+              autocomplete="tel"
+              oninput="onSnitchPhoneInput(this)" 
+              onkeydown="if(event.key==='Enter') requestSnitchOtp()"
+            >
+          </div>
+          <div id="snitchPhoneError" class="snitch-validation-error">Please enter a valid 10-digit mobile number</div>
+
+          <button class="snitch-submit-btn" id="snitchSendOtpBtn" onclick="requestSnitchOtp()">
+            <span>SEND OTP</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+
+          <p class="snitch-legal-note">
+            By continuing, you agree to {{ shop.name | default: 'MEENU LABEL' }}'s 
+            <a href="/policies/terms-of-service">Terms &amp; Conditions</a> and 
+            <a href="/policies/privacy-policy">Privacy Policy</a>
+          </p>
+        </div>
+
+        <!-- Step 2: OTP Verification -->
+        <div id="loginStepOtp" style="display:none;">
+          <div class="snitch-brand-block" style="margin-bottom: 20px;">
+            <h2 class="snitch-brand-title" style="font-size: 20px;">VERIFY OTP</h2>
+            <div class="snitch-otp-sent-info">
+              Code sent to <strong id="snitchOtpPhoneDisplay" style="color:#fff;">+91 99999 99999</strong>
+              <button type="button" class="snitch-edit-phone-btn" onclick="snitchEditPhone()">Edit</button>
+            </div>
+          </div>
+
+          <div class="snitch-otp-grid">
+            <input type="text" maxlength="1" class="snitch-digit-box" id="sOtp1" oninput="snitchOtpNext(this, 'sOtp2')" onkeydown="snitchOtpBack(event, this, null)">
+            <input type="text" maxlength="1" class="snitch-digit-box" id="sOtp2" oninput="snitchOtpNext(this, 'sOtp3')" onkeydown="snitchOtpBack(event, this, 'sOtp1')">
+            <input type="text" maxlength="1" class="snitch-digit-box" id="sOtp3" oninput="snitchOtpNext(this, 'sOtp4')" onkeydown="snitchOtpBack(event, this, 'sOtp2')">
+            <input type="text" maxlength="1" class="snitch-digit-box" id="sOtp4" oninput="snitchOtpNext(this, null)" onkeydown="snitchOtpBack(event, this, 'sOtp3')">
+          </div>
+
+          <div class="snitch-resend-bar">
+            <span id="snitchTimerTxt">Resend OTP in <strong id="snitchCountdown" style="color:#bbb;">0:28</strong></span>
+            <button type="button" id="snitchResendBtn" class="snitch-resend-action" style="display:none;" onclick="snitchResendOtp()">Resend OTP via SMS / WhatsApp</button>
+          </div>
+
+          <button class="snitch-submit-btn" onclick="verifySnitchOtp()">
+            <span>VERIFY &amp; PROCEED</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+
+          <div class="snitch-demo-badge">&bull; Demo Mode: Type any 4 digits (e.g. 1 2 3 4) to verify</div>
+        </div>
+
+        <!-- Step 3: VIP Privé Member Dashboard -->
+        <div id="loginStepVip" style="display:none; text-align:center;">
+          <div class="snitch-vip-avatar">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <div class="snitch-vip-status-tag">&#10024; ATELIER PRIV&Eacute; VIP MEMBER</div>
+          <h3 class="snitch-vip-user" id="snitchVipUserDisplay">+91 99888 98845</h3>
+          <div class="snitch-vip-perks">
+            <div class="snitch-perk-item">
+              <div class="snitch-perk-icon">&#128666;</div>
+              <div class="snitch-perk-text">
+                <strong>Free 24-Hr Tricity Delivery</strong>
+                <span>Sector 17 Chandigarh Atelier Express Dispatch</span>
+              </div>
+            </div>
+            <div class="snitch-perk-item">
+              <div class="snitch-perk-icon">&#128087;</div>
+              <div class="snitch-perk-text">
+                <strong>VIP Atelier Fittings</strong>
+                <span>Private suite fitting bookings in Chandigarh</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="snitch-vip-actions">
+            <button class="snitch-submit-btn" style="margin-bottom: 12px;" onclick="closeAccountModalDirect()">
+              <span>CONTINUE SHOPPING</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+            <a href="https://wa.me/919988898845?text=Hi%20Meenu%20Label%2C%20I%20am%20a%20VIP%20member." target="_blank" class="snitch-vip-concierge-btn">
+              &#128172; Open Stylist WhatsApp Concierge
+            </a>
+            <button type="button" class="snitch-signout-btn" onclick="signOutSnitchUser()">Sign Out / Change Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

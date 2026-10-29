@@ -1,0 +1,67 @@
+
+<section class="catalog-section" id="collection-grid">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">{{ section.settings.title }}</h2>
+      <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">{{ section.settings.subtitle }}</p>
+    </div>
+  </div>
+
+  <div class="product-grid">
+    {% assign collection = section.settings.collection %}
+    {% if collection != blank and collection.products_count > 0 %}
+      {% for product in collection.products limit: section.settings.products_to_show %}
+        {% render 'product-card', product: product %}
+      {% endfor %}
+    {% else %}
+      {% for i in (1..4) %}
+        <div class="product-card">
+          <div class="card-thumb" style="display:flex; align-items:center; justify-content:center; color:#9B9387;">Catalog Silhouette</div>
+          <div class="card-body">
+            <span class="card-title">Debut Silhouette #{{ i }}</span>
+            <div class="card-price-row"><span class="price-main">₹1,499</span></div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Signature Silhouettes"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Authentic catalog pieces ordered from Surat. Strictly 3 exclusive pieces per design (M, L, XL)."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 16,
+      "step": 1,
+      "default": 16,
+      "label": "Products to show"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}

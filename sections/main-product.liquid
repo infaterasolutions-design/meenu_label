@@ -1,0 +1,156 @@
+
+<section style="max-width: 1200px; margin: 40px auto; padding: 0 40px; display: grid; grid-template-columns: 1.05fr 1fr; gap: 50px; align-items: start;">
+  <div style="position: -webkit-sticky; position: sticky; top: 115px; align-self: start; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); background: #F4EFEB; z-index: 20;">
+    {% if product.featured_image %}
+      <img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.title }}" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: top center; display: block;">
+    {% endif %}
+  </div>
+
+  <div>
+    <span style="font-size: 11px; font-weight: 700; color: var(--accent-rose); letter-spacing: 0.1em; text-transform: uppercase;">
+      🔥 ONLY 1 PIECE LEFT PER SIZE
+    </span>
+    <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 600; margin: 8px 0 4px;">{{ product.title }}</h1>
+    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">SKU: {{ product.selected_or_first_available_variant.sku }}</div>
+
+    <div style="display: flex; align-items: baseline; gap: 12px; padding: 14px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); margin-bottom: 24px;">
+      <span style="font-size: 26px; font-weight: 700;">{{ product.price | money }}</span>
+      {% if product.compare_at_price > product.price %}
+        <span style="font-size: 16px; text-decoration: line-through; color: var(--text-muted);">{{ product.compare_at_price | money }}</span>
+        <span style="font-size: 11px; font-weight: 700; color: var(--accent-green); background: #EBF7EE; padding: 3px 8px; border-radius: 4px;">40% OFF</span>
+      {% endif %}
+    </div>
+
+    <!-- Size Selector (NO DEFAULT SELECTION) -->
+    <div class="shopify-size-section" id="shopifySizeSection" style="margin-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; font-weight: 700;">
+        <span>SELECT SIZE (INDIAN BUST MEASUREMENTS) <span id="shopifySelectedSizeLabel" style="display:none; color:var(--accent-burgundy,#6E1A24); font-weight:700; margin-left:6px;"></span></span>
+        <a href="javascript:void(0)" onclick="openSizeGuideModal()" style="color: var(--accent-gold);">📏 Size Chart</a>
+      </div>
+      <div id="shopifySizeGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+        {% for variant in product.variants %}
+          <button type="button" class="shopify-size-tile" data-variant-id="{{ variant.id }}" data-size-title="{{ variant.title }}" onclick="selectShopifyVariant('{{ variant.id }}', '{{ variant.title }}', this)" style="background: #FFFFFF; border: 1.5px solid var(--border-color); padding: 10px; border-radius: 6px; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+            <strong style="display:block; font-size: 14px;">{{ variant.title }}</strong>
+            <span style="display:block; font-size: 10px; color: var(--accent-rose); font-weight:700; text-transform:uppercase;">Only 1 Left!</span>
+          </button>
+        {% endfor %}
+      </div>
+      <div id="shopifySizeRequiredNotice" style="display:none; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:6px; padding:10px 14px; font-size:12px; font-weight:600; text-align:center; margin-top:8px;">
+        ⚠️ Please select your size (M, L, or XL) before adding to bag
+      </div>
+    </div>
+
+    <!-- Pincode Checker -->
+    <div style="background: #FAF5ED; padding: 14px; border-radius: 8px; margin-bottom: 24px; border: 1px solid var(--border-color);">
+      <div style="font-size: 12px; font-weight: 700; margin-bottom: 6px;">📍 Check Tricity Express Delivery</div>
+      <div style="display: flex; gap: 8px;">
+        <input type="text" id="pdpPincode" placeholder="Enter 6-digit Pincode" maxlength="6" style="padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; flex: 1;">
+        <button class="btn-primary" style="padding: 8px 14px;" onclick="checkTricityPincode(document.getElementById('pdpPincode').value)">Check</button>
+      </div>
+      <div id="PincodeResult" style="font-size: 12px; margin-top: 6px; font-weight: 600;"></div>
+    </div>
+
+    <!-- Shopify Product Form -->
+    {% form 'product', product, id: 'shopifyProductForm', onsubmit: 'return validateShopifyForm(event)' %}
+      <input type="hidden" name="id" id="selectedVariantId" value="">
+      <button type="submit" class="btn-primary" style="width: 100%; padding: 16px; margin-bottom: 10px; cursor: pointer;">ADD TO BAG 🛍️</button>
+    {% endform %}
+
+    <!-- Direct WhatsApp Order -->
+    <a id="shopifyWhatsAppBtn" href="https://wa.me/{{ settings.whatsapp_number }}?text=Hi%20Meenu%20Label!%20I%20would%20like%20to%20order%20{{ product.title | url_encode }}%20from%20Drop%2001.%20Please%20help%20me%20choose%20the%20right%20size." target="_blank" style="display: block; text-align: center; background: #E8F5E9; color: #1B5E20; border: 1px solid #C8E6C9; padding: 13px; border-radius: 6px; font-weight: 700; text-decoration: none;">
+      💬 Order Directly via WhatsApp
+    </a>
+    <div class="whatsapp-benefit-box">
+      <span class="wa-icon">&#128172;</span>
+      <div>
+        <strong>Shoppers with size doubts, customization questions, or first-time hesitation:</strong>
+        Chat directly with our Chandigarh atelier stylist to verify exact measurements, request custom sleeve/kurta length, or view unedited daylight fabric videos before ordering.
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .shopify-size-tile.selected {
+    background: var(--text-main, #1A1A1A) !important;
+    border-color: var(--text-main, #1A1A1A) !important;
+    color: #FFFFFF !important;
+  }
+  .shopify-size-tile.selected strong {
+    color: #FFFFFF !important;
+  }
+  .shopify-size-tile.selected span {
+    color: #FFD54F !important;
+  }
+  @keyframes sizeTileShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .size-error-shake {
+    animation: sizeTileShake 0.4s ease-in-out;
+    outline: 2px solid #E53935 !important;
+    border-radius: 8px;
+  }
+</style>
+
+<script>
+  var currentSelectedVariantId = null;
+  var currentSelectedSizeTitle = null;
+
+  function selectShopifyVariant(variantId, sizeTitle, btn) {
+    currentSelectedVariantId = variantId;
+    currentSelectedSizeTitle = sizeTitle;
+    var inp = document.getElementById('selectedVariantId');
+    if (inp) inp.value = variantId;
+
+    var tiles = document.querySelectorAll('.shopify-size-tile');
+    tiles.forEach(function(t) { t.classList.remove('selected'); });
+    if (btn) btn.classList.add('selected');
+
+    var notice = document.getElementById('shopifySizeRequiredNotice');
+    if (notice) notice.style.display = 'none';
+
+    var sec = document.getElementById('shopifySizeGrid');
+    if (sec) sec.classList.remove('size-error-shake');
+
+    var lbl = document.getElementById('shopifySelectedSizeLabel');
+    if (lbl) {
+      lbl.textContent = '— Size ' + sizeTitle + ' Selected';
+      lbl.style.display = 'inline';
+    }
+
+    var waBtn = document.getElementById('shopifyWhatsAppBtn');
+    if (waBtn) {
+      var prodTitle = {{ product.title | json }};
+      var text = encodeURIComponent('Hi Meenu Label! I would like to order "' + prodTitle + '" in Size ' + sizeTitle + ' from Drop 01. Please confirm piece reservation.');
+      waBtn.href = 'https://wa.me/{{ settings.whatsapp_number }}?text=' + text;
+    }
+  }
+
+  function validateShopifyForm(e) {
+    if (!currentSelectedVariantId) {
+      if (e) e.preventDefault();
+      var notice = document.getElementById('shopifySizeRequiredNotice');
+      if (notice) notice.style.display = 'block';
+
+      var sec = document.getElementById('shopifySizeGrid');
+      if (sec) {
+        sec.classList.remove('size-error-shake');
+        void sec.offsetWidth;
+        sec.classList.add('size-error-shake');
+        setTimeout(function() { sec.classList.remove('size-error-shake'); }, 1200);
+        sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return false;
+    }
+    return true;
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product Main",
+  "settings": []
+}
+{% endschema %}
