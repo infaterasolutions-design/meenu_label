@@ -622,3 +622,20 @@ document.addEventListener('click', function(e) {
     card.style.display = 'none';
   }
 });
+
+
+/* =========================================================================
+   9. DYNAMIC STICKY HEADER HEIGHT SYNCHRONIZER
+   ========================================================================= */
+function updateStickyHeaderHeight() {
+  var header = document.getElementById('siteStickyHeaderContainer');
+  if (header) {
+    var h = header.offsetHeight;
+    if (h > 0) {
+      document.documentElement.style.setProperty('--sticky-header-height', h + 'px');
+    }
+  }
+}
+window.addEventListener('DOMContentLoaded', updateStickyHeaderHeight);
+window.addEventListener('resize', updateStickyHeaderHeight);
+window.addEventListener('load', updateStickyHeaderHeight);

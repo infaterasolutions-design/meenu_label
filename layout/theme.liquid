@@ -22,8 +22,10 @@
   </head>
 
   <body class="template-{{ template.name }}">
-    {% section 'announcement-bar' %}
-    {% section 'header' %}
+    <div class="site-sticky-header-container" id="siteStickyHeaderContainer">
+      {% section 'announcement-bar' %}
+      {% section 'header' %}
+    </div>
 
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}
