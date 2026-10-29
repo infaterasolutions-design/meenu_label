@@ -314,31 +314,6 @@ function toggleSearchBar() {
   }
 }
 
-function openNavDrawer() {
-  var d = document.getElementById('navDrawerBackdrop');
-  if (d) d.classList.add('open');
-}
-
-function closeNavDrawer() {
-  var d = document.getElementById('navDrawerBackdrop');
-  if (d) d.classList.remove('open');
-}
-
-function toggleCartDrawer() {
-  var d = document.getElementById('cartDrawerBackdrop');
-  if (d) d.classList.toggle('open');
-}
-
-function openSizeGuideModal() {
-  var m = document.getElementById('sizeGuideModalBackdrop');
-  if (m) m.classList.add('open');
-}
-
-function closeSizeGuideModal() {
-  var m = document.getElementById('sizeGuideModalBackdrop');
-  if (m) m.classList.remove('open');
-}
-
 document.addEventListener('DOMContentLoaded', function() {
   var heroEl = document.getElementById('heroSlider');
   if (heroEl) {

@@ -1,9 +1,19 @@
-
 <section class="catalog-section" id="collection-grid">
-  <div class="section-header">
-    <div>
-      <h2 class="section-title">{{ section.settings.title }}</h2>
-      <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">{{ section.settings.subtitle }}</p>
+  <div class="sticky-catalog-header" id="stickyCatalogHeader">
+    <div class="sticky-header-info">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <h2 class="section-title" style="margin:0; font-size:22px; letter-spacing:0.02em;">{{ section.settings.title }}</h2>
+        <span class="sticky-count-pill" id="activeCategoryCount">HANDCRAFTED EDITIONS</span>
+      </div>
+      <p class="section-sub" style="margin:4px 0 0 0; font-size:12px;">{{ section.settings.subtitle }}</p>
+    </div>
+
+    <div class="filter-tabs">
+      <a href="/collections/all" class="filter-tab active">All Silhouettes</a>
+      <a href="/collections/co-ord-sets" class="filter-tab">Co-ord Sets</a>
+      <a href="/collections/festive-suits" class="filter-tab">Festive Suits</a>
+      <a href="/collections/dresses" class="filter-tab">Midi Dresses</a>
+      <a href="/collections/tops" class="filter-tab">Casual Tops</a>
     </div>
   </div>
 
@@ -13,13 +23,22 @@
       {% for product in collection.products limit: section.settings.products_to_show %}
         {% render 'product-card', product: product %}
       {% endfor %}
+    {% elsif collections.all.products_count > 0 %}
+      {% for product in collections.all.products limit: section.settings.products_to_show %}
+        {% render 'product-card', product: product %}
+      {% endfor %}
     {% else %}
       {% for i in (1..4) %}
         <div class="product-card">
-          <div class="card-thumb" style="display:flex; align-items:center; justify-content:center; color:#9B9387;">Catalog Silhouette</div>
+          <div class="card-thumb" style="display:flex; align-items:center; justify-content:center; background:#FAF8F5; color:#9B9387; font-size:13px; font-weight:600;">
+            Meenu Label Atelier Silhouette #0{{ i }}
+          </div>
           <div class="card-body">
-            <span class="card-title">Debut Silhouette #{{ i }}</span>
-            <div class="card-price-row"><span class="price-main">₹1,499</span></div>
+            <h3 class="card-title">Handcrafted Luxury Silhouette #0{{ i }}</h3>
+            <div class="card-price-row">
+              <span class="price-main">&#8377;1,899</span>
+              <span class="snitch-plus-trigger">+</span>
+            </div>
           </div>
         </div>
       {% endfor %}
@@ -41,7 +60,7 @@
       "type": "text",
       "id": "subtitle",
       "label": "Subtitle",
-      "default": "Authentic catalog pieces ordered from Surat. Strictly 3 exclusive pieces per design (M, L, XL)."
+      "default": "Limited Atelier Run • Strictly 1 piece per size (M, L, XL)"
     },
     {
       "type": "collection",
@@ -52,7 +71,7 @@
       "type": "range",
       "id": "products_to_show",
       "min": 4,
-      "max": 16,
+      "max": 24,
       "step": 1,
       "default": 16,
       "label": "Products to show"

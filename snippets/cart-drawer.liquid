@@ -1,33 +1,35 @@
-
-<div class="cart-drawer-backdrop" id="CartBackdrop" onclick="toggleCartDrawer()"></div>
+<div class="cart-backdrop" id="CartBackdrop" onclick="toggleCartDrawer()"></div>
 <div class="cart-drawer" id="CartDrawer">
   <div class="cart-header">
     <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px;">Your Shopping Bag ({{ cart.item_count }})</h3>
-    <button onclick="toggleCartDrawer()" style="background: none; border: none; font-size: 20px; cursor: pointer;">✕</button>
+    <button onclick="toggleCartDrawer()" style="background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-main);" aria-label="Close Bag">&times;</button>
   </div>
-  <div class="cart-items">
+
+  <div class="cart-body">
     {% if cart.item_count > 0 %}
       {% for item in cart.items %}
-        <div style="display: flex; gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
-          <img src="{{ item.image | image_url: width: 150 }}" style="width: 70px; height: 90px; object-fit: cover; border-radius: 4px;">
+        <div style="display: flex; gap: 14px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); align-items: center;">
+          <img src="{{ item.image | image_url: width: 160 }}" alt="{{ item.title | escape }}" style="width: 72px; height: 90px; object-fit: contain; background: #FAF8F5; border-radius: 4px; padding: 2px; border: 1px solid rgba(0,0,0,0.06);">
           <div style="flex: 1;">
-            <div style="font-size: 13px; font-weight: 700;">{{ item.product.title }}</div>
-            <div style="font-size: 11px; color: var(--text-muted);">Size: {{ item.variant.title }} • Qty: {{ item.quantity }}</div>
-            <div style="font-size: 13px; font-weight: 700; margin-top: 4px;">{{ item.final_line_price | money }}</div>
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-main);">{{ item.product.title }}</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Size: <strong>{{ item.variant.title }}</strong> &bull; Qty: {{ item.quantity }}</div>
+            <div style="font-size: 14px; font-weight: 700; margin-top: 6px; color: var(--text-main);">{{ item.final_line_price | money }}</div>
           </div>
         </div>
       {% endfor %}
     {% else %}
       <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
-        Your bag is currently empty.
+        <p style="font-size: 14px; margin-bottom: 12px;">Your shopping bag is currently empty.</p>
+        <button type="button" class="modal-btn-primary" style="display: inline-block; width: auto; padding: 10px 24px;" onclick="toggleCartDrawer()">EXPLORE COLLECTION</button>
       </div>
     {% endif %}
   </div>
+
   <div class="cart-footer">
     <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; margin-bottom: 14px;">
       <span>Subtotal</span>
       <span>{{ cart.total_price | money }}</span>
     </div>
-    <a href="/checkout" class="btn-primary" style="width: 100%; text-align: center; display: block;">PROCEED TO CHECKOUT 🔒</a>
+    <a href="/checkout" class="modal-btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box; text-decoration: none;">PROCEED TO CHECKOUT &rarr;</a>
   </div>
 </div>
