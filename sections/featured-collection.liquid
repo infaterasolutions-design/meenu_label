@@ -28,20 +28,82 @@
         {% render 'product-card', product: product %}
       {% endfor %}
     {% else %}
-      {% for i in (1..4) %}
-        <div class="product-card">
-          <div class="card-thumb" style="display:flex; align-items:center; justify-content:center; background:#FAF8F5; color:#9B9387; font-size:13px; font-weight:600;">
-            Meenu Label Atelier Silhouette #0{{ i }}
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">Handcrafted Luxury Silhouette #0{{ i }}</h3>
-            <div class="card-price-row">
-              <span class="price-main">&#8377;1,899</span>
-              <span class="snitch-plus-trigger">+</span>
-            </div>
+      <!-- Drop 01 Atelier Preview Silhouettes (Shown until products are added in Shopify Admin) -->
+      <div class="product-card" onclick="window.location.href='/collections/festive-suits'">
+        <div class="card-thumb">
+          <button type="button" class="card-wishlist-btn" onclick="event.preventDefault(); event.stopPropagation(); toggleWishlist('drop01_1')" title="Save to Wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <img src="{{ 'campaign_cafe.jpg' | asset_url }}" alt="Jaipur Chanderi Silk Festive Suit" loading="lazy">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Jaipur Chanderi Silk Festive Suit</h3>
+          <div class="card-price-row">
+            <span class="price-main">&#8377;2,299</span>
+            <span class="price-mrp" style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; margin-left: 6px;">&#8377;3,699</span>
+            <span class="snitch-plus-trigger">+</span>
           </div>
         </div>
-      {% endfor %}
+      </div>
+
+      <div class="product-card" onclick="window.location.href='/collections/co-ord-sets'">
+        <div class="card-thumb">
+          <button type="button" class="card-wishlist-btn" onclick="event.preventDefault(); event.stopPropagation(); toggleWishlist('drop01_2')" title="Save to Wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <img src="{{ 'campaign_balcony.jpg' | asset_url }}" alt="Mustard Crepe Angrakha Co-ord Set" loading="lazy">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Mustard Crepe Angrakha Co-ord Set</h3>
+          <div class="card-price-row">
+            <span class="price-main">&#8377;1,699</span>
+            <span class="price-mrp" style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; margin-left: 6px;">&#8377;2,799</span>
+            <span class="snitch-plus-trigger">+</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" onclick="window.location.href='/collections/dresses'">
+        <div class="card-thumb">
+          <button type="button" class="card-wishlist-btn" onclick="event.preventDefault(); event.stopPropagation(); toggleWishlist('drop01_3')" title="Save to Wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <img src="{{ 'campaign_sukhna.jpg' | asset_url }}" alt="White Porcelain Floral Wrap Dress" loading="lazy">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">White Porcelain Floral Wrap Dress</h3>
+          <div class="card-price-row">
+            <span class="price-main">&#8377;1,599</span>
+            <span class="price-mrp" style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; margin-left: 6px;">&#8377;2,599</span>
+            <span class="snitch-plus-trigger">+</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" onclick="window.location.href='/collections/co-ord-sets'">
+        <div class="card-thumb">
+          <button type="button" class="card-wishlist-btn" onclick="event.preventDefault(); event.stopPropagation(); toggleWishlist('drop01_4')" title="Save to Wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <img src="{{ 'craft_crepe.jpg' | asset_url }}" alt="Fluid Silk Crepe Angrakha Silhouette" loading="lazy">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Fluid Silk Crepe Angrakha Silhouette</h3>
+          <div class="card-price-row">
+            <span class="price-main">&#8377;1,899</span>
+            <span class="price-mrp" style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; margin-left: 6px;">&#8377;2,999</span>
+            <span class="snitch-plus-trigger">+</span>
+          </div>
+        </div>
+      </div>
     {% endif %}
   </div>
 </section>
