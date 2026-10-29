@@ -572,3 +572,53 @@ document.addEventListener('DOMContentLoaded', function() {
     startAutoSlide();
   }
 });
+
+
+/* =========================================================================
+   8. WHATSAPP ATELIER CONCIERGE CONTROLLER
+   ========================================================================= */
+function toggleWaPopup(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  var card = document.getElementById('waPopupCard');
+  if (!card) return;
+  var isHidden = card.style.display === 'none' || !card.style.display;
+  if (isHidden) {
+    card.style.display = 'flex';
+    var inp = document.getElementById('waCustomMessage');
+    if (inp) {
+      setTimeout(function() { inp.focus(); }, 120);
+    }
+  } else {
+    card.style.display = 'none';
+  }
+}
+
+function sendWaPreset(text) {
+  var phone = '919988898845';
+  var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(text);
+  window.open(url, '_blank');
+  var card = document.getElementById('waPopupCard');
+  if (card) card.style.display = 'none';
+}
+
+function handleWaCustomSubmit(e) {
+  if (e) e.preventDefault();
+  var inp = document.getElementById('waCustomMessage');
+  var msg = inp ? inp.value.trim() : '';
+  if (!msg) {
+    msg = 'Hi Meenu Label! I have a question about Drop 01 silhouettes and sizing.';
+  }
+  sendWaPreset(msg);
+  if (inp) inp.value = '';
+}
+
+document.addEventListener('click', function(e) {
+  var container = document.getElementById('waConciergeContainer');
+  var card = document.getElementById('waPopupCard');
+  if (card && card.style.display !== 'none' && container && !container.contains(e.target)) {
+    card.style.display = 'none';
+  }
+});

@@ -1,0 +1,77 @@
+{% comment %}
+  Meenu Label Floating WhatsApp Atelier Concierge Pill & Interactive Chat Pop-up
+{% endcomment %}
+
+{% assign wa_phone = settings.whatsapp_number | default: '919988898845' %}
+
+<div class="wa-concierge-container" id="waConciergeContainer">
+  
+  <!-- Interactive WhatsApp Concierge Chat Pop-up Card -->
+  <div class="wa-popup-card" id="waPopupCard" style="display: none;">
+    <div class="wa-popup-header">
+      <div class="wa-popup-avatar">
+        <img src="{{ 'logo.png' | asset_url }}" alt="Meenu Label" style="width: 28px; height: auto; max-height: 28px; object-fit: contain; filter: brightness(0) invert(1);">
+      </div>
+      <div class="wa-popup-meta">
+        <div class="wa-popup-name">Meenu Label Atelier Concierge</div>
+        <div class="wa-popup-status">
+          <span class="wa-status-dot"></span> Online &bull; Replies in ~5 mins
+        </div>
+      </div>
+      <button type="button" class="wa-popup-close" onclick="toggleWaPopup(event)" aria-label="Close Chat">&times;</button>
+    </div>
+
+    <div class="wa-popup-body">
+      <div class="wa-chat-bubble">
+        <p style="margin: 0 0 6px 0; font-weight: 700; color: #1E1C19;">Namaste! &#128591; Welcome to Meenu Label.</p>
+        <p style="margin: 0; color: #4A4238; font-size: 12px; line-height: 1.5;">
+          Have doubts about bust sizing, fabric feel, or want to reserve 1 of only 3 pieces nationwide? Our Chandigarh atelier stylist is here to assist you live.
+        </p>
+        <span class="wa-chat-time">Just now</span>
+      </div>
+
+      <div class="wa-quick-chips">
+        <button type="button" class="wa-chip-btn" onclick="sendWaPreset('Hi Meenu Label! I need help choosing the right size for my measurements.')">
+          &#128207; Sizing &amp; Bust Measurement Advice
+        </button>
+        <button type="button" class="wa-chip-btn" onclick="sendWaPreset('Hi Meenu Label! Can you share unedited daylight fabric videos of Drop 01?')">
+          &#127916; Unedited Daylight Fabric Videos
+        </button>
+        <button type="button" class="wa-chip-btn" onclick="sendWaPreset('Hi Meenu Label! How soon can you deliver to my Tricity / Indian pincode?')">
+          &#128666; Delivery Timelines &amp; Express Dispatch
+        </button>
+        <button type="button" class="wa-chip-btn" onclick="sendWaPreset('Hi Meenu Label! I would like to reserve a Drop 01 silhouette.')">
+          &#128087; Reserve 1 of 3 Limited Edition Pieces
+        </button>
+      </div>
+    </div>
+
+    <div class="wa-popup-footer">
+      <form onsubmit="handleWaCustomSubmit(event)" style="display: flex; gap: 8px; width: 100%; margin: 0;">
+        <input type="text" id="waCustomMessage" placeholder="Ask a styling or sizing question..." style="flex: 1; border: 1px solid #D9D1C7; border-radius: 20px; padding: 10px 14px; font-size: 12px; outline: none; font-family: inherit; background: #FAF8F5;">
+        <button type="submit" class="wa-send-btn" title="Send to WhatsApp" aria-label="Send">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
+      </form>
+      <div style="font-size: 10px; color: #8C8275; text-align: center; margin-top: 8px;">
+        10:00 AM – 7:00 PM IST &bull; Chandigarh Atelier Direct Line (+91 99888 98845)
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Pill Trigger Button -->
+  <button type="button" class="floating-wa-concierge" id="floatingWaConcierge" onclick="toggleWaPopup(event)" aria-label="Open Meenu Label Atelier Concierge on WhatsApp">
+    <div class="wa-concierge-icon-wrap">
+      <svg viewBox="0 0 24 24" class="wa-concierge-svg" fill="currentColor">
+        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.77.818 2.788.818 3.18 0 5.767-2.587 5.767-5.766.001-3.182-2.585-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.698.077-1.748-.358-.871-.362-1.579-.909-2.185-1.515-.606-.606-1.153-1.314-1.515-2.185-.435-1.05-.403-1.436-.358-1.748.05-.333.419-1.026.824-1.17.135-.048.281-.072.417-.072.106 0 .211.004.306.012.235.018.351.042.507.414.193.459.66 1.606.717 1.723.058.117.098.253.02.408-.078.156-.118.254-.234.39-.118.136-.248.305-.353.41-.118.118-.241.246-.104.482.137.235.61 1.003 1.309 1.626.899.801 1.657 1.049 1.892 1.166.236.118.373.104.51-.054.137-.156.587-.685.744-.92.156-.235.313-.195.528-.117.215.078 1.365.644 1.599.761.234.117.391.176.449.274.058.098.058.566-.086.971zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.662 1.434 5.176L2 22l4.958-1.399C8.423 21.499 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+      </svg>
+      <span class="wa-concierge-ping"></span>
+    </div>
+    <div class="wa-concierge-badge">
+      <span class="wa-concierge-title">Atelier Concierge</span>
+      <span class="wa-concierge-status"><span class="wa-status-dot"></span> Online &bull; +91 99888 98845</span>
+    </div>
+  </button>
+</div>
