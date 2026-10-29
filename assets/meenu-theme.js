@@ -242,3 +242,108 @@ function checkTricityPincode(pin) {
     res.style.color = '#2B6E44';
   }
 }
+
+
+// --- Snitch Hero Carousel JS ---
+var currentSlide = 0;
+var totalSlides = 4;
+var slideInterval = 6000;
+var slideTimer = null;
+
+function updateSlider() {
+  var track = document.getElementById('sliderTrack');
+  var dotsContainer = document.getElementById('sliderDots');
+  if (track) {
+    track.style.transform = 'translateX(-' + (currentSlide * 25) + '%)';
+  }
+  if (dotsContainer) {
+    var dots = dotsContainer.querySelectorAll('.slider-dot');
+    dots.forEach(function(dot, idx) {
+      if (idx === currentSlide) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+}
+
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % totalSlides;
+  updateSlider();
+}
+
+function prevSlide() {
+  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+  updateSlider();
+}
+
+function goToSlide(idx) {
+  currentSlide = idx;
+  updateSlider();
+  resetAutoSlide();
+}
+
+function startAutoSlide() {
+  stopAutoSlide();
+  slideTimer = setInterval(nextSlide, slideInterval);
+}
+
+function stopAutoSlide() {
+  if (slideTimer) {
+    clearInterval(slideTimer);
+    slideTimer = null;
+  }
+}
+
+function resetAutoSlide() {
+  stopAutoSlide();
+  startAutoSlide();
+}
+
+// --- Navigation & Search Bar Controls ---
+function toggleSearchBar() {
+  var bar = document.getElementById('searchOverlayBar');
+  if (!bar) return;
+  if (bar.style.display === 'block') {
+    bar.style.display = 'none';
+  } else {
+    bar.style.display = 'block';
+    var inp = document.getElementById('searchInput');
+    if (inp) inp.focus();
+  }
+}
+
+function openNavDrawer() {
+  var d = document.getElementById('navDrawerBackdrop');
+  if (d) d.classList.add('open');
+}
+
+function closeNavDrawer() {
+  var d = document.getElementById('navDrawerBackdrop');
+  if (d) d.classList.remove('open');
+}
+
+function toggleCartDrawer() {
+  var d = document.getElementById('cartDrawerBackdrop');
+  if (d) d.classList.toggle('open');
+}
+
+function openSizeGuideModal() {
+  var m = document.getElementById('sizeGuideModalBackdrop');
+  if (m) m.classList.add('open');
+}
+
+function closeSizeGuideModal() {
+  var m = document.getElementById('sizeGuideModalBackdrop');
+  if (m) m.classList.remove('open');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var heroEl = document.getElementById('heroSlider');
+  if (heroEl) {
+    heroEl.addEventListener('mouseenter', stopAutoSlide);
+    heroEl.addEventListener('mouseleave', startAutoSlide);
+    startAutoSlide();
+  }
+});
