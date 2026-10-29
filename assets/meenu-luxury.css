@@ -5585,3 +5585,23 @@
   overflow-y: auto;
   padding: 24px;
 }
+
+
+/* Search Overlay Bar Clickability & Layering Fix */
+.search-overlay-bar {
+  z-index: 250 !important;
+}
+.search-overlay-bar.open {
+  display: block !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateY(0) !important;
+  visibility: visible !important;
+}
+.search-input-box {
+  position: relative !important;
+  z-index: 260 !important;
+}
+.search-input-box input {
+  pointer-events: auto !important;
+}

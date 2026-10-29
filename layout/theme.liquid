@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#FAF8F5">
     <link rel="canonical" href="{{ canonical_url }}">
     
-    <title>{{ page_title }} – {{ shop.name }}</title>
+    <title>{{ page_title }} &bull; {{ shop.name }}</title>
     {% if page_description %}
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
@@ -32,9 +32,10 @@
     {% section 'footer' %}
 
     {% render 'nav-drawer' %}
-  {% render 'snitch-login-modal' %}
-  {% render 'cart-drawer' %}
+    {% render 'snitch-login-modal' %}
+    {% render 'cart-drawer' %}
     {% render 'size-guide-modal' %}
+    {% render 'policy-modal' %}
 
     <script src="{{ 'meenu-theme.js' | asset_url }}" defer="defer"></script>
   </body>
