@@ -27,7 +27,7 @@
     <!-- Right: Action Icons (Wishlist, Bag, User) -->
     <div class="header-right">
       <!-- 1. Wishlist (Heart) -->
-      <button class="header-icon-action header-wishlist-btn" onclick="toggleCartDrawer()" title="Saved Wishlist" aria-label="Wishlist">
+      <button class="header-icon-action header-wishlist-btn" onclick="toggleWishlistDrawer()" title="Saved Wishlist" aria-label="Wishlist">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
           <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
         </svg>
@@ -40,7 +40,7 @@
           <rect x="4.5" y="8" width="15" height="13" rx="1.5"></rect>
           <path d="M8.5 8V6a3.5 3.5 0 0 1 7 0v2"></path>
         </svg>
-        <span class="header-badge-pill" id="headerCartCount">{% if cart.item_count > 0 %}{{ cart.item_count }}{% else %}0{% endif %}</span>
+        <span class="header-badge-pill" id="headerCartCount" {% if cart.item_count > 0 %}style="display:inline-flex;"{% else %}style="display:none;"{% endif %}>{{ cart.item_count | default: 0 }}</span>
       </button>
 
       <!-- 3. User Account (Direct Official Shopify Account Portal) -->

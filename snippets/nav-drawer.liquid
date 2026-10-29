@@ -16,6 +16,18 @@
         <li><a href="/collections/tops" style="text-decoration:none; color:var(--text-color); font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.08em;">Tops &amp; Blouses</a></li>
         
         <li style="border-top:1px solid var(--border-color); margin-top:16px; padding-top:16px;">
+          <a href="javascript:void(0)" onclick="closeNavDrawer(); toggleWishlistDrawer();" style="text-decoration:none; color:var(--text-color); font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:space-between;">
+            <span>❤️ Saved Wishlist</span>
+            <span class="header-badge-pill nav-drawer-wishlist-count" style="display:none; position:static;">0</span>
+          </a>
+        </li>
+        <li>
+          <a href="javascript:void(0)" onclick="closeNavDrawer(); toggleCartDrawer();" style="text-decoration:none; color:var(--text-color); font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:space-between;">
+            <span>🛍️ Shopping Bag</span>
+            <span class="header-badge-pill nav-drawer-cart-count" style="{% if cart.item_count > 0 %}display:inline-flex;{% else %}display:none;{% endif %} position:static;">{{ cart.item_count }}</span>
+          </a>
+        </li>
+        <li>
           <a href="/account" style="text-decoration:none; color:var(--text-color); font-size:13px; font-weight:600;">&#128100; My Account &amp; Order Tracking</a>
         </li>
         <li>

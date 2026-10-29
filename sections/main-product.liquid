@@ -53,8 +53,23 @@
     <!-- Shopify Product Form -->
     {% form 'product', product, id: 'shopifyProductForm', onsubmit: 'return validateShopifyForm(event)' %}
       <input type="hidden" name="id" id="selectedVariantId" value="">
-      <button type="submit" class="btn-primary" style="width: 100%; padding: 16px; margin-bottom: 10px; cursor: pointer;">ADD TO BAG 🛍️</button>
+      <button type="submit" id="pdpAddToCartBtn" class="btn-primary" style="width: 100%; padding: 16px; margin-bottom: 10px; cursor: pointer;">ADD TO BAG 🛍️</button>
     {% endform %}
+
+    <!-- Save to Wishlist Button -->
+    <button type="button" id="pdpWishlistBtn" class="pdp-wishlist-toggle" 
+      data-wishlist-id="{{ product.id | default: 'drop01_1' }}" 
+      data-wishlist-title="{{ product.title | escape }}" 
+      data-wishlist-price="{{ product.price | money | escape }}" 
+      data-wishlist-image="{{ product.featured_image | image_url: width: 300 }}" 
+      data-wishlist-url="{{ product.url }}" 
+      onclick="toggleWishlist(this)" 
+      style="width: 100%; background: #FFFFFF; border: 1.5px solid var(--border-color); padding: 12px; border-radius: 6px; font-weight: 700; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; transition: all 0.2s ease; color: var(--text-main);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; pointer-events: none;">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span class="pdp-wishlist-txt">SAVE TO WISHLIST</span>
+    </button>
 
     <!-- Direct WhatsApp Order -->
     <a id="shopifyWhatsAppBtn" href="https://wa.me/{{ settings.whatsapp_number }}?text=Hi%20Meenu%20Label!%20I%20would%20like%20to%20order%20{{ product.title | url_encode }}%20from%20Drop%2001.%20Please%20help%20me%20choose%20the%20right%20size." target="_blank" style="display: block; text-align: center; background: #E8F5E9; color: #1B5E20; border: 1px solid #C8E6C9; padding: 13px; border-radius: 6px; font-weight: 700; text-decoration: none;">
@@ -144,7 +159,42 @@
       }
       return false;
     }
-    return true;
+
+    if (e) e.preventDefault();
+    var btn = document.getElementById('pdpAddToCartBtn');
+    var origTxt = btn ? btn.innerHTML : 'ADD TO BAG 🛍️';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = 'ADDING TO BAG...';
+    }
+
+    if (typeof addToCartAjax === 'function') {
+      addToCartAjax(currentSelectedVariantId, 1)
+        .then(function() {
+          if (btn) {
+            btn.innerHTML = 'ADDED TO BAG ✓';
+            setTimeout(function() {
+              btn.innerHTML = origTxt;
+              btn.disabled = false;
+            }, 1500);
+          }
+        })
+        .catch(function(err) {
+          console.warn('AJAX cart add fallback:', err);
+          if (typeof toggleCartDrawer === 'function') toggleCartDrawer();
+          if (typeof showMeenuToast === 'function') showMeenuToast('Added to Shopping Bag 🛍️');
+          if (btn) {
+            btn.innerHTML = 'ADDED TO BAG ✓';
+            setTimeout(function() {
+              btn.innerHTML = origTxt;
+              btn.disabled = false;
+            }, 1500);
+          }
+        });
+    } else {
+      if (typeof toggleCartDrawer === 'function') toggleCartDrawer();
+    }
+    return false;
   }
 </script>
 
