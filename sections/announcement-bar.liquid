@@ -1,7 +1,19 @@
 <div class="announcement-bar">
-  <div class="left">&#128205; CHANDIGARH &bull; PANCHKULA &bull; MOHALI</div>
-  <div class="center">&#9992;&#65039; {{ section.settings.message }}</div>
-  <div class="right">
+  <div class="ann-left">
+    <span>&#9889; DEBUT DROP 01 LIVE &bull; CHANDIGARH ATELIER</span>
+  </div>
+  <div class="ann-center">
+    <div class="upi-ann-badge" onclick="alert('&#9889; Pay via UPI (GPay/PhonePe/Paytm) at checkout to save flat &#8377;100 instantly! Use Code: UPI100')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:4px;">
+        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+        <line x1="1" y1="10" x2="23" y2="10"></line>
+      </svg>
+      <span>PAY VIA UPI &bull; GET INSTANT &#8377;100 OFF</span>
+      <span class="upi-code-pill">CODE: UPI100</span>
+    </div>
+  </div>
+  <div class="ann-right">
+    <span>FREE PAN-INDIA EXPRESS SHIPPING</span>
     <a href="javascript:void(0)" onclick="openSizeGuideModal()">SIZE GUIDE</a>
   </div>
 </div>
@@ -9,13 +21,6 @@
 {% schema %}
 {
   "name": "Announcement Bar",
-  "settings": [
-    {
-      "type": "text",
-      "id": "message",
-      "label": "Announcement Text",
-      "default": "DROP 01 LIVE • FREE SHIPPING IN TRICITY • LIMITED 3 PCS PER SIZE"
-    }
-  ]
+  "settings": []
 }
 {% endschema %}
