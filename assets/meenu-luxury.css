@@ -151,10 +151,71 @@
 
     
     /* Permanently disabled cart drawer in favor of independent Cart Page */
-    #cartDrawer, #cartBackdrop, .cart-drawer {
+    #cartDrawer, #cartBackdrop {
       display: none !important;
       visibility: hidden !important;
       pointer-events: none !important;
+    }
+
+    /* =========================================================================
+       DEDICATED ATELIER WISHLIST DRAWER ARCHITECTURE
+       ========================================================================= */
+    .wishlist-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 18, 16, 0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 450;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .wishlist-backdrop.open {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      display: block !important;
+    }
+
+    .wishlist-drawer {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 420px;
+      max-width: 90vw;
+      height: 100%;
+      background: #FFFFFF;
+      z-index: 460;
+      box-shadow: -6px 0 32px rgba(0, 0, 0, 0.16);
+      display: flex !important;
+      flex-direction: column;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      visibility: visible !important;
+      pointer-events: auto !important;
+    }
+    .wishlist-drawer.open {
+      transform: translateX(-420px) !important;
+    }
+
+    .wishlist-drawer .wishlist-header {
+      padding: 22px 26px;
+      border-bottom: 1px solid var(--border-color, #E8E2D8);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FAF8F5;
+    }
+    .wishlist-drawer .wishlist-body {
+      padding: 22px 26px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .wishlist-drawer .wishlist-footer {
+      padding: 20px 26px;
+      border-top: 1px solid var(--border-color, #E8E2D8);
+      background: #FAF8F5;
     }
 
     

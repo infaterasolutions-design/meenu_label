@@ -1,15 +1,15 @@
-<div class="cart-backdrop" id="wishlistBackdrop" onclick="toggleWishlistDrawer()"></div>
-<div class="cart-drawer" id="wishlistDrawer">
-  <div class="cart-header">
-    <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; margin: 0;">Saved Wishlist (<span id="wishlistDrawerCount">0</span>)</h3>
+<div class="wishlist-backdrop" id="wishlistBackdrop" onclick="toggleWishlistDrawer()"></div>
+<div class="wishlist-drawer" id="wishlistDrawer">
+  <div class="wishlist-header">
+    <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; margin: 0; color: #1E1C19;">Saved Wishlist (<span id="wishlistDrawerCount">0</span>)</h3>
     <button type="button" style="background: none; border: none; font-size: 26px; cursor: pointer; color: var(--text-main); line-height: 1; padding: 4px;" onclick="toggleWishlistDrawer()" aria-label="Close Wishlist">&times;</button>
   </div>
   
-  <div class="cart-body" id="wishlistItemsList">
+  <div class="wishlist-body" id="wishlistItemsList">
     <!-- Populated dynamically via JavaScript -->
   </div>
   
-  <div class="cart-footer" id="wishlistFooter" style="display:none;">
+  <div class="wishlist-footer" id="wishlistFooter" style="display:none;">
     <button type="button" class="modal-btn-primary" onclick="toggleWishlistDrawer(); window.location.href='/collections/all'" style="margin-bottom: 8px; width: 100%; text-align: center;">EXPLORE ALL SILHOUETTES &rarr;</button>
     <div style="font-size: 11px; color: var(--text-muted); text-align: center;">
       Handcrafted pieces &bull; Strictly limited batches of 3 per size

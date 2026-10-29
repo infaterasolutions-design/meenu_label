@@ -91,21 +91,16 @@ function isWishlisted(id) {
 function toggleWishlistDrawer() {
   var drawer = document.getElementById('wishlistDrawer');
   var backdrop = document.getElementById('wishlistBackdrop');
-  var cartDrawer = document.getElementById('CartDrawer');
-  var cartBackdrop = document.getElementById('CartBackdrop');
+  if (!drawer) return;
 
-  if (cartDrawer && cartDrawer.classList.contains('open')) {
-    cartDrawer.classList.remove('open');
-    if (cartBackdrop) cartBackdrop.classList.remove('open');
-  }
-
-  if (drawer && backdrop) {
-    var willOpen = !drawer.classList.contains('open');
-    drawer.classList.toggle('open');
-    backdrop.classList.toggle('open');
-    if (willOpen) {
-      updateWishlistUI();
-    }
+  var isOpen = drawer.classList.contains('open');
+  if (isOpen) {
+    drawer.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('open');
+  } else {
+    updateWishlistUI();
+    drawer.classList.add('open');
+    if (backdrop) backdrop.classList.add('open');
   }
 }
 
