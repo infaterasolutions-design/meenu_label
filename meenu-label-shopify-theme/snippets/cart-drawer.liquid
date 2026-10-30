@@ -1,33 +1,51 @@
-
-<div class="cart-drawer-backdrop" id="CartBackdrop" onclick="toggleCartDrawer()"></div>
+<div class="cart-backdrop" id="CartBackdrop" onclick="toggleCartDrawer()"></div>
 <div class="cart-drawer" id="CartDrawer">
   <div class="cart-header">
-    <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px;">Your Shopping Bag ({{ cart.item_count }})</h3>
-    <button onclick="toggleCartDrawer()" style="background: none; border: none; font-size: 20px; cursor: pointer;">✕</button>
+    <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; margin: 0;">Your Shopping Bag (<span id="cartDrawerCount">{{ cart.item_count | default: 0 }}</span>)</h3>
+    <button type="button" onclick="toggleCartDrawer()" style="background: none; border: none; font-size: 26px; cursor: pointer; color: var(--text-main); line-height: 1; padding: 4px;" aria-label="Close Bag">&times;</button>
   </div>
-  <div class="cart-items">
+
+  <div class="cart-body" id="cartDrawerBody">
     {% if cart.item_count > 0 %}
       {% for item in cart.items %}
-        <div style="display: flex; gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
-          <img src="{{ item.image | image_url: width: 150 }}" style="width: 70px; height: 90px; object-fit: cover; border-radius: 4px;">
-          <div style="flex: 1;">
-            <div style="font-size: 13px; font-weight: 700;">{{ item.product.title }}</div>
-            <div style="font-size: 11px; color: var(--text-muted);">Size: {{ item.variant.title }} • Qty: {{ item.quantity }}</div>
-            <div style="font-size: 13px; font-weight: 700; margin-top: 4px;">{{ item.final_line_price | money }}</div>
+        <div class="cart-drawer-item" data-line-key="{{ item.key }}" style="display: flex; gap: 14px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); align-items: center; position: relative;">
+          <img src="{{ item.image | image_url: width: 160 }}" alt="{{ item.title | escape }}" style="width: 72px; height: 90px; object-fit: cover; background: #FAF8F5; border-radius: 4px; padding: 2px; border: 1px solid rgba(0,0,0,0.06);">
+          <div style="flex: 1; padding-right: 20px;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-main); line-height: 1.35;">{{ item.product.title }}</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Size: <strong>{{ item.variant.title }}</strong></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px;">
+              <div style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 4px; overflow: hidden; background: #FAF8F5;">
+                <button type="button" onclick="updateCartItemQty('{{ item.key }}', {{ item.quantity | minus: 1 }})" style="border: none; background: transparent; width: 26px; height: 26px; cursor: pointer; font-size: 14px; font-weight: 700; line-height: 1;">-</button>
+                <span style="font-size: 12px; font-weight: 700; min-width: 26px; text-align: center;">{{ item.quantity }}</span>
+                <button type="button" onclick="updateCartItemQty('{{ item.key }}', {{ item.quantity | plus: 1 }})" style="border: none; background: transparent; width: 26px; height: 26px; cursor: pointer; font-size: 14px; font-weight: 700; line-height: 1;">+</button>
+              </div>
+              <div style="font-size: 14px; font-weight: 700; color: var(--text-main);">{{ item.final_line_price | money }}</div>
+            </div>
           </div>
+          <button type="button" onclick="updateCartItemQty('{{ item.key }}', 0)" style="position: absolute; top: 2px; right: 0; background: none; border: none; font-size: 20px; color: #999; cursor: pointer; line-height: 1; padding: 4px;" title="Remove">&times;</button>
         </div>
       {% endfor %}
     {% else %}
-      <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
-        Your bag is currently empty.
+      <div id="cartDrawerEmptyState" style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+        <div style="font-size: 40px; margin-bottom: 12px; opacity: 0.7;">🛍️</div>
+        <p style="font-size: 15px; margin-bottom: 6px; color: var(--text-main); font-weight: 700;">Your shopping bag is empty.</p>
+        <p style="font-size: 12px; margin-bottom: 24px; color: var(--text-muted); line-height: 1.5;">Explore our Drop 01 handcrafted silhouettes and select your size.</p>
+        <button type="button" class="modal-btn-primary" style="display: inline-block; width: auto; padding: 11px 26px;" onclick="toggleCartDrawer(); window.location.href='/collections/all';">EXPLORE DROP 01</button>
       </div>
     {% endif %}
   </div>
-  <div class="cart-footer">
-    <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; margin-bottom: 14px;">
+
+  <div class="cart-footer" id="cartDrawerFooter" {% if cart.item_count == 0 %}style="display:none;"{% endif %}>
+    <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; margin-bottom: 10px;">
       <span>Subtotal</span>
-      <span>{{ cart.total_price | money }}</span>
+      <span id="cartDrawerSubtotal">{{ cart.total_price | money }}</span>
     </div>
-    <a href="/checkout" class="btn-primary" style="width: 100%; text-align: center; display: block;">PROCEED TO CHECKOUT 🔒</a>
+    <div style="font-size: 11px; color: var(--accent-green, #2B6E44); background: #EBF7EE; padding: 6px 10px; border-radius: 4px; margin-bottom: 14px; text-align: center; font-weight: 600;">
+      ⚡ Instant ₹100 Prepaid UPI Discount auto-applied at checkout
+    </div>
+    <a href="/checkout" class="modal-btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box; text-decoration: none;">PROCEED TO CHECKOUT &rarr;</a>
+    <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 10px;">
+      🔒 256-Bit SSL Encrypted Checkout &bull; Free Pan-India Delivery
+    </div>
   </div>
 </div>

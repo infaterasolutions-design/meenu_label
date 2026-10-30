@@ -5910,3 +5910,22 @@
   margin: 0 !important;
   padding: 0 !important;
 }
+
+/* =========================================================================
+   FESTIVE MAROON ELEGANCE IN BLOOM - HERO BANNER 1
+   ========================================================================= */
+.snitch-slide-maroon {
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  cursor: pointer !important;
+}
+.snitch-slide.snitch-slide-maroon::after {
+  display: none !important;
+  content: none !important;
+}
+@media (max-width: 768px) {
+  .snitch-slide.snitch-slide-maroon {
+    background-position: 72% center !important; /* Perfectly frames the model in festive maroon on mobile */
+  }
+}

@@ -1,8 +1,8 @@
 
-<section style="max-width: 1200px; margin: 40px auto; padding: 0 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 50px;">
-  <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); background: #F4EFEB;">
+<section style="max-width: 1200px; margin: 40px auto; padding: 0 40px; display: grid; grid-template-columns: 1.05fr 1fr; gap: 50px; align-items: start;">
+  <div style="position: -webkit-sticky; position: sticky; top: 115px; align-self: start; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); background: #F4EFEB; z-index: 20;">
     {% if product.featured_image %}
-      <img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.title }}" style="width: 100%; height: auto; display: block;">
+      <img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.title }}" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: top center; display: block;">
     {% endif %}
   </div>
 
@@ -21,19 +21,22 @@
       {% endif %}
     </div>
 
-    <!-- Size Selector -->
-    <div style="margin-bottom: 20px;">
+    <!-- Size Selector (NO DEFAULT SELECTION) -->
+    <div class="shopify-size-section" id="shopifySizeSection" style="margin-bottom: 20px;">
       <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; font-weight: 700;">
-        <span>SELECT SIZE (INDIAN BUST MEASUREMENTS)</span>
+        <span>SELECT SIZE (INDIAN BUST MEASUREMENTS) <span id="shopifySelectedSizeLabel" style="display:none; color:var(--accent-burgundy,#6E1A24); font-weight:700; margin-left:6px;"></span></span>
         <a href="javascript:void(0)" onclick="openSizeGuideModal()" style="color: var(--accent-gold);">📏 Size Chart</a>
       </div>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+      <div id="shopifySizeGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
         {% for variant in product.variants %}
-          <div style="border: 1.5px solid var(--border-color); padding: 10px; border-radius: 6px; text-align: center; cursor: pointer;">
-            <strong>{{ variant.title }}</strong>
-            <span style="display:block; font-size: 10px; color: var(--accent-rose);">Only 1 Left!</span>
-          </div>
+          <button type="button" class="shopify-size-tile" data-variant-id="{{ variant.id }}" data-size-title="{{ variant.title }}" onclick="selectShopifyVariant('{{ variant.id }}', '{{ variant.title }}', this)" style="background: #FFFFFF; border: 1.5px solid var(--border-color); padding: 10px; border-radius: 6px; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+            <strong style="display:block; font-size: 14px;">{{ variant.title }}</strong>
+            <span style="display:block; font-size: 10px; color: var(--accent-rose); font-weight:700; text-transform:uppercase;">Only 1 Left!</span>
+          </button>
         {% endfor %}
+      </div>
+      <div id="shopifySizeRequiredNotice" style="display:none; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:6px; padding:10px 14px; font-size:12px; font-weight:600; text-align:center; margin-top:8px;">
+        ⚠️ Please select your size (M, L, or XL) before adding to bag
       </div>
     </div>
 
@@ -48,13 +51,28 @@
     </div>
 
     <!-- Shopify Product Form -->
-    {% form 'product', product %}
-      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-      <button type="submit" class="btn-primary" style="width: 100%; padding: 16px; margin-bottom: 10px;">ADD TO BAG 🛍️</button>
+    {% form 'product', product, id: 'shopifyProductForm', onsubmit: 'return validateShopifyForm(event)' %}
+      <input type="hidden" name="id" id="selectedVariantId" value="">
+      <button type="submit" id="pdpAddToCartBtn" class="btn-primary" style="width: 100%; padding: 16px; margin-bottom: 10px; cursor: pointer;">ADD TO BAG 🛍️</button>
     {% endform %}
 
+    <!-- Save to Wishlist Button -->
+    <button type="button" id="pdpWishlistBtn" class="pdp-wishlist-toggle" 
+      data-wishlist-id="{{ product.id | default: 'drop01_1' }}" 
+      data-wishlist-title="{{ product.title | escape }}" 
+      data-wishlist-price="{{ product.price | money | escape }}" 
+      data-wishlist-image="{{ product.featured_image | image_url: width: 300 }}" 
+      data-wishlist-url="{{ product.url }}" 
+      onclick="toggleWishlist(this)" 
+      style="width: 100%; background: #FFFFFF; border: 1.5px solid var(--border-color); padding: 12px; border-radius: 6px; font-weight: 700; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; transition: all 0.2s ease; color: var(--text-main);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; pointer-events: none;">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span class="pdp-wishlist-txt">SAVE TO WISHLIST</span>
+    </button>
+
     <!-- Direct WhatsApp Order -->
-    <a href="https://wa.me/{{ settings.whatsapp_number }}?text=Hi%20Meenu%20Label!%20I%20would%20like%20to%20order%20{{ product.title | url_encode }}" target="_blank" style="display: block; text-align: center; background: #E8F5E9; color: #1B5E20; border: 1px solid #C8E6C9; padding: 13px; border-radius: 6px; font-weight: 700; text-decoration: none;">
+    <a id="shopifyWhatsAppBtn" href="https://wa.me/{{ settings.whatsapp_number }}?text=Hi%20Meenu%20Label!%20I%20would%20like%20to%20order%20{{ product.title | url_encode }}%20from%20Drop%2001.%20Please%20help%20me%20choose%20the%20right%20size." target="_blank" style="display: block; text-align: center; background: #E8F5E9; color: #1B5E20; border: 1px solid #C8E6C9; padding: 13px; border-radius: 6px; font-weight: 700; text-decoration: none;">
       💬 Order Directly via WhatsApp
     </a>
     <div class="whatsapp-benefit-box">
@@ -66,6 +84,115 @@
     </div>
   </div>
 </section>
+
+<style>
+  .shopify-size-tile.selected {
+    background: var(--text-main, #1A1A1A) !important;
+    border-color: var(--text-main, #1A1A1A) !important;
+    color: #FFFFFF !important;
+  }
+  .shopify-size-tile.selected strong {
+    color: #FFFFFF !important;
+  }
+  .shopify-size-tile.selected span {
+    color: #FFD54F !important;
+  }
+  @keyframes sizeTileShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .size-error-shake {
+    animation: sizeTileShake 0.4s ease-in-out;
+    outline: 2px solid #E53935 !important;
+    border-radius: 8px;
+  }
+</style>
+
+<script>
+  var currentSelectedVariantId = null;
+  var currentSelectedSizeTitle = null;
+
+  function selectShopifyVariant(variantId, sizeTitle, btn) {
+    currentSelectedVariantId = variantId;
+    currentSelectedSizeTitle = sizeTitle;
+    var inp = document.getElementById('selectedVariantId');
+    if (inp) inp.value = variantId;
+
+    var tiles = document.querySelectorAll('.shopify-size-tile');
+    tiles.forEach(function(t) { t.classList.remove('selected'); });
+    if (btn) btn.classList.add('selected');
+
+    var notice = document.getElementById('shopifySizeRequiredNotice');
+    if (notice) notice.style.display = 'none';
+
+    var sec = document.getElementById('shopifySizeGrid');
+    if (sec) sec.classList.remove('size-error-shake');
+
+    var lbl = document.getElementById('shopifySelectedSizeLabel');
+    if (lbl) {
+      lbl.textContent = '— Size ' + sizeTitle + ' Selected';
+      lbl.style.display = 'inline';
+    }
+
+    var waBtn = document.getElementById('shopifyWhatsAppBtn');
+    if (waBtn) {
+      var prodTitle = {{ product.title | json }};
+      var text = encodeURIComponent('Hi Meenu Label! I would like to order "' + prodTitle + '" in Size ' + sizeTitle + ' from Drop 01. Please confirm piece reservation.');
+      waBtn.href = 'https://wa.me/{{ settings.whatsapp_number }}?text=' + text;
+    }
+  }
+
+  function validateShopifyForm(e) {
+    if (!currentSelectedVariantId) {
+      if (e) e.preventDefault();
+      var notice = document.getElementById('shopifySizeRequiredNotice');
+      if (notice) notice.style.display = 'block';
+
+      var sec = document.getElementById('shopifySizeGrid');
+      if (sec) {
+        sec.classList.remove('size-error-shake');
+        void sec.offsetWidth;
+        sec.classList.add('size-error-shake');
+        setTimeout(function() { sec.classList.remove('size-error-shake'); }, 1200);
+        sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return false;
+    }
+
+    if (e) e.preventDefault();
+    var btn = document.getElementById('pdpAddToCartBtn');
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = 'ADDING TO BAG...';
+    }
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: [{
+          id: currentSelectedVariantId,
+          quantity: 1
+        }]
+      })
+    })
+    .then(function() {
+      window.location.href = '/cart';
+    })
+    .catch(function(err) {
+      console.warn('Cart add notice:', err);
+      var form = document.getElementById('shopifyProductForm');
+      if (form) {
+        form.submit();
+      } else {
+        window.location.href = '/cart';
+      }
+    });
+
+    return false;
+  }
+</script>
 
 {% schema %}
 {

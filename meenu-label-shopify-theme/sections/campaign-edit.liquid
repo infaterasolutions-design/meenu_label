@@ -1,66 +1,90 @@
+<section class="campaign-edit-section">
+  <div class="campaign-header">
+    <span class="campaign-eyebrow">Atelier Capsule 01 &bull; Editorial Lookbook</span>
+    <h2 class="campaign-title">
+      THE CAMPAIGN EDIT: EFFORTLESS CHANDIGARH MORNINGS TO <span class="accent">REGAL EVENINGS</span>
+    </h2>
+    <p class="campaign-sub">Curated silhouettes styled in natural daylight across Chandigarh's iconic verandahs and promenades.</p>
+  </div>
 
-<section class="snitch-campaign-editorial-section">
-  <div class="snitch-campaign-container">
-    <div class="snitch-campaign-header">
-      <span class="snitch-campaign-eyebrow">Atelier Capsule 01 &bull; Editorial Lookbook</span>
-      <h2 class="snitch-campaign-title">
-        THE CAMPAIGN EDIT: EFFORTLESS CHANDIGARH MORNINGS TO <span class="accent">REGAL EVENINGS</span>
-      </h2>
-      <p class="snitch-campaign-sub">Curated silhouettes styled in natural daylight across Chandigarh's iconic verandahs and promenades.</p>
+  <div class="campaign-grid">
+    <!-- Left Main Feature (58%): Jaipur Chanderi Silk Festive Suit -->
+    <div class="campaign-hero-card" onclick="window.location.href='/products/jaipur-chanderi-silk-festive-suit'">
+      <img src="{{ 'campaign_cafe.jpg' | asset_url }}" alt="Jaipur Chanderi Silk Festive Suit" class="campaign-hero-img" loading="lazy">
+      <div class="campaign-hero-vignette"></div>
+      <div class="campaign-hero-content">
+        <h3 class="campaign-hero-name">Jaipur Chanderi Silk Festive Suit</h3>
+        <div class="campaign-hero-meta">
+          <span class="campaign-price">&#8377;2,299</span>
+          <span class="campaign-mrp">&#8377;3,699</span>
+          <span style="font-size:11px; background:rgba(37,211,102,0.2); color:#25D366; padding:2px 8px; border-radius:12px; font-weight:700;">38% OFF</span>
+          <span style="font-size:12px; color:rgba(255,255,255,0.7);">&bull; Handcrafted Chanderi &amp; Zari</span>
+        </div>
+        <div class="campaign-hero-actions" onclick="event.stopPropagation()">
+          <a href="/products/jaipur-chanderi-silk-festive-suit" class="btn-campaign-primary">
+            <span>SHOP SILHOUETTE</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </a>
+          <a href="/collections/festive-suits" class="btn-campaign-secondary">
+            EXPLORE SUITS &rarr;
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="snitch-campaign-grid">
-      <div class="snitch-campaign-card card-large">
-        <div class="snitch-campaign-img-wrap">
-          <img src="{{ 'campaign_cafe.jpg' | asset_url }}" alt="The Royal Wine Chanderi Festive Suit" class="snitch-campaign-img">
-          <div class="snitch-campaign-overlay"></div>
-          <div class="snitch-campaign-content">
-            <span class="snitch-campaign-badge">Editorial Drop Headliner &bull; Garden Verandah</span>
-            <h3 class="snitch-campaign-name">The Royal Wine Chanderi Festive Suit</h3>
-            <div class="snitch-campaign-price-row">
-              <span class="snitch-campaign-price">₹2,299</span>
-              <span class="snitch-campaign-mrp">₹3,699</span>
-              <span class="snitch-campaign-discount">38% OFF</span>
+
+    <!-- Right Stack (42%): 2 Companion Silhouettes -->
+    <div class="campaign-stack">
+      <!-- Top Right Card: Mustard Crepe Angrakha Co-ord Set -->
+      <div class="campaign-sub-card" onclick="window.location.href='/products/mustard-crepe-angrakha-co-ord-set'">
+        <img src="{{ 'campaign_balcony.jpg' | asset_url }}" alt="Mustard Crepe Angrakha Co-ord Set" class="campaign-sub-img" loading="lazy">
+        <div class="campaign-sub-vignette"></div>
+        <div class="campaign-sub-content">
+          <h4 class="campaign-sub-name">Mustard Crepe Angrakha Co-ord</h4>
+          <p style="font-size:12px; color:rgba(255,255,255,0.75); margin:0 0 8px;">Gold Gota Trim with Side Tie-Up Tassels</p>
+          <div class="campaign-sub-meta" onclick="event.stopPropagation()">
+            <div>
+              <span class="campaign-sub-price">&#8377;1,699</span>
+              <span style="font-size:11px; color:rgba(255,255,255,0.5); text-decoration:line-through; margin-left:6px;">&#8377;2,799</span>
             </div>
-            <a href="/products/jaipur-chanderi-silk-festive-suit" class="snitch-campaign-btn">SHOP SILHOUETTE &rarr;</a>
+            <a href="/products/mustard-crepe-angrakha-co-ord-set" class="btn-campaign-sub">
+              <span>SHOP LOOK</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </a>
           </div>
         </div>
       </div>
-      <div class="snitch-campaign-card card-half">
-        <div class="snitch-campaign-img-wrap">
-          <img src="{{ 'campaign_balcony.jpg' | asset_url }}" alt="Mustard Crepe Angrakha Co-ord" class="snitch-campaign-img">
-          <div class="snitch-campaign-overlay"></div>
-          <div class="snitch-campaign-content">
-            <span class="snitch-campaign-badge">The Balcony Edit &bull; Modern Wrap</span>
-            <h3 class="snitch-campaign-name">Mustard Crepe Angrakha Co-ord</h3>
-            <div class="snitch-campaign-price-row">
-              <span class="snitch-campaign-price">₹1,699</span>
-              <span class="snitch-campaign-mrp">₹2,799</span>
+
+      <!-- Bottom Right Card: White Porcelain Floral Wrap Dress -->
+      <div class="campaign-sub-card" onclick="window.location.href='/products/white-porcelain-floral-wrap-dress'">
+        <img src="{{ 'campaign_sukhna.jpg' | asset_url }}" alt="White Porcelain Floral Wrap Dress" class="campaign-sub-img" loading="lazy">
+        <div class="campaign-sub-vignette"></div>
+        <div class="campaign-sub-content">
+          <h4 class="campaign-sub-name">White Porcelain Floral Wrap Dress</h4>
+          <p style="font-size:12px; color:rgba(255,255,255,0.75); margin:0 0 8px;">Featherlight Georgette with Circular Waist Belt</p>
+          <div class="campaign-sub-meta" onclick="event.stopPropagation()">
+            <div>
+              <span class="campaign-sub-price">&#8377;1,599</span>
+              <span style="font-size:11px; color:rgba(255,255,255,0.5); text-decoration:line-through; margin-left:6px;">&#8377;2,599</span>
             </div>
-            <a href="/products/mustard-crepe-angrakha-co-ord-set" class="snitch-campaign-btn">SHOP LOOK &rarr;</a>
-          </div>
-        </div>
-      </div>
-      <div class="snitch-campaign-card card-half">
-        <div class="snitch-campaign-img-wrap">
-          <img src="{{ 'campaign_sukhna.jpg' | asset_url }}" alt="White Porcelain Floral Wrap Dress" class="snitch-campaign-img">
-          <div class="snitch-campaign-overlay"></div>
-          <div class="snitch-campaign-content">
-            <span class="snitch-campaign-badge">Sukhna Promenade &bull; Resort Elegance</span>
-            <h3 class="snitch-campaign-name">White Porcelain Floral Wrap Dress</h3>
-            <div class="snitch-campaign-price-row">
-              <span class="snitch-campaign-price">₹1,599</span>
-              <span class="snitch-campaign-mrp">₹2,599</span>
-            </div>
-            <a href="/products/white-porcelain-floral-wrap-dress" class="snitch-campaign-btn">SHOP LOOK &rarr;</a>
+            <a href="/products/white-porcelain-floral-wrap-dress" class="btn-campaign-sub">
+              <span>SHOP LOOK</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 {% schema %}
 {
   "name": "Campaign Edit",
-  "settings": []
+  "settings": [],
+  "presets": [
+    {
+      "name": "Campaign Edit"
+    }
+  ]
 }
 {% endschema %}

@@ -1,9 +1,19 @@
-
 <section class="catalog-section" id="collection-grid">
-  <div class="section-header">
-    <div>
-      <h2 class="section-title">{{ section.settings.title }}</h2>
-      <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">{{ section.settings.subtitle }}</p>
+  <div class="sticky-catalog-header" id="stickyCatalogHeader">
+    <div class="sticky-header-info">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <h2 class="section-title" style="margin:0; font-size:22px; letter-spacing:0.02em;">{{ section.settings.title }}</h2>
+        <span class="sticky-count-pill" id="activeCategoryCount">HANDCRAFTED EDITIONS</span>
+      </div>
+      <p class="section-sub" style="margin:4px 0 0 0; font-size:12px;">{{ section.settings.subtitle }}</p>
+    </div>
+
+    <div class="filter-tabs">
+      <a href="/collections/all" class="filter-tab active">All Silhouettes</a>
+      <a href="/collections/co-ord-sets" class="filter-tab">Co-ord Sets</a>
+      <a href="/collections/festive-suits" class="filter-tab">Festive Suits</a>
+      <a href="/collections/dresses" class="filter-tab">Midi Dresses</a>
+      <a href="/collections/tops" class="filter-tab">Casual Tops</a>
     </div>
   </div>
 
@@ -13,16 +23,119 @@
       {% for product in collection.products limit: section.settings.products_to_show %}
         {% render 'product-card', product: product %}
       {% endfor %}
+    {% elsif collections.all.products_count > 0 %}
+      {% for product in collections.all.products limit: section.settings.products_to_show %}
+        {% render 'product-card', product: product %}
+      {% endfor %}
     {% else %}
-      {% for i in (1..4) %}
-        <div class="product-card">
-          <div class="card-thumb" style="display:flex; align-items:center; justify-content:center; color:#9B9387;">Catalog Silhouette</div>
-          <div class="card-body">
-            <span class="card-title">Debut Silhouette #{{ i }}</span>
-            <div class="card-price-row"><span class="price-main">₹1,499</span></div>
+      <!-- Drop 01 Atelier Preview Silhouettes (Shown until products are added in Shopify Admin) -->
+      <div class="product-card" onclick="window.location.href='/collections/festive-suits'">
+        <div class="card-thumb">
+          <button type="button" class="card-wishlist-btn" 
+            data-wishlist-id="drop01_1" 
+            data-wishlist-title="Jaipur Chanderi Silk Festive Suit" 
+            data-wishlist-price="₹2,299" 
+            data-wishlist-image="{{ 'campaign_cafe.jpg' | asset_url }}" 
+            data-wishlist-url="/collections/festive-suits" 
+            onclick="event.preventDefault(); event.stopPropagation(); toggleWishlist(this)" 
+            title="Save to Wishlist" 
+            aria-label="Save to Wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <img src="{{ 'campaign_cafe.jpg' | asset_url }}" alt="Jaipur Chanderi Silk Festive Suit" loading="lazy">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Jaipur Chanderi Silk Festive Suit</h3>
+          <div class="card-price-row">
+            <span class="price-main">&#8377;2,299</span>
+            <span class="price-mrp" style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; margin-left: 6px;">&#8377;3,699</span>
+            <span class="snitch-plus-trigger">+</span>
           </div>
         </div>
-      {% endfor %}
+      </div>
+
+      <div class="product-card" onclick="window.location.href='/collections/co-ord-sets'">
+        <div class="card-thumb">
+          <button type="button" class="card-wishlist-btn" 
+            data-wishlist-id="drop01_2" 
+            data-wishlist-title="Mustard Crepe Angrakha Co-ord Set" 
+            data-wishlist-price="₹1,699" 
+            data-wishlist-image="{{ 'campaign_balcony.jpg' | asset_url }}" 
+            data-wishlist-url="/collections/co-ord-sets" 
+            onclick="event.preventDefault(); event.stopPropagation(); toggleWishlist(this)" 
+            title="Save to Wishlist" 
+            aria-label="Save to Wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <img src="{{ 'campaign_balcony.jpg' | asset_url }}" alt="Mustard Crepe Angrakha Co-ord Set" loading="lazy">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Mustard Crepe Angrakha Co-ord Set</h3>
+          <div class="card-price-row">
+            <span class="price-main">&#8377;1,699</span>
+            <span class="price-mrp" style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; margin-left: 6px;">&#8377;2,799</span>
+            <span class="snitch-plus-trigger">+</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" onclick="window.location.href='/collections/dresses'">
+        <div class="card-thumb">
+          <button type="button" class="card-wishlist-btn" 
+            data-wishlist-id="drop01_3" 
+            data-wishlist-title="White Porcelain Floral Wrap Dress" 
+            data-wishlist-price="₹1,599" 
+            data-wishlist-image="{{ 'campaign_sukhna.jpg' | asset_url }}" 
+            data-wishlist-url="/collections/dresses" 
+            onclick="event.preventDefault(); event.stopPropagation(); toggleWishlist(this)" 
+            title="Save to Wishlist" 
+            aria-label="Save to Wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <img src="{{ 'campaign_sukhna.jpg' | asset_url }}" alt="White Porcelain Floral Wrap Dress" loading="lazy">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">White Porcelain Floral Wrap Dress</h3>
+          <div class="card-price-row">
+            <span class="price-main">&#8377;1,599</span>
+            <span class="price-mrp" style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; margin-left: 6px;">&#8377;2,599</span>
+            <span class="snitch-plus-trigger">+</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" onclick="window.location.href='/collections/co-ord-sets'">
+        <div class="card-thumb">
+          <button type="button" class="card-wishlist-btn" 
+            data-wishlist-id="drop01_4" 
+            data-wishlist-title="Fluid Silk Crepe Angrakha Silhouette" 
+            data-wishlist-price="₹1,899" 
+            data-wishlist-image="{{ 'craft_crepe.jpg' | asset_url }}" 
+            data-wishlist-url="/collections/co-ord-sets" 
+            onclick="event.preventDefault(); event.stopPropagation(); toggleWishlist(this)" 
+            title="Save to Wishlist" 
+            aria-label="Save to Wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <img src="{{ 'craft_crepe.jpg' | asset_url }}" alt="Fluid Silk Crepe Angrakha Silhouette" loading="lazy">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Fluid Silk Crepe Angrakha Silhouette</h3>
+          <div class="card-price-row">
+            <span class="price-main">&#8377;1,899</span>
+            <span class="price-mrp" style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; margin-left: 6px;">&#8377;2,999</span>
+            <span class="snitch-plus-trigger">+</span>
+          </div>
+        </div>
+      </div>
     {% endif %}
   </div>
 </section>
@@ -41,7 +154,7 @@
       "type": "text",
       "id": "subtitle",
       "label": "Subtitle",
-      "default": "Authentic catalog pieces ordered from Surat. Strictly 3 exclusive pieces per design (M, L, XL)."
+      "default": "Limited Atelier Run • Strictly 1 piece per size (M, L, XL)"
     },
     {
       "type": "collection",
@@ -52,7 +165,7 @@
       "type": "range",
       "id": "products_to_show",
       "min": 4,
-      "max": 16,
+      "max": 24,
       "step": 1,
       "default": 16,
       "label": "Products to show"

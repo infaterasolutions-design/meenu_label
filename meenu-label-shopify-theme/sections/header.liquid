@@ -1,33 +1,84 @@
-
 <header>
-  <div class="header-inner">
-    <nav>
-      <ul class="nav-links">
-        <li><a href="/collections/all">All Silhouettes</a></li>
-        <li><a href="/collections/co-ord-sets">Co-ord Sets</a></li>
-        <li><a href="/collections/festive-suits">Festive Suits</a></li>
-        <li><a href="/collections/dresses">Dresses</a></li>
-        <li><a href="/collections/tops">Tops</a></li>
-      </ul>
-    </nav>
-
-    <div>
-      <a href="/" class="brand-logo">{{ shop.name | default: 'MEENU LABEL' }}</a>
-      <span class="brand-sub">CHANDIGARH • ESTD 2026</span>
+  <div class="header-bar">
+    <!-- Left: Hamburger Menu + Search Icon -->
+    <div class="header-left">
+      <button class="hamburger-btn" onclick="openNavDrawer()" title="Open Navigation Menu" aria-label="Open Navigation Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <button class="header-icon-action header-search-btn" onclick="toggleSearchBar()" title="Search Drop 01" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
+          <circle cx="11" cy="11" r="7.5"></circle>
+          <line x1="16.5" y1="16.5" x2="22" y2="22"></line>
+        </svg>
+      </button>
     </div>
 
-    <div class="header-actions">
-      <button class="header-btn" onclick="openSizeGuideModal()">📏 Guide</button>
-      <button class="header-btn" onclick="toggleCartDrawer()">
-        🛍️ Bag <span class="cart-badge">{{ cart.item_count }}</span>
+    <!-- Middle: Centered Authentic Canva Brand Logo -->
+    <div class="header-center">
+      <a href="/" title="Meenu Label Homepage">
+        <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name | default: 'Meenu Label' }}" class="brand-logo-img">
+      </a>
+    </div>
+
+    <!-- Right: Action Icons (Wishlist, Bag, User) -->
+    <div class="header-right">
+      <!-- 1. Wishlist (Heart) -->
+      <button class="header-icon-action header-wishlist-btn" onclick="toggleWishlistDrawer()" title="Saved Wishlist" aria-label="Wishlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        <span class="header-badge-pill" id="headerWishlistCount" style="display:none;">0</span>
       </button>
+
+      <!-- 2. Shopping Bag (Links directly to Dedicated Cart Page) -->
+      <a href="/cart" class="header-icon-action header-bag-btn" title="Shopping Bag" aria-label="Shopping Bag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
+          <rect x="4.5" y="8" width="15" height="13" rx="1.5"></rect>
+          <path d="M8.5 8V6a3.5 3.5 0 0 1 7 0v2"></path>
+        </svg>
+        <span class="header-badge-pill" id="headerCartCount" {% if cart.item_count > 0 %}style="display:inline-flex;"{% else %}style="display:none;"{% endif %}>{{ cart.item_count | default: 0 }}</span>
+      </a>
+
+      <!-- 3. User Account (Direct Official Shopify Account Portal) -->
+      <a href="/account" class="header-icon-action header-account-btn" title="My Account & Orders" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
+          <circle cx="12" cy="7.5" r="4"></circle>
+          <path d="M5 20.5a7 7 0 0 1 14 0"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Slide-Down Search Overlay -->
+  <div class="search-overlay-bar" id="searchOverlayBar">
+    <div class="search-overlay-inner">
+      <button type="button" class="search-close-action" onclick="toggleSearchBar()" title="Close Search">Close &times;</button>
+      <form action="/search" method="get" class="search-input-box" role="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
+          <circle cx="11" cy="11" r="7.5"></circle>
+          <line x1="16.5" y1="16.5" x2="22" y2="22"></line>
+        </svg>
+        <input type="search" name="q" id="searchInput" placeholder="Search by silhouette, style code, fabric, color..." value="{{ search.terms | escape }}" autocomplete="off">
+      </form>
+      <div class="search-quick-tags">
+        <span class="quick-tag-label">Popular Searches:</span>
+        <a href="/collections/festive-suits" class="quick-tag">Festive Suits</a>
+        <a href="/collections/co-ord-sets" class="quick-tag">Co-ord Sets</a>
+        <a href="/collections/all" class="quick-tag">Chanderi Silk</a>
+        <a href="/collections/dresses" class="quick-tag">Midi Dress</a>
+        <a href="/collections/all" class="quick-tag">Pure Cotton</a>
+      </div>
     </div>
   </div>
 </header>
 
 {% schema %}
 {
-  "name": "Header",
+  "name": "Luxury Header",
   "settings": []
 }
 {% endschema %}

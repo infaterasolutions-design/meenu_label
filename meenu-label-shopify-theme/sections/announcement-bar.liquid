@@ -1,22 +1,126 @@
-
 <div class="announcement-bar">
-  <div class="left">📍 CHANDIGARH • PANCHKULA • MOHALI</div>
-  <div class="center">{{ section.settings.message }}</div>
-  <div class="right">
-    <a href="javascript:void(0)" onclick="openSizeGuideModal()">SIZE GUIDE</a>
+  <!-- Desktop Layout: 3-column side-by-side -->
+  <div class="ann-desktop-row">
+    <div class="ann-left">
+      <span>&#9889; DEBUT DROP 01 LIVE &bull; CHANDIGARH ATELIER</span>
+    </div>
+    <div class="ann-center">
+      <div class="upi-ann-badge" onclick="alert('&#9889; Pay via UPI at checkout to save flat &#8377;100 instantly! Use Code: UPI100')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:4px;">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+          <line x1="1" y1="10" x2="23" y2="10"></line>
+        </svg>
+        <span>PAY VIA UPI &bull; GET INSTANT &#8377;100 OFF</span>
+        <span class="upi-code-pill">CODE: UPI100</span>
+      </div>
+    </div>
+    <div class="ann-right">
+      <span>FREE PAN-INDIA EXPRESS SHIPPING</span>
+      <a href="javascript:void(0)" onclick="openSizeGuideModal()">SIZE GUIDE</a>
+    </div>
+  </div>
+
+  <!-- Mobile Auto-Slider Ticker: Cycles smoothly between key updates -->
+  <div class="ann-mobile-ticker" id="annMobileTicker">
+    <!-- Item 1: UPI Discount -->
+    <div class="ticker-item active" onclick="alert('&#9889; Pay via UPI at checkout to save flat &#8377;100 instantly! Use Code: UPI100')">
+      <div class="upi-ann-badge" style="margin: 0 auto;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+          <line x1="1" y1="10" x2="23" y2="10"></line>
+        </svg>
+        <span>PAY VIA UPI &bull; GET INSTANT &#8377;100 OFF</span>
+        <span class="upi-code-pill">CODE: UPI100</span>
+      </div>
+    </div>
+
+    <!-- Item 2: Chandigarh Atelier -->
+    <div class="ticker-item">
+      <span>&#9889; DEBUT DROP 01 LIVE &bull; CHANDIGARH ATELIER</span>
+    </div>
+
+    <!-- Item 3: Free Pan-India Shipping -->
+    <div class="ticker-item">
+      <span>&#9992;&#65039; FREE PAN-INDIA EXPRESS DELIVERY &bull; NO MINIMUM</span>
+    </div>
+
+    <!-- Item 4: Size & 7-Day Exchange -->
+    <div class="ticker-item" onclick="openSizeGuideModal()" style="cursor: pointer;">
+      <span>&#128207; TRUE TO SIZE &bull; 7-DAY EASY SIZE EXCHANGE</span>
+    </div>
   </div>
 </div>
+
+<style>
+  .ann-desktop-row {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ann-mobile-ticker {
+    display: none;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    height: 28px;
+    overflow: hidden;
+  }
+  .ann-mobile-ticker .ticker-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+  .ann-mobile-ticker .ticker-item.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  @media (max-width: 991px) {
+    .ann-desktop-row {
+      display: none !important;
+    }
+    .ann-mobile-ticker {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+    }
+    .announcement-bar {
+      padding: 6px 12px !important;
+      justify-content: center !important;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var items = document.querySelectorAll('#annMobileTicker .ticker-item');
+    if (!items || items.length < 2) return;
+    var currentIndex = 0;
+    setInterval(function() {
+      items[currentIndex].classList.remove('active');
+      currentIndex = (currentIndex + 1) % items.length;
+      items[currentIndex].classList.add('active');
+    }, 3200);
+  });
+</script>
 
 {% schema %}
 {
   "name": "Announcement Bar",
-  "settings": [
-    {
-      "type": "text",
-      "id": "message",
-      "label": "Announcement Text",
-      "default": "✨ DROP 01 LIVE • FREE SHIPPING IN TRICITY • LIMITED 3 PCS PER SIZE"
-    }
-  ]
+  "settings": []
 }
 {% endschema %}
