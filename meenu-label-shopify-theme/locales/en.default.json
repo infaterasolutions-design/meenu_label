@@ -1,0 +1,8 @@
+{
+  "general": {
+    "cart": {
+      "view": "View bag",
+      "item_added": "Item added to bag"
+    }
+  }
+}

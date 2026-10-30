@@ -1,0 +1,33 @@
+
+<header>
+  <div class="header-inner">
+    <nav>
+      <ul class="nav-links">
+        <li><a href="/collections/all">All Silhouettes</a></li>
+        <li><a href="/collections/co-ord-sets">Co-ord Sets</a></li>
+        <li><a href="/collections/festive-suits">Festive Suits</a></li>
+        <li><a href="/collections/dresses">Dresses</a></li>
+        <li><a href="/collections/tops">Tops</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <a href="/" class="brand-logo">{{ shop.name | default: 'MEENU LABEL' }}</a>
+      <span class="brand-sub">CHANDIGARH • ESTD 2026</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="header-btn" onclick="openSizeGuideModal()">📏 Guide</button>
+      <button class="header-btn" onclick="toggleCartDrawer()">
+        🛍️ Bag <span class="cart-badge">{{ cart.item_count }}</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": []
+}
+{% endschema %}

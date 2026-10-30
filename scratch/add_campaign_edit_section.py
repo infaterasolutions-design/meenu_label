@@ -1,0 +1,413 @@
+import os, re
+
+with open('scratch/build_snitch_storefront.py', 'r', encoding='utf-8') as f:
+    code = f.read()
+
+# 1. Add image loaders at top
+if "campaign_cafe_b64" not in code:
+    loader_target = "login_campaign_b64 = get_b64(r'scratch/login_campaign_banner.jpg')"
+    loader_repl = loader_target + """\ncampaign_cafe_b64 = get_b64(r'scratch/campaign_cafe.jpg')\ncampaign_balcony_b64 = get_b64(r'scratch/campaign_balcony.jpg')\ncampaign_sukhna_b64 = get_b64(r'scratch/campaign_sukhna.jpg')"""
+    if loader_target in code:
+        code = code.replace(loader_target, loader_repl)
+        print("Added campaign editorial image loaders.")
+    else:
+        print("ERROR: loader_target not found!")
+
+# 2. Add CSS for The Campaign Edit
+campaign_css = """
+    /* ========================================================
+       THE CAMPAIGN EDIT / ASYMMETRICAL EDITORIAL LOOKBOOK
+       ======================================================== */
+    .campaign-edit-section {{
+      max-width: 1440px;
+      margin: 80px auto 70px;
+      padding: 0 36px;
+    }}
+
+    .campaign-header {{
+      text-align: center;
+      margin-bottom: 38px;
+    }}
+    .campaign-eyebrow {{
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 8px;
+      display: inline-block;
+    }}
+    .campaign-title {{
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 3.4vw, 42px);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--text-main);
+      margin: 0 0 10px;
+      line-height: 1.18;
+    }}
+    .campaign-title .accent {{
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      color: #E2725B;
+      text-transform: none;
+      font-weight: 600;
+    }}
+    .campaign-sub {{
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      max-width: 620px;
+      margin: 0 auto;
+    }}
+
+    /* Asymmetrical Grid: Left (58%) & Right (42%) */
+    .campaign-grid {{
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }}
+
+    /* Left Hero Card */
+    .campaign-hero-card {{
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      min-height: 640px;
+      background: #0D0D0D;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+    }}
+    .campaign-hero-img {{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 25%;
+      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }}
+    .campaign-hero-card:hover .campaign-hero-img {{
+      transform: scale(1.04);
+    }}
+    .campaign-hero-vignette {{
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.08) 0%,
+        rgba(0, 0, 0, 0.15) 50%,
+        rgba(0, 0, 0, 0.72) 80%,
+        rgba(0, 0, 0, 0.94) 100%
+      );
+    }}
+    .campaign-hero-content {{
+      position: relative;
+      z-index: 2;
+      padding: 36px 40px;
+    }}
+    .campaign-badge {{
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #D4AF37;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      backdrop-filter: blur(8px);
+    }}
+    .campaign-hero-name {{
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(26px, 2.6vw, 34px);
+      font-weight: 700;
+      color: #FFFFFF;
+      margin: 0 0 6px;
+      line-height: 1.2;
+    }}
+    .campaign-hero-meta {{
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }}
+    .campaign-price {{
+      font-size: 18px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }}
+    .campaign-mrp {{
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.55);
+      text-decoration: line-through;
+    }}
+    .campaign-hero-actions {{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }}
+    .btn-campaign-primary {{
+      background: #FFFFFF;
+      color: #000000;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }}
+    .btn-campaign-primary:hover {{
+      background: #EAEAEA;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    }}
+    .btn-campaign-secondary {{
+      background: rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+    }}
+    .btn-campaign-secondary:hover {{
+      background: rgba(255, 255, 255, 0.3);
+      border-color: #FFFFFF;
+    }}
+
+    /* Right Stack Column (2 Cards) */
+    .campaign-stack {{
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }}
+    .campaign-sub-card {{
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      flex: 1;
+      min-height: 308px;
+      background: #0D0D0D;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+    }}
+    .campaign-sub-img {{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 25%;
+      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }}
+    .campaign-sub-card:hover .campaign-sub-img {{
+      transform: scale(1.04);
+    }}
+    .campaign-sub-vignette {{
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.05) 0%,
+        rgba(0, 0, 0, 0.2) 40%,
+        rgba(0, 0, 0, 0.75) 80%,
+        rgba(0, 0, 0, 0.92) 100%
+      );
+    }}
+    .campaign-sub-content {{
+      position: relative;
+      z-index: 2;
+      padding: 24px 28px;
+    }}
+    .campaign-sub-name {{
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin: 0 0 4px;
+    }}
+    .campaign-sub-meta {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }}
+    .campaign-sub-price {{
+      font-size: 15px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }}
+    .btn-campaign-sub {{
+      background: #FFFFFF;
+      color: #000000;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }}
+    .btn-campaign-sub:hover {{
+      background: #EAEAEA;
+    }}
+
+    /* Responsive */
+    @media (max-width: 900px) {{
+      .campaign-grid {{
+        grid-template-columns: 1fr;
+      }}
+      .campaign-hero-card {{
+        min-height: 480px;
+      }}
+      .campaign-hero-content {{
+        padding: 24px 20px;
+      }}
+      .campaign-sub-card {{
+        min-height: 260px;
+      }}
+      .campaign-sub-content {{
+        padding: 20px 20px;
+      }}
+    }}
+"""
+
+if "campaign-edit-section" not in code:
+    code = code.replace("</style>", campaign_css + "\n  </style>")
+    print("Inserted The Campaign Edit CSS.")
+
+# 3. Add HTML markup before <!-- Value Props -->
+campaign_html = """  <!-- ========================================================
+       THE CAMPAIGN EDIT / ASYMMETRICAL EDITORIAL LOOKBOOK
+       ======================================================== -->
+  <section class="campaign-edit-section">
+    <div class="campaign-header">
+      <span class="campaign-eyebrow">Atelier Capsule 01 &bull; Editorial Lookbook</span>
+      <h2 class="campaign-title">
+        THE CAMPAIGN EDIT: EFFORTLESS CHANDIGARH MORNINGS TO <span class="accent">REGAL EVENINGS</span>
+      </h2>
+      <p class="campaign-sub">Curated silhouettes styled in natural daylight across Chandigarh's iconic verandahs and promenades.</p>
+    </div>
+
+    <div class="campaign-grid">
+      <!-- Left Main Feature (58%): Jaipur Chanderi Silk Festive Suit (SKU: JAB26ST05010) -->
+      <div class="campaign-hero-card" onclick="openProductPage('JAB26ST05010')">
+        <img src="{campaign_cafe_b64}" alt="Jaipur Chanderi Silk Festive Suit" class="campaign-hero-img">
+        <div class="campaign-hero-vignette"></div>
+        <div class="campaign-hero-content">
+          <span class="campaign-badge">Editorial Drop Headliner &bull; Garden Verandah</span>
+          <h3 class="campaign-hero-name">Jaipur Chanderi Silk Festive Suit</h3>
+          <div class="campaign-hero-meta">
+            <span class="campaign-price">&#8377;2,299</span>
+            <span class="campaign-mrp">&#8377;3,699</span>
+            <span style="font-size:11px; background:rgba(37,211,102,0.2); color:#25D366; padding:2px 8px; border-radius:12px; font-weight:700;">38% OFF</span>
+            <span style="font-size:12px; color:rgba(255,255,255,0.7);">&bull; Handcrafted Chanderi &amp; Zari</span>
+          </div>
+          <div class="campaign-hero-actions" onclick="event.stopPropagation()">
+            <button class="btn-campaign-primary" onclick="openProductPage('JAB26ST05010')">
+              <span>SHOP SILHOUETTE</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+            <button class="btn-campaign-secondary" onclick="openQuickView('JAB26ST05010')">
+              &#9881; QUICK VIEW
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Stack (42%): 2 Companion Silhouettes -->
+      <div class="campaign-stack">
+        <!-- Top Right Card: Mustard Crepe Angrakha Co-ord Set (SKU: SET974) -->
+        <div class="campaign-sub-card" onclick="openProductPage('SET974')">
+          <img src="{campaign_balcony_b64}" alt="Mustard Crepe Angrakha Co-ord Set" class="campaign-sub-img">
+          <div class="campaign-sub-vignette"></div>
+          <div class="campaign-sub-content">
+            <span class="campaign-badge" style="font-size:9px; padding:3px 8px;">The Balcony Edit &bull; Modern Wrap</span>
+            <h4 class="campaign-sub-name">Mustard Crepe Angrakha Co-ord</h4>
+            <p style="font-size:12px; color:rgba(255,255,255,0.75); margin:0 0 8px;">Gold Gota Trim with Side Tie-Up Tassels</p>
+            <div class="campaign-sub-meta" onclick="event.stopPropagation()">
+              <div>
+                <span class="campaign-sub-price">&#8377;1,699</span>
+                <span style="font-size:11px; color:rgba(255,255,255,0.5); text-decoration:line-through; margin-left:6px;">&#8377;2,799</span>
+              </div>
+              <button class="btn-campaign-sub" onclick="openProductPage('SET974')">
+                <span>SHOP LOOK</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Right Card: White Porcelain Floral Wrap Dress (SKU: JNE4046) -->
+        <div class="campaign-sub-card" onclick="openProductPage('JNE4046')">
+          <img src="{campaign_sukhna_b64}" alt="White Porcelain Floral Wrap Dress" class="campaign-sub-img">
+          <div class="campaign-sub-vignette"></div>
+          <div class="campaign-sub-content">
+            <span class="campaign-badge" style="font-size:9px; padding:3px 8px;">Sukhna Promenade &bull; Resort Elegance</span>
+            <h4 class="campaign-sub-name">White Porcelain Floral Wrap Dress</h4>
+            <p style="font-size:12px; color:rgba(255,255,255,0.75); margin:0 0 8px;">Featherlight Georgette with Circular Waist Belt</p>
+            <div class="campaign-sub-meta" onclick="event.stopPropagation()">
+              <div>
+                <span class="campaign-sub-price">&#8377;1,599</span>
+                <span style="font-size:11px; color:rgba(255,255,255,0.5); text-decoration:line-through; margin-left:6px;">&#8377;2,599</span>
+              </div>
+              <button class="btn-campaign-sub" onclick="openProductPage('JNE4046')">
+                <span>SHOP LOOK</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+"""
+
+target = "<!-- Value Props -->"
+if target in code and '<section class="campaign-edit-section">' not in code:
+    code = code.replace(target, campaign_html + "\n  " + target)
+    print("Inserted The Campaign Edit HTML markup before Value Props.")
+else:
+    print("Warning: target not found or section already exists in HTML markup.")
+
+with open('scratch/build_snitch_storefront.py', 'w', encoding='utf-8') as f:
+    f.write(code)
+
+print("Saved scratch/build_snitch_storefront.py successfully!")

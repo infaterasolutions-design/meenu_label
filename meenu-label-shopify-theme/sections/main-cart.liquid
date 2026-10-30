@@ -1,0 +1,330 @@
+{% comment %}
+  Meenu Label Dedicated Atelier Cart Page
+  Sections: Progress Bar, Line Items, Silk Potli Gift, Curated Pairings, Sticky Summary
+{% endcomment %}
+
+<div class="cart-page-section" style="background: #FAF8F5; min-height: 85vh; padding: 36px 0 80px;">
+  <div class="cart-page-container">
+    
+    <!-- Top Breadcrumb & Header Row -->
+    <div class="cart-page-breadcrumb">
+      <a href="/">HOME</a> &nbsp;/&nbsp; <span>YOUR SHOPPING BAG</span>
+    </div>
+
+    <div class="cart-page-header-row">
+      <div>
+        <span style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #C5A059;">MEENU LABEL &bull; ATELIER SHOPPING BAG</span>
+        <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 600; color: #1E1C19; margin: 4px 0 0;">Shopping Bag <span class="modern-num-pill">(<span id="cartPageHeaderCount">{{ cart.item_count }}</span>)</span></h1>
+      </div>
+      <a href="/collections/all" class="cart-continue-btn">
+        &larr; CONTINUE SHOPPING
+      </a>
+    </div>
+
+    {% if cart.item_count == 0 %}
+      <!-- Empty State -->
+      <div id="cartPageEmpty" style="text-align: center; padding: 80px 20px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px;">
+        <div style="font-size: 48px; margin-bottom: 14px;">🛍️</div>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; margin: 0 0 8px; color: #1E1C19;">Your Shopping Bag is Empty</h2>
+        <p style="font-size: 13px; color: var(--text-muted); max-width: 420px; margin: 0 auto 24px; line-height: 1.6;">Explore our debut handcrafted silhouettes and find your perfect fit in pure breathable Jaipur textiles.</p>
+        <a href="/collections/all" class="btn-primary" style="display: inline-block; padding: 14px 32px; font-size: 12px; letter-spacing: 0.1em; text-decoration: none;">EXPLORE DROP 01 COLLECTION</a>
+      </div>
+    {% else %}
+      {% assign potli_threshold = 299900 %}
+      {% assign current_total = cart.total_price %}
+      {% assign potli_diff = potli_threshold | minus: current_total %}
+      {% assign potli_percent = current_total | times: 100 | divided_by: potli_threshold %}
+      {% if potli_percent > 100 %}{% assign potli_percent = 100 %}{% endif %}
+
+      <!-- Active Cart Content Grid -->
+      <div id="cartPageActiveGrid" class="cart-page-layout">
+        
+        <!-- LEFT COLUMN: Items & Perks -->
+        <div class="cart-page-left">
+          
+          <!-- Wide Luxury Progress Bar Card -->
+          <div class="cart-page-progress-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #1E1C19;">
+                <span id="pageProgressIcon" style="font-size: 18px;">{% if current_total >= potli_threshold %}🎉{% else %}🎁{% endif %}</span>
+                <span id="pageProgressText">
+                  {% if current_total >= potli_threshold %}
+                    Congratulations! You unlocked a <strong>FREE Handcrafted Jaipur Silk Potli Bag</strong>!
+                  {% else %}
+                    Add <strong>{{ potli_diff | money }}</strong> more to unlock a <strong>FREE Handcrafted Silk Potli Bag</strong>!
+                  {% endif %}
+                </span>
+              </div>
+              <span class="page-progress-tag">DROP 01 PERK</span>
+            </div>
+            
+            <div class="page-progress-track">
+              <div class="page-progress-fill {% if current_total >= potli_threshold %}unlocked{% endif %}" style="width: {{ potli_percent }}%;"></div>
+            </div>
+            
+            <div class="page-progress-milestones">
+              <div class="page-milestone active">
+                <span class="page-ms-dot">&#10003;</span>
+                <span>Free Express Delivery (All-India)</span>
+              </div>
+              <div class="page-milestone {% if current_total >= potli_threshold %}active{% endif %}">
+                <span class="page-ms-dot">{% if current_total >= potli_threshold %}&#10003;{% else %}&#128274;{% endif %}</span>
+                <span>Complimentary Jaipur Silk Potli (₹2,999)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unlocked Silk Potli Card (if threshold reached) -->
+          {% if current_total >= potli_threshold %}
+            <div class="cart-page-gift-card">
+              <div class="cart-page-gift-thumb">🎁</div>
+              <div style="flex: 1;">
+                <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #2E6B38; margin-bottom: 2px;">ATELIER GIFT INCLUDED</div>
+                <div style="font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: #1E1C19;">Handcrafted Jaipur Silk Potli Bag (Worth ₹999)</div>
+                <div style="font-size: 11.5px; color: #6A7E68; margin-top: 2px;">Hand-stitched in pure brocade silk with metallic zari tassels &bull; Auto-packed with your parcel</div>
+              </div>
+              <span style="font-size: 13px; font-weight: 800; color: #2E6B38;">FREE</span>
+            </div>
+          {% endif %}
+
+          <!-- Cart Items Container -->
+          <div id="cartPageItemsList" class="cart-page-items">
+            {% for item in cart.items %}
+              <div class="cart-page-item" data-line-key="{{ item.key }}">
+                <a href="{{ item.url }}">
+                  <img src="{{ item.image | image_url: width: 300 }}" alt="{{ item.title | escape }}" class="cart-page-item-img">
+                </a>
+                <div class="cart-page-item-content">
+                  <div class="cart-page-item-eyebrow">DROP 01 &bull; ATELIER PREVIEW</div>
+                  <h3 class="cart-page-item-title">
+                    <a href="{{ item.url }}" style="text-decoration:none; color:inherit;">{{ item.product.title }}</a>
+                  </h3>
+                  <div class="cart-page-item-meta">
+                    Size: <strong>{{ item.variant.title }}</strong> &bull; Pure Breathable Textile &bull; Handcrafted in Chandigarh
+                  </div>
+                  <div class="cart-page-item-actions">
+                    <div class="qty-stepper">
+                      <button type="button" class="qty-step-btn" onclick="updateCartPageQuantity('{{ item.key }}', {{ item.quantity | minus: 1 }})">-</button>
+                      <span class="qty-step-val">{{ item.quantity }}</span>
+                      <button type="button" class="qty-step-btn" onclick="updateCartPageQuantity('{{ item.key }}', {{ item.quantity | plus: 1 }})">+</button>
+                    </div>
+                    <button type="button" class="cart-remove-link" onclick="updateCartPageQuantity('{{ item.key }}', 0)">Remove Piece</button>
+                    <div class="cart-page-item-prices">
+                      <span class="cart-page-price-main">{{ item.final_line_price | money }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <!-- Cross-sell Curated Pairings -->
+          <div class="cart-page-crosssell">
+            <div class="crosssell-header">
+              <div>
+                <span class="crosssell-eyebrow">CURATED PAIRINGS</span>
+                <h3 class="crosssell-title">Complete Your Drop 01 Ensemble</h3>
+              </div>
+              <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Strict Scarcity: 3 Per Size</span>
+            </div>
+            <div class="crosssell-grid">
+              <div class="crosssell-card">
+                <img src="{{ 'campaign_cafe.jpg' | asset_url }}" alt="Chanderi Silk Suit" class="crosssell-img">
+                <div class="crosssell-card-title">Chanderi Silk Festive Suit</div>
+                <div class="crosssell-card-price">&#8377;2,299</div>
+                <a href="/collections/festive-suits" class="crosssell-add-btn" style="text-align:center; text-decoration:none;">VIEW PIECE</a>
+              </div>
+              <div class="crosssell-card">
+                <img src="{{ 'campaign_balcony.jpg' | asset_url }}" alt="Mustard Crepe Angrakha" class="crosssell-img">
+                <div class="crosssell-card-title">Mustard Crepe Angrakha</div>
+                <div class="crosssell-card-price">&#8377;1,699</div>
+                <a href="/collections/co-ord-sets" class="crosssell-add-btn" style="text-align:center; text-decoration:none;">VIEW PIECE</a>
+              </div>
+              <div class="crosssell-card">
+                <img src="{{ 'campaign_sukhna.jpg' | asset_url }}" alt="Porcelain Wrap Dress" class="crosssell-img">
+                <div class="crosssell-card-title">Porcelain Wrap Dress</div>
+                <div class="crosssell-card-price">&#8377;1,599</div>
+                <a href="/collections/dresses" class="crosssell-add-btn" style="text-align:center; text-decoration:none;">VIEW PIECE</a>
+              </div>
+              <div class="crosssell-card">
+                <img src="{{ 'craft_crepe.jpg' | asset_url }}" alt="Silk Crepe Co-ord" class="crosssell-img">
+                <div class="crosssell-card-title">Silk Crepe Co-ord</div>
+                <div class="crosssell-card-price">&#8377;1,899</div>
+                <a href="/collections/co-ord-sets" class="crosssell-add-btn" style="text-align:center; text-decoration:none;">VIEW PIECE</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: Sticky Order Summary -->
+        <div class="cart-page-right">
+          <div class="cart-summary-card">
+            
+            <h2 class="summary-card-title">Order Summary</h2>
+
+            <!-- Payment Selector -->
+            <div class="summary-payment-selector">
+              <div class="summary-payment-header">
+                <span>Payment Mode</span>
+                <span class="summary-upi-save-badge">SAVE &#8377;100</span>
+              </div>
+              
+              <div class="summary-pay-option selected" id="pageOptUpi" onclick="selectPagePaymentMode('upi')">
+                <input type="radio" name="pagePayMode" id="pageRadioUpi" value="upi" checked style="accent-color:#2E6B38; cursor:pointer;">
+                <div style="flex:1;">
+                  <div style="font-weight:700; font-size:12px; color:#1E1C19;">Pay via UPI / Cards (Save &#8377;100)</div>
+                  <div style="font-size:10.5px; color:#6E6459;">Instant &#8377;100 auto-discount</div>
+                </div>
+                <span style="color:#2E6B38; font-weight:800; font-size:12px;">-&#8377;100</span>
+              </div>
+
+              <div class="summary-pay-option" id="pageOptCod" onclick="selectPagePaymentMode('cod')">
+                <input type="radio" name="pagePayMode" id="pageRadioCod" value="cod" style="accent-color:#1E1C19; cursor:pointer;">
+                <div style="flex:1;">
+                  <div style="font-weight:600; font-size:12px; color:#1E1C19;">Cash on Delivery</div>
+                  <div style="font-size:10.5px; color:#8C8275;">Standard price &bull; OTP verification</div>
+                </div>
+                <span style="color:#8C8275; font-size:11px;">+&#8377;0</span>
+              </div>
+            </div>
+
+            <!-- Coupon Code Field -->
+            <div class="summary-coupon-row">
+              <input type="text" id="pageCouponCode" placeholder="Promo code (e.g. UPI100)" class="summary-coupon-input" value="UPI100">
+              <button type="button" onclick="applyPageCoupon()" class="summary-coupon-btn">APPLIED</button>
+            </div>
+
+            <!-- Breakdown Lines -->
+            <div class="summary-breakdown">
+              <div class="summary-line">
+                <span>Bag Subtotal</span>
+                <span id="pageSubtotal">{{ cart.total_price | money }}</span>
+              </div>
+              
+              <div class="summary-line highlight-green" id="pageUpiDiscountRow">
+                <span>⚡ Instant UPI / Prepaid Perk</span>
+                <span id="pageUpiDiscount">-&#8377;100</span>
+              </div>
+
+              <div class="summary-line">
+                <span>Estimated GST (5% Included)</span>
+                <span>&#8377;0</span>
+              </div>
+
+              <div class="summary-line highlight-green">
+                <span>Pan-India Priority Courier</span>
+                <span>FREE</span>
+              </div>
+
+              <div class="summary-divider"></div>
+
+              <div class="summary-line total-line">
+                <span>Total Payable</span>
+                <span id="pageTotal">
+                  {% assign discounted_total = cart.total_price | minus: 10000 %}
+                  {% if discounted_total < 0 %}{% assign discounted_total = 0 %}{% endif %}
+                  {{ discounted_total | money }}
+                </span>
+              </div>
+              
+              <div class="summary-savings-pill" id="pageSavingsNote">
+                ✨ Instant ₹100 Prepaid UPI Discount auto-applied at checkout
+              </div>
+            </div>
+
+            <!-- Checkout CTA Button -->
+            <a href="/checkout" class="summary-checkout-btn" style="text-decoration:none;">
+              PROCEED TO SECURE CHECKOUT &rarr;
+            </a>
+
+            <!-- Trust Grid -->
+            <div class="summary-trust-grid">
+              <div class="summary-trust-item">
+                <span class="trust-icon">&#128274;</span>
+                <span>256-Bit SSL Encrypted Razorpay Gateway</span>
+              </div>
+              <div class="summary-trust-item">
+                <span class="trust-icon">&#128260;</span>
+                <span>7-Day Hassle-Free Doorstep Size Exchange</span>
+              </div>
+              <div class="summary-trust-item">
+                <span class="trust-icon">&#128205;</span>
+                <span>Dispatched directly from Chandigarh Atelier</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<script>
+  function selectPagePaymentMode(mode) {
+    var upiOpt = document.getElementById('pageOptUpi');
+    var codOpt = document.getElementById('pageOptCod');
+    var upiRadio = document.getElementById('pageRadioUpi');
+    var codRadio = document.getElementById('pageRadioCod');
+    var upiRow = document.getElementById('pageUpiDiscountRow');
+    var totalEl = document.getElementById('pageTotal');
+    var savingsPill = document.getElementById('pageSavingsNote');
+
+    var cartTotalCents = {{ cart.total_price }};
+
+    if (mode === 'upi') {
+      if (upiOpt) upiOpt.classList.add('selected');
+      if (codOpt) codOpt.classList.remove('selected');
+      if (upiRadio) upiRadio.checked = true;
+      if (upiRow) upiRow.style.display = 'flex';
+      if (savingsPill) savingsPill.style.display = 'block';
+
+      var discounted = Math.max(0, cartTotalCents - 10000);
+      if (totalEl) totalEl.textContent = '₹' + Math.round(discounted / 100).toLocaleString('en-IN');
+    } else {
+      if (codOpt) codOpt.classList.add('selected');
+      if (upiOpt) upiOpt.classList.remove('selected');
+      if (codRadio) codRadio.checked = true;
+      if (upiRow) upiRow.style.display = 'none';
+      if (savingsPill) savingsPill.style.display = 'none';
+
+      if (totalEl) totalEl.textContent = '₹' + Math.round(cartTotalCents / 100).toLocaleString('en-IN');
+    }
+  }
+
+  function applyPageCoupon() {
+    var inp = document.getElementById('pageCouponCode');
+    var code = inp ? inp.value.trim().toUpperCase() : '';
+    if (code === 'UPI100' || code === 'DEBUT10') {
+      alert('Coupon "' + code + '" is active and will be auto-applied at checkout!');
+    } else if (code) {
+      alert('Coupon "' + code + '" will be validated at checkout.');
+    }
+  }
+
+  function updateCartPageQuantity(lineKey, newQty) {
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: lineKey, quantity: Math.max(0, newQty) })
+    })
+    .then(function() {
+      // Reload page to re-render fresh cart state
+      window.location.reload();
+    })
+    .catch(function(err) {
+      console.error('Failed to update cart line:', err);
+      window.location.reload();
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Main Cart Page",
+  "settings": []
+}
+{% endschema %}

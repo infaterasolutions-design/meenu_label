@@ -1,0 +1,13 @@
+# Chrome & Test runtime temp dumps
+scratch/chrome_temp*/
+scratch/temp_chrome*/
+scratch/theme_extracted/
+scratch/extracted_sections/
+scratch/*.html
+scratch/syntax_check*.js
+scratch/storefront_script_*.js
+*.log
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

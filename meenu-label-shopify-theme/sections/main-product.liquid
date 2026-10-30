@@ -1,0 +1,75 @@
+
+<section style="max-width: 1200px; margin: 40px auto; padding: 0 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 50px;">
+  <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); background: #F4EFEB;">
+    {% if product.featured_image %}
+      <img src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.title }}" style="width: 100%; height: auto; display: block;">
+    {% endif %}
+  </div>
+
+  <div>
+    <span style="font-size: 11px; font-weight: 700; color: var(--accent-rose); letter-spacing: 0.1em; text-transform: uppercase;">
+      🔥 ONLY 1 PIECE LEFT PER SIZE
+    </span>
+    <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 600; margin: 8px 0 4px;">{{ product.title }}</h1>
+    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">SKU: {{ product.selected_or_first_available_variant.sku }}</div>
+
+    <div style="display: flex; align-items: baseline; gap: 12px; padding: 14px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); margin-bottom: 24px;">
+      <span style="font-size: 26px; font-weight: 700;">{{ product.price | money }}</span>
+      {% if product.compare_at_price > product.price %}
+        <span style="font-size: 16px; text-decoration: line-through; color: var(--text-muted);">{{ product.compare_at_price | money }}</span>
+        <span style="font-size: 11px; font-weight: 700; color: var(--accent-green); background: #EBF7EE; padding: 3px 8px; border-radius: 4px;">40% OFF</span>
+      {% endif %}
+    </div>
+
+    <!-- Size Selector -->
+    <div style="margin-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; font-weight: 700;">
+        <span>SELECT SIZE (INDIAN BUST MEASUREMENTS)</span>
+        <a href="javascript:void(0)" onclick="openSizeGuideModal()" style="color: var(--accent-gold);">📏 Size Chart</a>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+        {% for variant in product.variants %}
+          <div style="border: 1.5px solid var(--border-color); padding: 10px; border-radius: 6px; text-align: center; cursor: pointer;">
+            <strong>{{ variant.title }}</strong>
+            <span style="display:block; font-size: 10px; color: var(--accent-rose);">Only 1 Left!</span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Pincode Checker -->
+    <div style="background: #FAF5ED; padding: 14px; border-radius: 8px; margin-bottom: 24px; border: 1px solid var(--border-color);">
+      <div style="font-size: 12px; font-weight: 700; margin-bottom: 6px;">📍 Check Tricity Express Delivery</div>
+      <div style="display: flex; gap: 8px;">
+        <input type="text" id="pdpPincode" placeholder="Enter 6-digit Pincode" maxlength="6" style="padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; flex: 1;">
+        <button class="btn-primary" style="padding: 8px 14px;" onclick="checkTricityPincode(document.getElementById('pdpPincode').value)">Check</button>
+      </div>
+      <div id="PincodeResult" style="font-size: 12px; margin-top: 6px; font-weight: 600;"></div>
+    </div>
+
+    <!-- Shopify Product Form -->
+    {% form 'product', product %}
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      <button type="submit" class="btn-primary" style="width: 100%; padding: 16px; margin-bottom: 10px;">ADD TO BAG 🛍️</button>
+    {% endform %}
+
+    <!-- Direct WhatsApp Order -->
+    <a href="https://wa.me/{{ settings.whatsapp_number }}?text=Hi%20Meenu%20Label!%20I%20would%20like%20to%20order%20{{ product.title | url_encode }}" target="_blank" style="display: block; text-align: center; background: #E8F5E9; color: #1B5E20; border: 1px solid #C8E6C9; padding: 13px; border-radius: 6px; font-weight: 700; text-decoration: none;">
+      💬 Order Directly via WhatsApp
+    </a>
+    <div class="whatsapp-benefit-box">
+      <span class="wa-icon">&#128172;</span>
+      <div>
+        <strong>Shoppers with size doubts, customization questions, or first-time hesitation:</strong>
+        Chat directly with our Chandigarh atelier stylist to verify exact measurements, request custom sleeve/kurta length, or view unedited daylight fabric videos before ordering.
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Main",
+  "settings": []
+}
+{% endschema %}
