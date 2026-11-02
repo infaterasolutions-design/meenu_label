@@ -1,4 +1,4 @@
-<div class="product-card">
+<div class="product-card" data-category="{{ product.type | handleize }} {{ product.tags | join: ' ' | handleize }}">
   <div class="card-thumb">
     <button type="button" class="card-wishlist-btn" 
       data-wishlist-id="{{ product.id }}" 

@@ -9,15 +9,15 @@
     </div>
 
     <div class="filter-tabs">
-      <a href="/collections/all" class="filter-tab active">All Silhouettes</a>
-      <a href="/collections/co-ord-sets" class="filter-tab">Co-ord Sets</a>
-      <a href="/collections/festive-suits" class="filter-tab">Festive Suits</a>
-      <a href="/collections/dresses" class="filter-tab">Midi Dresses</a>
-      <a href="/collections/tops" class="filter-tab">Casual Tops</a>
+      <button type="button" class="filter-tab active" data-cat="all" onclick="filterCategory('all', this)">All Silhouettes</button>
+      <button type="button" class="filter-tab" data-cat="co-ord-sets" onclick="filterCategory('co-ord', this)">Co-ord Sets</button>
+      <button type="button" class="filter-tab" data-cat="festive-suits" onclick="filterCategory('festive', this)">Festive Suits</button>
+      <button type="button" class="filter-tab" data-cat="dresses" onclick="filterCategory('dress', this)">Midi Dresses</button>
+      <button type="button" class="filter-tab" data-cat="tops" onclick="filterCategory('top', this)">Casual Tops</button>
     </div>
   </div>
 
-  <div class="product-grid">
+  <div class="product-grid" id="productGrid">
     {% assign collection = section.settings.collection %}
     {% if collection != blank and collection.products_count > 0 %}
       {% for product in collection.products limit: section.settings.products_to_show %}
@@ -29,7 +29,7 @@
       {% endfor %}
     {% else %}
       <!-- Drop 01 Atelier Preview Silhouettes (Shown until products are added in Shopify Admin) -->
-      <div class="product-card" onclick="window.location.href='/collections/festive-suits'">
+      <div class="product-card" data-category="festive-suits festive" onclick="window.location.href='/collections/all'">
         <div class="card-thumb">
           <button type="button" class="card-wishlist-btn" 
             data-wishlist-id="drop01_1" 
@@ -56,7 +56,7 @@
         </div>
       </div>
 
-      <div class="product-card" onclick="window.location.href='/collections/co-ord-sets'">
+      <div class="product-card" data-category="co-ord-sets co-ord" onclick="window.location.href='/collections/all'">
         <div class="card-thumb">
           <button type="button" class="card-wishlist-btn" 
             data-wishlist-id="drop01_2" 
@@ -83,7 +83,7 @@
         </div>
       </div>
 
-      <div class="product-card" onclick="window.location.href='/collections/dresses'">
+      <div class="product-card" data-category="dresses dress" onclick="window.location.href='/collections/all'">
         <div class="card-thumb">
           <button type="button" class="card-wishlist-btn" 
             data-wishlist-id="drop01_3" 
@@ -110,7 +110,7 @@
         </div>
       </div>
 
-      <div class="product-card" onclick="window.location.href='/collections/co-ord-sets'">
+      <div class="product-card" data-category="co-ord-sets co-ord" onclick="window.location.href='/collections/all'">
         <div class="card-thumb">
           <button type="button" class="card-wishlist-btn" 
             data-wishlist-id="drop01_4" 
