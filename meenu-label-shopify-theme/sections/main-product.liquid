@@ -1,14 +1,15 @@
 <section class="shopify-product-layout">
-  <!-- Left Column: Multi-Image Product Gallery -->
+  <!-- Left Column: Compact Luxury Multi-Image Gallery -->
   <div class="shopify-pdp-gallery-col">
     <!-- Main Showcase Image Container -->
     <div class="shopify-pdp-main-image-wrap" id="shopifyPdpMainWrap">
       <div class="shopify-pdp-badges">
         <span class="pdp-atelier-badge">HANDCRAFTED PREVIEW</span>
-        {% if product.images.size > 1 %}
-          <span class="pdp-image-counter" id="shopifyImageCounter">1 / {{ product.images.size }}</span>
-        {% endif %}
       </div>
+
+      {% if product.images.size > 1 %}
+        <span class="pdp-image-counter" id="shopifyImageCounter">1 / {{ product.images.size }}</span>
+      {% endif %}
 
       {% if product.images.size > 0 %}
         <img id="shopifyMainImg" 
@@ -16,7 +17,7 @@
              alt="{{ product.title | escape }}" 
              loading="eager"
              onclick="openShopifyLightbox(this.src)"
-             title="Click to view high-resolution zoom">
+             title="Click to zoom">
       {% else %}
         <div class="shopify-img-placeholder">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
@@ -26,7 +27,7 @@
       {% endif %}
 
       {% if product.images.size > 1 %}
-        <!-- Prev & Next Navigation Arrows -->
+        <!-- Prev & Next Navigation Arrows (Centred, Compact) -->
         <button type="button" class="shopify-gallery-arrow shopify-gallery-prev" onclick="changeShopifyGalleryImage(-1)" aria-label="Previous photo">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
         </button>
@@ -36,7 +37,7 @@
       {% endif %}
     </div>
 
-    <!-- Multi-Image Interactive Thumbnails Rail -->
+    <!-- Multi-Image Thumbnails Rail (Compact, Directly Visible) -->
     {% if product.images.size > 1 %}
       <div class="shopify-pdp-thumbnails" id="shopifyPdpThumbs">
         {% for image in product.images %}
@@ -46,7 +47,7 @@
                   data-src="{{ image | image_url: width: 1200 }}"
                   onclick="selectShopifyGalleryImage(this, '{{ image | image_url: width: 1200 }}', {{ forloop.index0 }})"
                   aria-label="View photo {{ forloop.index }} of {{ product.images.size }}">
-            <img src="{{ image | image_url: width: 220, height: 275, crop: 'center' }}" 
+            <img src="{{ image | image_url: width: 160, height: 200, crop: 'center' }}" 
                  alt="{{ image.alt | default: product.title | escape }}" 
                  loading="lazy">
           </button>
@@ -64,71 +65,71 @@
       <div class="trust-tile">
         <span class="trust-icon">&#128666;</span>
         <strong>Tricity 24-Hr</strong>
-        <small>Complimentary Courier</small>
+        <small>Priority Courier</small>
       </div>
       <div class="trust-tile">
         <span class="trust-icon">&#128207;</span>
-        <strong>Custom Alterations</strong>
-        <small>Bespoke Hem & Fitting</small>
+        <strong>Custom Fit</strong>
+        <small>Complimentary Hems</small>
       </div>
     </div>
   </div>
 
   <!-- Right Column: Product Details & Purchase Form -->
   <div class="shopify-pdp-info-col">
-    <span style="font-size: 11px; font-weight: 700; color: var(--accent-rose, #C95D63); letter-spacing: 0.1em; text-transform: uppercase;">
+    <div class="pdp-scarcity-tag">
       &#128293; ONLY 1 PIECE LEFT PER SIZE
-    </span>
-    <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 38px; font-weight: 600; margin: 8px 0 4px; line-height: 1.2;">{{ product.title }}</h1>
-    <div style="font-size: 12px; color: var(--text-muted, #7A7269); margin-bottom: 16px;">SKU: {{ product.selected_or_first_available_variant.sku | default: 'MEENU-DROP01' }}</div>
+    </div>
+    <h1 class="pdp-main-title">{{ product.title }}</h1>
+    <div class="pdp-sku-line">SKU: {{ product.selected_or_first_available_variant.sku | default: 'MEENU-DROP01' }}</div>
 
-    <div style="display: flex; align-items: baseline; gap: 12px; padding: 14px 0; border-top: 1px solid var(--border-color, #E8E2D9); border-bottom: 1px solid var(--border-color, #E8E2D9); margin-bottom: 24px;">
-      <span style="font-size: 26px; font-weight: 700; color: var(--text-main, #1A1A1A); font-variant-numeric: lining-nums;">{{ product.price | money }}</span>
+    <!-- Price Row (Enforced Single Line, No Wrapping) -->
+    <div class="shopify-pdp-price-row">
+      <span class="pdp-price-current">{{ product.price | money }}</span>
       {% if product.compare_at_price > product.price %}
-        <span style="font-size: 16px; text-decoration: line-through; color: var(--text-muted, #7A7269); font-variant-numeric: lining-nums;">{{ product.compare_at_price | money }}</span>
-        <span style="font-size: 11px; font-weight: 700; color: var(--accent-green, #2E7D32); background: #EBF7EE; padding: 3px 8px; border-radius: 4px;">SAVINGS INCLUDED</span>
+        <span class="pdp-price-original">{{ product.compare_at_price | money }}</span>
+        <span class="pdp-savings-pill">SAVINGS INCLUDED</span>
       {% endif %}
     </div>
 
-    <!-- Size Selector (NO DEFAULT SELECTION) -->
-    <div class="shopify-size-section" id="shopifySizeSection" style="margin-bottom: 20px;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; font-weight: 700;">
-        <span>SELECT SIZE (INDIAN BUST MEASUREMENTS) <span id="shopifySelectedSizeLabel" style="display:none; color:var(--accent-burgundy,#6E1A24); font-weight:700; margin-left:6px;"></span></span>
-        <a href="javascript:void(0)" onclick="openSizeGuideModal()" style="color: var(--accent-gold, #C5A059); text-decoration: none;">&#128207; Size Chart</a>
+    <!-- Size Selector -->
+    <div class="shopify-size-section" id="shopifySizeSection">
+      <div class="shopify-size-header">
+        <span>SELECT SIZE (INDIAN BUST MEASUREMENTS) <span id="shopifySelectedSizeLabel" class="shopify-selected-size-label"></span></span>
+        <a href="javascript:void(0)" onclick="openSizeGuideModal()" class="size-chart-link">&#128207; Size Chart</a>
       </div>
-      <div id="shopifySizeGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+      <div id="shopifySizeGrid" class="shopify-size-grid">
         {% for variant in product.variants %}
           <button type="button" 
                   class="shopify-size-tile" 
                   data-variant-id="{{ variant.id }}" 
                   data-size-title="{{ variant.title }}" 
                   {% if variant.featured_image %}data-variant-image="{{ variant.featured_image | image_url: width: 1200 }}"{% elsif variant.image %}data-variant-image="{{ variant.image | image_url: width: 1200 }}"{% endif %}
-                  onclick="selectShopifyVariant('{{ variant.id }}', '{{ variant.title }}', this)" 
-                  style="background: #FFFFFF; border: 1.5px solid var(--border-color, #E8E2D9); padding: 10px; border-radius: 6px; text-align: center; cursor: pointer; transition: all 0.2s ease;">
-            <strong style="display:block; font-size: 14px;">{{ variant.title }}</strong>
-            <span style="display:block; font-size: 10px; color: var(--accent-rose, #C95D63); font-weight:700; text-transform:uppercase;">Only 1 Left!</span>
+                  onclick="selectShopifyVariant('{{ variant.id }}', '{{ variant.title }}', this)">
+            <strong>{{ variant.title }}</strong>
+            <span>Only 1 Left!</span>
           </button>
         {% endfor %}
       </div>
-      <div id="shopifySizeRequiredNotice" style="display:none; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:6px; padding:10px 14px; font-size:12px; font-weight:600; text-align:center; margin-top:8px;">
+      <div id="shopifySizeRequiredNotice" class="shopify-size-notice">
         &#9888;&#65039; Please select your size (M, L, or XL) before adding to bag
       </div>
     </div>
 
     <!-- Pincode Checker -->
-    <div style="background: #FAF5ED; padding: 14px; border-radius: 8px; margin-bottom: 24px; border: 1px solid var(--border-color, #E8E2D9);">
-      <div style="font-size: 12px; font-weight: 700; margin-bottom: 6px;">&#128205; Check Tricity Express Delivery</div>
-      <div style="display: flex; gap: 8px;">
-        <input type="text" id="pdpPincode" placeholder="Enter 6-digit Pincode" maxlength="6" style="padding: 8px 12px; border: 1px solid var(--border-color, #E8E2D9); border-radius: 4px; flex: 1;">
-        <button type="button" class="btn-primary" style="padding: 8px 14px; font-size: 12px;" onclick="checkTricityPincode(document.getElementById('pdpPincode').value)">Check</button>
+    <div class="shopify-pincode-box">
+      <div class="pincode-title">&#128205; Check Tricity Express Delivery</div>
+      <div class="pincode-input-row">
+        <input type="text" id="pdpPincode" placeholder="Enter 6-digit Pincode" maxlength="6">
+        <button type="button" class="btn-primary pincode-check-btn" onclick="checkTricityPincode(document.getElementById('pdpPincode').value)">Check</button>
       </div>
-      <div id="PincodeResult" style="font-size: 12px; margin-top: 6px; font-weight: 600;"></div>
+      <div id="PincodeResult" class="pincode-result"></div>
     </div>
 
     <!-- Shopify Product Form -->
     {% form 'product', product, id: 'shopifyProductForm', onsubmit: 'return validateShopifyForm(event)' %}
       <input type="hidden" name="id" id="selectedVariantId" value="">
-      <button type="submit" id="pdpAddToCartBtn" class="btn-primary" style="width: 100%; padding: 16px; margin-bottom: 10px; cursor: pointer; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">ADD TO BAG &#128717;&#65039;</button>
+      <button type="submit" id="pdpAddToCartBtn" class="btn-primary pdp-submit-btn">ADD TO BAG &#128717;&#65039;</button>
     {% endform %}
 
     <!-- Save to Wishlist Button -->
@@ -138,22 +139,21 @@
       data-wishlist-price="{{ product.price | money | escape }}" 
       data-wishlist-image="{{ product.featured_image | default: product.images.first | image_url: width: 300 }}" 
       data-wishlist-url="{{ product.url }}" 
-      onclick="toggleWishlist(this)" 
-      style="width: 100%; background: #FFFFFF; border: 1.5px solid var(--border-color, #E8E2D9); padding: 12px; border-radius: 6px; font-weight: 700; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; transition: all 0.2s ease; color: var(--text-main, #1A1A1A);">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; pointer-events: none;">
+      onclick="toggleWishlist(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
       </svg>
       <span class="pdp-wishlist-txt">SAVE TO WISHLIST</span>
     </button>
 
     <!-- Direct WhatsApp Order -->
-    <a id="shopifyWhatsAppBtn" href="https://wa.me/{{ settings.whatsapp_number | default: '919988898845' }}?text=Hi%20Meenu%20Label!%20I%20would%20like%20to%20order%20{{ product.title | url_encode }}%20from%20Drop%2001.%20Please%20help%20me%20choose%20the%20right%20size." target="_blank" style="display: block; text-align: center; background: #E8F5E9; color: #1B5E20; border: 1px solid #C8E6C9; padding: 13px; border-radius: 6px; font-weight: 700; text-decoration: none; font-size: 13px;">
+    <a id="shopifyWhatsAppBtn" href="https://wa.me/{{ settings.whatsapp_number | default: '919988898845' }}?text=Hi%20Meenu%20Label!%20I%20would%20like%20to%20order%20{{ product.title | url_encode }}%20from%20Drop%2001.%20Please%20help%20me%20choose%20the%20right%20size." target="_blank" class="shopify-whatsapp-cta">
       &#128172; Order Directly via WhatsApp
     </a>
-    <div class="whatsapp-benefit-box" style="margin-top: 12px; background: #FAF7F2; border: 1px solid var(--border-color, #E8E2D9); border-radius: 8px; padding: 12px; display: flex; gap: 10px; font-size: 11px; color: var(--text-muted, #7A7269); line-height: 1.5;">
-      <span class="wa-icon" style="font-size: 16px;">&#128172;</span>
+    <div class="whatsapp-benefit-box">
+      <span class="wa-icon">&#128172;</span>
       <div>
-        <strong style="color: var(--text-main, #1A1A1A); display: block; margin-bottom: 2px;">Shoppers with size doubts or customization questions:</strong>
+        <strong>Shoppers with size doubts or customization questions:</strong>
         Chat directly with our Chandigarh atelier stylist to verify exact measurements, request custom sleeve/kurta length, or view unedited daylight fabric videos before ordering.
       </div>
     </div>
@@ -167,104 +167,115 @@
 </div>
 
 <style>
+  /* Balanced Luxury PDP Layout */
   .shopify-product-layout {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 40px;
+    max-width: 1080px;
+    margin: 28px auto 48px;
+    padding: 0 32px;
     display: grid;
-    grid-template-columns: 1.05fr 1fr;
-    gap: 50px;
+    grid-template-columns: 440px 1fr;
+    gap: 44px;
     align-items: start;
   }
-  @media (max-width: 900px) {
+  @media (max-width: 960px) {
     .shopify-product-layout {
       grid-template-columns: 1fr;
-      gap: 32px;
+      gap: 28px;
       padding: 0 20px;
-      margin: 20px auto;
+      margin: 16px auto 36px;
     }
   }
 
-  /* Gallery Column */
+  /* Sticky Gallery Column */
   .shopify-pdp-gallery-col {
     position: -webkit-sticky;
     position: sticky;
-    top: 115px;
+    top: 110px;
     align-self: start;
     z-index: 20;
   }
-  @media (max-width: 900px) {
+  @media (max-width: 960px) {
     .shopify-pdp-gallery-col {
       position: relative !important;
       top: 0 !important;
     }
   }
 
-  /* Main Showcase Wrap */
+  /* Main Showcase Wrap (Controlled Height, Uncropped Fit) */
   .shopify-pdp-main-image-wrap {
     position: relative;
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
     border: 1px solid var(--border-color, #E8E2D9);
-    background: #F4EFEB;
-    aspect-ratio: 4 / 5;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    background: #FAF7F2;
+    height: 460px;
+    max-height: 68vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
+  }
+  @media (max-width: 600px) {
+    .shopify-pdp-main-image-wrap {
+      height: 380px;
+    }
   }
   .shopify-pdp-main-image-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
     display: block;
+    margin: 0 auto;
     cursor: zoom-in;
-    transition: opacity 0.22s ease;
+    transition: opacity 0.2s ease;
   }
 
-  /* Badges */
+  /* Top Badges (Subtle, Non-Obtrusive) */
   .shopify-pdp-badges {
     position: absolute;
-    top: 14px;
-    left: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    top: 10px;
+    left: 10px;
     z-index: 5;
     pointer-events: none;
   }
   .pdp-atelier-badge {
-    background: rgba(26, 26, 26, 0.88);
+    background: rgba(26, 26, 26, 0.85);
     backdrop-filter: blur(8px);
     color: #FFFFFF;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 20px;
-    width: fit-content;
-  }
-  .pdp-image-counter {
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(8px);
-    color: #1A1A1A;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 700;
     letter-spacing: 0.08em;
+    text-transform: uppercase;
     padding: 3px 8px;
-    border-radius: 20px;
-    width: fit-content;
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 16px;
+    display: inline-block;
+  }
+  .pdp-image-counter {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(26, 26, 26, 0.75);
+    backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 16px;
+    z-index: 5;
   }
 
-  /* Arrow Controls */
+  /* Centered Arrow Controls */
   .shopify-gallery-arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.88);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(0, 0, 0, 0.08);
     color: #1A1A1A;
@@ -274,64 +285,63 @@
     cursor: pointer;
     z-index: 10;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
   .shopify-gallery-arrow:hover {
     background: #FFFFFF;
     color: var(--accent-burgundy, #6E1A24);
     transform: translateY(-50%) scale(1.08);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   }
   .shopify-gallery-arrow svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
   .shopify-gallery-prev {
-    left: 14px;
+    left: 10px;
   }
   .shopify-gallery-next {
-    right: 14px;
+    right: 10px;
   }
 
-  /* Multi-Image Thumbnails Rail */
+  /* Thumbnails Rail (Directly Visible Below Main Image) */
   .shopify-pdp-thumbnails {
     display: flex;
-    gap: 10px;
-    margin-top: 14px;
+    gap: 8px;
+    margin-top: 10px;
     overflow-x: auto;
     scrollbar-width: thin;
     padding-bottom: 4px;
     -webkit-overflow-scrolling: touch;
   }
   .shopify-pdp-thumbnails::-webkit-scrollbar {
-    height: 4px;
+    height: 3px;
   }
   .shopify-pdp-thumbnails::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.18);
+    border-radius: 3px;
   }
   .shopify-thumb-btn {
-    flex: 0 0 74px;
-    width: 74px;
-    aspect-ratio: 4 / 5;
-    border-radius: 8px;
+    flex: 0 0 54px;
+    width: 54px;
+    height: 65px;
+    border-radius: 6px;
     overflow: hidden;
-    border: 2px solid transparent;
+    border: 1.5px solid transparent;
     padding: 0;
-    background: #F4EFEB;
+    background: #FAF7F2;
     cursor: pointer;
     transition: all 0.2s ease;
     opacity: 0.6;
   }
   .shopify-thumb-btn:hover {
     opacity: 0.95;
-    border-color: rgba(110, 26, 36, 0.3);
+    border-color: rgba(110, 26, 36, 0.35);
   }
   .shopify-thumb-btn.active {
     opacity: 1;
     border-color: var(--accent-burgundy, #6E1A24);
     box-shadow: 0 0 0 1px var(--accent-burgundy, #6E1A24);
-    transform: translateY(-1px);
   }
   .shopify-thumb-btn img {
     width: 100%;
@@ -345,65 +355,299 @@
   .shopify-img-placeholder {
     width: 100%;
     height: 100%;
-    min-height: 480px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: #8C827A;
     background: #FAF5ED;
-    padding: 30px;
+    padding: 24px;
     text-align: center;
   }
   .shopify-img-placeholder svg {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 12px;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 8px;
     opacity: 0.5;
   }
   .shopify-img-placeholder .placeholder-title {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 600;
     color: #1A1A1A;
     margin-bottom: 4px;
   }
   .shopify-img-placeholder .placeholder-sub {
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
-  /* Trust Grid */
+  /* Trust Micro-Grid */
   .shopify-pdp-trust-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 16px;
+    gap: 8px;
+    margin-top: 14px;
     text-align: center;
   }
   .shopify-pdp-trust-grid .trust-tile {
     background: #FAF7F2;
     border: 1px solid var(--border-color, #E8E2D9);
-    padding: 10px 6px;
-    border-radius: 8px;
+    padding: 8px 4px;
+    border-radius: 6px;
   }
   .shopify-pdp-trust-grid .trust-icon {
-    font-size: 16px;
+    font-size: 14px;
     display: block;
     margin-bottom: 2px;
   }
   .shopify-pdp-trust-grid strong {
-    font-size: 11px;
+    font-size: 10px;
     display: block;
     color: var(--text-main, #1A1A1A);
   }
   .shopify-pdp-trust-grid small {
-    font-size: 10px;
+    font-size: 9px;
     color: var(--text-muted, #7A7269);
   }
 
-  /* Lightbox Zoom Modal */
+  /* Right Column Styling */
+  .shopify-pdp-info-col {
+    display: flex;
+    flex-direction: column;
+  }
+  .pdp-scarcity-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-rose, #C95D63);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .pdp-main-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 28px;
+    font-weight: 600;
+    margin: 4px 0 2px;
+    line-height: 1.25;
+    color: var(--text-main, #1A1A1A);
+  }
+  .pdp-sku-line {
+    font-size: 11px;
+    color: var(--text-muted, #7A7269);
+    margin-bottom: 14px;
+  }
+
+  /* Price Row (Single Line, Never Wraps) */
+  .shopify-pdp-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border-color, #E8E2D9);
+    border-bottom: 1px solid var(--border-color, #E8E2D9);
+    margin-bottom: 18px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+  .pdp-price-current {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-main, #1A1A1A);
+    white-space: nowrap;
+    font-variant-numeric: lining-nums;
+  }
+  .pdp-price-original {
+    font-size: 15px;
+    text-decoration: line-through;
+    color: var(--text-muted, #7A7269);
+    white-space: nowrap;
+    font-variant-numeric: lining-nums;
+  }
+  .pdp-savings-pill {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-green, #2E7D32);
+    background: #EBF7EE;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+
+  /* Size Selector */
+  .shopify-size-section {
+    margin-bottom: 18px;
+  }
+  .shopify-size-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .shopify-selected-size-label {
+    display: none;
+    color: var(--accent-burgundy, #6E1A24);
+    font-weight: 700;
+    margin-left: 6px;
+  }
+  .size-chart-link {
+    color: var(--accent-gold, #C5A059);
+    text-decoration: none;
+  }
+  .shopify-size-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .shopify-size-tile {
+    background: #FFFFFF;
+    border: 1.5px solid var(--border-color, #E8E2D9);
+    padding: 8px 6px;
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .shopify-size-tile strong {
+    display: block;
+    font-size: 13px;
+  }
+  .shopify-size-tile span {
+    display: block;
+    font-size: 9px;
+    color: var(--accent-rose, #C95D63);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .shopify-size-tile.selected {
+    background: var(--text-main, #1A1A1A) !important;
+    border-color: var(--text-main, #1A1A1A) !important;
+    color: #FFFFFF !important;
+  }
+  .shopify-size-tile.selected strong {
+    color: #FFFFFF !important;
+  }
+  .shopify-size-tile.selected span {
+    color: #FFD54F !important;
+  }
+  .shopify-size-notice {
+    display: none;
+    color: #B91C1C;
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  /* Pincode Box */
+  .shopify-pincode-box {
+    background: #FAF5ED;
+    padding: 11px 13px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    border: 1px solid var(--border-color, #E8E2D9);
+  }
+  .pincode-title {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .pincode-input-row {
+    display: flex;
+    gap: 8px;
+  }
+  .pincode-input-row input {
+    padding: 7px 10px;
+    border: 1px solid var(--border-color, #E8E2D9);
+    border-radius: 4px;
+    flex: 1;
+    font-size: 12px;
+  }
+  .pincode-check-btn {
+    padding: 7px 12px;
+    font-size: 11px;
+  }
+  .pincode-result {
+    font-size: 11px;
+    margin-top: 5px;
+    font-weight: 600;
+  }
+
+  /* Form Actions */
+  .pdp-submit-btn {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .pdp-wishlist-toggle {
+    width: 100%;
+    background: #FFFFFF;
+    border: 1.5px solid var(--border-color, #E8E2D9);
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    transition: all 0.2s ease;
+    color: var(--text-main, #1A1A1A);
+  }
+  .pdp-wishlist-toggle svg {
+    width: 15px;
+    height: 15px;
+    pointer-events: none;
+  }
+  .shopify-whatsapp-cta {
+    display: block;
+    text-align: center;
+    background: #E8F5E9;
+    color: #1B5E20;
+    border: 1px solid #C8E6C9;
+    padding: 11px;
+    border-radius: 6px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 12px;
+  }
+  .whatsapp-benefit-box {
+    margin-top: 10px;
+    background: #FAF7F2;
+    border: 1px solid var(--border-color, #E8E2D9);
+    border-radius: 6px;
+    padding: 10px;
+    display: flex;
+    gap: 8px;
+    font-size: 10px;
+    color: var(--text-muted, #7A7269);
+    line-height: 1.45;
+  }
+  .whatsapp-benefit-box .wa-icon {
+    font-size: 14px;
+  }
+  .whatsapp-benefit-box strong {
+    color: var(--text-main, #1A1A1A);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* Lightbox Modal */
   .shopify-lightbox-modal {
     display: none;
     position: fixed;
@@ -435,10 +679,10 @@
     background: rgba(255, 255, 255, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.25);
     color: #FFFFFF;
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    font-size: 26px;
+    font-size: 24px;
     line-height: 1;
     display: flex;
     align-items: center;
@@ -455,22 +699,10 @@
     to { opacity: 1; transform: scale(1); }
   }
 
-  /* Size Selector Styles */
-  .shopify-size-tile.selected {
-    background: var(--text-main, #1A1A1A) !important;
-    border-color: var(--text-main, #1A1A1A) !important;
-    color: #FFFFFF !important;
-  }
-  .shopify-size-tile.selected strong {
-    color: #FFFFFF !important;
-  }
-  .shopify-size-tile.selected span {
-    color: #FFD54F !important;
-  }
   @keyframes sizeTileShake {
     0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-6px); }
-    40%, 80% { transform: translateX(6px); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
   }
   .size-error-shake {
     animation: sizeTileShake 0.4s ease-in-out;
@@ -497,7 +729,7 @@
       setTimeout(function() {
         mainImg.src = src;
         mainImg.style.opacity = '1';
-      }, 100);
+      }, 90);
     }
 
     currentShopifyGalleryIndex = index;
@@ -543,7 +775,7 @@
     }
   }
 
-  // Keyboard navigation for gallery & lightbox
+  // Keyboard navigation
   window.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
       closeShopifyLightbox();
@@ -554,7 +786,7 @@
     }
   });
 
-  // Touch Swipe on Main Image Container
+  // Touch Swipe
   (function() {
     var wrap = document.getElementById('shopifyPdpMainWrap');
     if (!wrap) return;
@@ -590,7 +822,7 @@
     tiles.forEach(function(t) { t.classList.remove('selected'); });
     if (btn) btn.classList.add('selected');
 
-    // If variant has assigned image, switch gallery to it
+    // Switch image if variant has image
     if (btn) {
       var varImg = btn.getAttribute('data-variant-image');
       if (varImg) {

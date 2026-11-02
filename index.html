@@ -1331,9 +1331,11 @@
     /* 2-Column Luxury PDP Layout */
     .pdp-grid {
       display: grid;
-      grid-template-columns: 1.05fr 1fr;
-      gap: 56px;
+      grid-template-columns: 440px 1fr;
+      gap: 44px;
       align-items: flex-start;
+      max-width: 1080px;
+      margin: 0 auto;
     }
     @media (max-width: 992px) {
       .pdp-grid {
@@ -1350,19 +1352,26 @@
     .pdp-main-image-wrap {
       position: relative;
       width: 100%;
-      border-radius: 12px;
+      height: 460px;
+      max-height: 68vh;
+      border-radius: 10px;
       overflow: hidden;
-      background: #F4EFEB;
+      background: #FAF7F2;
       border: 1px solid var(--border-color);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.04);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .pdp-main-image {
-      width: 100%;
-      aspect-ratio: 4 / 5;
-      object-fit: cover;
-      object-position: top center;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
       display: block;
-      transition: transform 0.4s ease;
+      margin: 0 auto;
+      transition: transform 0.3s ease, opacity 0.2s ease;
     }
     .pdp-main-image-wrap:hover .pdp-main-image {
       transform: scale(1.02);
