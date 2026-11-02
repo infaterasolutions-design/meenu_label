@@ -1823,6 +1823,24 @@
       transition: transform 0.4s ease;
       display: block;
     }
+    
+    .card-thumb .card-img-secondary {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+    }
+    .product-card:hover .card-thumb .card-img-secondary {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
     .product-card:hover .card-thumb img {
       transform: scale(1.05);
     }

@@ -4,7 +4,7 @@
       data-wishlist-id="{{ product.id }}" 
       data-wishlist-title="{{ product.title | escape }}" 
       data-wishlist-price="{{ product.price | money | escape }}" 
-      data-wishlist-image="{{ product.featured_image | image_url: width: 300 }}" 
+      data-wishlist-image="{{ product.featured_image | default: product.images.first | image_url: width: 300 }}" 
       data-wishlist-url="{{ product.url }}" 
       onclick="event.preventDefault(); event.stopPropagation(); toggleWishlist(this)" 
       title="Save to Wishlist" 
@@ -15,7 +15,15 @@
     </button>
     <a href="{{ product.url }}">
       {% if product.featured_image %}
-        <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy">
+        <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy" class="card-img-primary">
+        {% if product.images.size > 1 %}
+          <img src="{{ product.images[1] | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy" class="card-img-secondary">
+        {% endif %}
+      {% elsif product.images.size > 0 %}
+        <img src="{{ product.images.first | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy" class="card-img-primary">
+        {% if product.images.size > 1 %}
+          <img src="{{ product.images[1] | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy" class="card-img-secondary">
+        {% endif %}
       {% else %}
         <div style="width: 100%; height: 100%; min-height: 280px; background: #FAF5ED; display: flex; align-items: center; justify-content: center; color: #8C827A; font-size: 13px; font-weight: 500;">
           {{ product.title }}
