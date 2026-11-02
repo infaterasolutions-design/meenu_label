@@ -554,6 +554,27 @@
     }
   }
 
+
+  /* Ensure Natural Desktop Flow & No Blank Bottom Space */
+  @media (min-width: 901px) {
+    .pdp-info-col {
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 18px !important;
+      padding-right: 0 !important;
+    }
+    .pdp-gallery-col {
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: 105px !important;
+      align-self: start !important;
+      height: fit-content !important;
+    }
+  }
+
 </style>
 
 <script>
