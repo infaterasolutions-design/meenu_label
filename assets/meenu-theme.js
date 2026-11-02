@@ -651,7 +651,23 @@ function filterCategory(cat, btn) {
 
   cards.forEach(function(card) {
     var cardCat = (card.getAttribute('data-category') || card.textContent || '').toLowerCase();
-    if (normalizedCat === 'all' || cardCat.indexOf(normalizedCat) !== -1) {
+    var isMatch = false;
+
+    if (normalizedCat === 'all') {
+      isMatch = true;
+    } else if (normalizedCat === 'coord' || normalizedCat === 'co-ord' || normalizedCat === 'co-ord-sets') {
+      isMatch = cardCat.indexOf('coord') !== -1 || cardCat.indexOf('co-ord') !== -1;
+    } else if (normalizedCat === 'festive' || normalizedCat === 'festive-suits') {
+      isMatch = cardCat.indexOf('festive') !== -1;
+    } else if (normalizedCat === 'dress' || normalizedCat === 'dresses') {
+      isMatch = cardCat.indexOf('dress') !== -1;
+    } else if (normalizedCat === 'top' || normalizedCat === 'tops' || normalizedCat === 'blouse') {
+      isMatch = cardCat.indexOf('top') !== -1 || cardCat.indexOf('blouse') !== -1;
+    } else {
+      isMatch = cardCat.indexOf(normalizedCat) !== -1;
+    }
+
+    if (isMatch) {
       card.style.display = 'flex';
       matchedCount++;
     } else {
