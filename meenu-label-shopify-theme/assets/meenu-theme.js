@@ -222,6 +222,16 @@ function updateWishlistUI() {
     }
   });
 
+  // 4b. Update Quick Size drawer Wishlist heart if open
+  var snitchWishBtn = document.getElementById('snitchSizeWishlistBtn');
+  if (snitchWishBtn) {
+    var sId = snitchWishBtn.getAttribute('data-wishlist-id') || (typeof activeSnitchProduct !== 'undefined' && activeSnitchProduct ? activeSnitchProduct.id : null);
+    if (sId) {
+      var isSActive = list.some(function(it) { return String(it.id) === String(sId); });
+      snitchWishBtn.classList.toggle('active', isSActive);
+    }
+  }
+
   // 5. Render Wishlist Drawer items list
   var listContainer = document.getElementById('wishlistItemsList');
   var footerEl = document.getElementById('wishlistFooter');
@@ -729,11 +739,18 @@ function openQuickSizePopup(btn) {
   // Sync Wishlist button in header
   var wishBtn = document.getElementById('snitchSizeWishlistBtn');
   if (wishBtn) {
-    if (typeof wishlist !== 'undefined' && wishlist.indexOf(productId) !== -1) {
-      wishBtn.classList.add('active');
-    } else {
-      wishBtn.classList.remove('active');
+    var isSaved = false;
+    if (typeof isWishlisted === 'function') {
+      isSaved = isWishlisted(productId);
+    } else if (typeof wishlist !== 'undefined') {
+      isSaved = wishlist.indexOf(productId) !== -1;
     }
+    wishBtn.classList.toggle('active', isSaved);
+    wishBtn.setAttribute('data-wishlist-id', productId);
+    wishBtn.setAttribute('data-wishlist-title', title);
+    wishBtn.setAttribute('data-wishlist-price', price);
+    wishBtn.setAttribute('data-wishlist-image', img);
+    wishBtn.setAttribute('data-wishlist-url', url);
   }
 
   // Read variants data if available from the card script
@@ -919,22 +936,57 @@ function snitchFallbackCartAdd(sizeName) {
 
 function toggleSnitchSizeWishlist(btn) {
   if (!activeSnitchProduct) return;
-  btn.classList.toggle('active');
-  if (typeof toggleWishlistProduct === 'function') {
-    toggleWishlistProduct(activeSnitchProduct.id);
-  } else if (typeof toggleWishlist === 'function') {
-    // create a pseudo button or call
-    var wishId = activeSnitchProduct.id;
-    if (typeof wishlist !== 'undefined') {
-      var idx = wishlist.indexOf(wishId);
-      if (idx === -1) {
-        wishlist.push(wishId);
-      } else {
-        wishlist.splice(idx, 1);
-      }
-      try { localStorage.setItem('meenu_wishlist', JSON.stringify(wishlist)); } catch(e) {}
+  var pId = String(activeSnitchProduct.id);
+
+  // 1. Live Shopify theme environment (localStorage 'meenu_saved_wishlist')
+  if (typeof getWishlist === 'function' && typeof saveWishlist === 'function') {
+    var list = getWishlist();
+    var idx = list.findIndex(function(it) { return String(it.id) === pId; });
+    var willBeSaved = (idx === -1);
+
+    if (idx >= 0) {
+      list.splice(idx, 1);
+      saveWishlist(list);
+      if (typeof showMeenuToast === 'function') showMeenuToast('Removed from Wishlist');
+    } else {
+      list.push({
+        id: pId,
+        title: activeSnitchProduct.title || 'Atelier Silhouette',
+        price: activeSnitchProduct.price || '',
+        image: activeSnitchProduct.image || '',
+        url: activeSnitchProduct.url || '#'
+      });
+      saveWishlist(list);
+      if (typeof showMeenuToast === 'function') showMeenuToast('Saved to Wishlist ❤️');
     }
+    btn.classList.toggle('active', willBeSaved);
+    var cardBtn = document.querySelector('[data-wishlist-id="' + pId + '"]');
+    if (cardBtn) cardBtn.classList.toggle('active', willBeSaved);
+    return;
   }
+
+  // 2. Standalone preview environment (index.html, global wishlist array)
+  if (typeof wishlist !== 'undefined') {
+    var idx = wishlist.indexOf(pId);
+    var cardWishBtn = document.getElementById('wishBtn_' + pId) || document.querySelector('[data-wishlist-id="' + pId + '"]');
+    if (idx === -1) {
+      wishlist.push(pId);
+      btn.classList.add('active');
+      if (cardWishBtn) cardWishBtn.classList.add('active');
+      if (typeof showToast === 'function') showToast('Added to your Wishlist!');
+    } else {
+      wishlist.splice(idx, 1);
+      btn.classList.remove('active');
+      if (cardWishBtn) cardWishBtn.classList.remove('active');
+      if (typeof showToast === 'function') showToast('Removed from your Wishlist.');
+    }
+    if (typeof updateWishlistUI === 'function') {
+      updateWishlistUI();
+    }
+    return;
+  }
+
+  btn.classList.toggle('active');
 }
 
 function closeSnitchSizePopup() {
