@@ -44,7 +44,7 @@
                onclick="openShopifyLightbox(this.src)"
                title="Click to view full screen">
         {% else %}
-          <div style="width:100%; aspect-ratio:4/5; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#FAF5ED; color:#8C827A; padding:30px; text-align:center;">
+          <div style="width:100%; aspect-ratio:2/3; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#FAF5ED; color:#8C827A; padding:30px; text-align:center;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="width:48px; height:48px; margin-bottom:10px; opacity:0.5;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
             <span style="font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:#1A1A1A;">{{ product.title }}</span>
             <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.1em;">Awaiting Model Photography</span>
@@ -331,6 +331,30 @@
   .pdp-gallery-prev { left: 14px; }
   .pdp-gallery-next { right: 14px; }
 
+    /* Main Gallery Image Frame (2:3 Atelier Portrait Aspect Ratio) */
+  .pdp-main-image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3 !important;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #F4EFEB;
+    border: 1px solid var(--border-color, #E8E2D9);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.04);
+  }
+  .pdp-main-image {
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: 2 / 3 !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+    display: block !important;
+    transition: transform 0.4s ease;
+  }
+  .pdp-main-image-wrap:hover .pdp-main-image {
+    transform: scale(1.02);
+  }
+
   /* Thumbnails Rail */
   .pdp-thumbnails-rail {
     display: flex;
@@ -351,7 +375,7 @@
   .pdp-thumb-item {
     flex: 0 0 72px;
     width: 72px;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 2 / 3 !important;
     border-radius: 8px;
     overflow: hidden;
     border: 2px solid transparent;
@@ -473,7 +497,7 @@
     .pdp-main-image-wrap {
       width: 100% !important;
       max-width: 100% !important;
-      aspect-ratio: 4 / 5 !important;
+      aspect-ratio: 2 / 3 !important;
       border-radius: 12px !important;
       overflow: hidden !important;
       box-sizing: border-box !important;
@@ -484,7 +508,7 @@
     .pdp-main-image {
       width: 100% !important;
       height: 100% !important;
-      aspect-ratio: 4 / 5 !important;
+      aspect-ratio: 2 / 3 !important;
       object-fit: cover !important;
       object-position: top center !important;
       display: block !important;
@@ -504,7 +528,7 @@
     .pdp-thumb-item {
       flex: 0 0 54px !important;
       width: 54px !important;
-      aspect-ratio: 4 / 5 !important;
+      aspect-ratio: 2 / 3 !important;
       border-radius: 6px !important;
       box-sizing: border-box !important;
     }

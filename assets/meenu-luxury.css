@@ -2430,6 +2430,7 @@
     .pdp-main-image-wrap {
       position: relative;
       width: 100%;
+      aspect-ratio: 2 / 3 !important;
       border-radius: 12px;
       overflow: hidden;
       background: #F4EFEB;
@@ -2438,7 +2439,7 @@
     }
     .pdp-main-image {
       width: 100%;
-      aspect-ratio: 4 / 5;
+      aspect-ratio: 2 / 3 !important;
       object-fit: cover;
       object-position: top center;
       display: block;
@@ -5987,7 +5988,7 @@
     .pdp-main-image-wrap {
       width: 100% !important;
       max-width: 100% !important;
-      aspect-ratio: 4 / 5 !important;
+      aspect-ratio: 2 / 3 !important;
       border-radius: 12px !important;
       overflow: hidden !important;
       box-sizing: border-box !important;
@@ -5998,7 +5999,7 @@
     .pdp-main-image {
       width: 100% !important;
       height: 100% !important;
-      aspect-ratio: 4 / 5 !important;
+      aspect-ratio: 2 / 3 !important;
       object-fit: cover !important;
       object-position: top center !important;
       display: block !important;
@@ -6018,7 +6019,7 @@
     .pdp-thumb-item {
       flex: 0 0 54px !important;
       width: 54px !important;
-      aspect-ratio: 4 / 5 !important;
+      aspect-ratio: 2 / 3 !important;
       border-radius: 6px !important;
       box-sizing: border-box !important;
     }
