@@ -703,25 +703,38 @@ window.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-
 /* ========================================================
-   QUICK SIZE POPUP INTERFACE LOGIC
+   EXACT SNITCH-STYLE QUICK SIZE DRAWER LOGIC
    ======================================================== */
-var activeQuickSizeProduct = null;
-var activeQuickSelectedVariantId = null;
-var activeQuickSelectedSizeTitle = 'M';
+var activeSnitchProduct = null;
 
 function openQuickSizePopup(btn) {
-  var modalBackdrop = document.getElementById('quickSizeModalBackdrop');
+  var modalBackdrop = document.getElementById('snitchSizeModalBackdrop');
   if (!modalBackdrop) return;
 
   var productId = btn.getAttribute('data-product-id');
   var title = btn.getAttribute('data-product-title') || 'Atelier Ensemble';
   var price = btn.getAttribute('data-product-price') || '';
-  var mrp = btn.getAttribute('data-product-mrp') || '';
   var img = btn.getAttribute('data-product-image') || '';
   var url = btn.getAttribute('data-product-url') || '#';
-  var tag = btn.getAttribute('data-product-tag') || 'DROP 01 • ATELIER PIECE';
+
+  activeSnitchProduct = {
+    id: productId,
+    title: title,
+    price: price,
+    image: img,
+    url: url
+  };
+
+  // Sync Wishlist button in header
+  var wishBtn = document.getElementById('snitchSizeWishlistBtn');
+  if (wishBtn) {
+    if (typeof wishlist !== 'undefined' && wishlist.indexOf(productId) !== -1) {
+      wishBtn.classList.add('active');
+    } else {
+      wishBtn.classList.remove('active');
+    }
+  }
 
   // Read variants data if available from the card script
   var variants = [];
@@ -739,175 +752,72 @@ function openQuickSizePopup(btn) {
   if ((!variants || variants.length === 0) && typeof productsData !== 'undefined') {
     var pObj = productsData.find(function(p) { return p.id === productId || p.code === productId; });
     if (pObj) {
-      title = pObj.name;
-      price = '₹' + pObj.price.toLocaleString('en-IN');
-      mrp = pObj.mrp ? '₹' + pObj.mrp.toLocaleString('en-IN') : '';
-      img = (pObj.images && pObj.images.length) ? pObj.images[0] : pObj.b64;
-      tag = pObj.badge || 'DROP 01 STAR';
-      url = '#product-' + pObj.id;
-      var defaultSizes = ['XS', 'S', 'M', 'L', 'XL'];
-      variants = defaultSizes.map(function(s) {
-        var bust = s === 'XS' ? '34' : s === 'S' ? '36' : s === 'M' ? '38' : s === 'L' ? '40' : '42';
-        return {
-          id: pObj.id + '_' + s,
-          title: s,
-          bust: bust,
-          available: true,
-          price: pObj.price
-        };
+      activeSnitchProduct.title = pObj.name;
+      activeSnitchProduct.price = '₹' + pObj.price.toLocaleString('en-IN');
+      activeSnitchProduct.image = (pObj.images && pObj.images.length) ? pObj.images[0] : pObj.b64;
+      activeSnitchProduct.url = '#product-' + pObj.id;
+    }
+  }
+
+  // Default Snitch sizes if variants not loaded or single variant
+  var standardSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  var sizeListEl = document.getElementById('snitchSizeList');
+  if (sizeListEl) {
+    sizeListEl.innerHTML = '';
+
+    if (variants && variants.length > 1) {
+      variants.forEach(function(v) {
+        var sName = v.title.includes('/') ? v.title.split('/')[0].trim() : v.title;
+        var isAvail = v.available !== false;
+        createSnitchSizeRow(sizeListEl, sName, v.id, isAvail);
+      });
+    } else {
+      standardSizes.forEach(function(sName) {
+        createSnitchSizeRow(sizeListEl, sName, productId + '_' + sName, true);
       });
     }
   }
 
-  // If still no variants, provide standard atelier sizes
-  if (!variants || variants.length === 0) {
-    variants = [
-      { id: productId + '_XS', title: 'XS', bust: '34', available: true },
-      { id: productId + '_S', title: 'S', bust: '36', available: true },
-      { id: productId + '_M', title: 'M', bust: '38', available: true },
-      { id: productId + '_L', title: 'L', bust: '40', available: true },
-      { id: productId + '_XL', title: 'XL', bust: '42', available: true }
-    ];
-  }
-
-  // Populate popup modal
-  var imgEl = document.getElementById('qsProductImg');
-  if (imgEl) imgEl.src = img;
-
-  var titleEl = document.getElementById('qsProductTitle');
-  if (titleEl) titleEl.textContent = title;
-
-  var tagEl = document.getElementById('qsProductTag');
-  if (tagEl) tagEl.textContent = tag.toUpperCase();
-
-  var priceEl = document.getElementById('qsProductPrice');
-  if (priceEl) priceEl.textContent = price;
-
-  var mrpEl = document.getElementById('qsProductMrp');
-  var discEl = document.getElementById('qsProductDiscount');
-  if (mrpEl) {
-    if (mrp && mrp !== price) {
-      mrpEl.textContent = mrp;
-      mrpEl.style.display = 'inline-block';
-      if (discEl) discEl.style.display = 'inline-block';
-    } else {
-      mrpEl.style.display = 'none';
-      if (discEl) discEl.style.display = 'none';
-    }
-  }
-
-  var fullLink = document.getElementById('qsViewFullLink');
-  if (fullLink) {
-    fullLink.href = url;
-    if (url.startsWith('#product-')) {
-      fullLink.onclick = function(e) {
-        e.preventDefault();
-        closeQuickSizePopup();
-        if (typeof openProductPage === 'function') {
-          openProductPage(productId);
-        }
-      };
-    } else {
-      fullLink.onclick = null;
-    }
-  }
-
-  // Render Size Tiles
-  var tilesContainer = document.getElementById('qsSizeTiles');
-  if (tilesContainer) {
-    tilesContainer.innerHTML = '';
-    var firstAvailableSelected = false;
-
-    variants.forEach(function(v) {
-      var sTitle = v.title;
-      var bustSub = v.bust ? (v.bust + ' in') : (sTitle.includes('/') ? sTitle.split('/')[1].trim() : (sTitle === 'XS' ? '34 in' : sTitle === 'S' ? '36 in' : sTitle === 'M' ? '38 in' : sTitle === 'L' ? '40 in' : sTitle === 'XL' ? '42 in' : 'Standard'));
-      var mainName = sTitle.includes('/') ? sTitle.split('/')[0].trim() : sTitle;
-      var isAvail = v.available !== false;
-      var isDefault = !firstAvailableSelected && isAvail;
-
-      if (isDefault) {
-        firstAvailableSelected = true;
-        activeQuickSelectedVariantId = v.id;
-        activeQuickSelectedSizeTitle = mainName;
-      }
-
-      var tile = document.createElement('button');
-      tile.type = 'button';
-      tile.className = 'qs-size-tile' + (isDefault ? ' active' : '') + (!isAvail ? ' disabled' : '');
-      tile.setAttribute('data-variant-id', v.id);
-      tile.setAttribute('data-size-title', mainName);
-
-      tile.innerHTML = '<span class="qs-tile-name">' + mainName + '</span>' +
-                       '<span class="qs-tile-sub">' + bustSub + '</span>' +
-                       '<span class="qs-tile-stock">' + (isAvail ? 'Only 1 Left' : 'Sold Out') + '</span>';
-
-      if (isAvail) {
-        tile.onclick = function() {
-          selectQuickSize(this, v.id, mainName);
-        };
-      }
-      tilesContainer.appendChild(tile);
-    });
-  }
-
-  // Reset Add Button state
-  var addBtn = document.getElementById('qsAddBtn');
-  var addBtnText = document.getElementById('qsAddBtnText');
-  if (addBtn) {
-    addBtn.disabled = false;
-    if (addBtnText) addBtnText.textContent = 'ADD TO ATELIER BAG';
-    addBtn.style.background = '#6E1A24';
-  }
-
-  activeQuickSizeProduct = {
-    id: productId,
-    title: title,
-    price: price,
-    image: img,
-    url: url
-  };
-
-  // Open modal with smooth transition
   modalBackdrop.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
-function selectQuickSize(btn, variantId, sizeTitle) {
-  var allTiles = document.querySelectorAll('#qsSizeTiles .qs-size-tile');
-  allTiles.forEach(function(t) { t.classList.remove('active'); });
-  btn.classList.add('active');
-  activeQuickSelectedVariantId = variantId;
-  activeQuickSelectedSizeTitle = sizeTitle;
-}
+function createSnitchSizeRow(container, sizeName, variantId, isAvailable) {
+  var row = document.createElement('button');
+  row.type = 'button';
+  row.className = 'snitch-size-row' + (!isAvailable ? ' disabled' : '');
+  
+  var nameSpan = document.createElement('span');
+  nameSpan.className = 'snitch-size-name';
+  nameSpan.textContent = sizeName;
+  row.appendChild(nameSpan);
 
-function closeQuickSizePopup() {
-  var modalBackdrop = document.getElementById('quickSizeModalBackdrop');
-  if (modalBackdrop) modalBackdrop.classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function closeQuickSizePopupOnBackdrop(event) {
-  if (event.target.id === 'quickSizeModalBackdrop') {
-    closeQuickSizePopup();
+  var statusSpan = document.createElement('span');
+  statusSpan.className = 'snitch-size-status';
+  if (!isAvailable) {
+    statusSpan.textContent = 'OUT OF STOCK';
   }
-}
+  row.appendChild(statusSpan);
 
-function submitQuickSizeAdd() {
-  if (!activeQuickSelectedVariantId) {
-    alert('Please select a size');
-    return;
+  if (isAvailable) {
+    row.onclick = function() {
+      snitchAddSizeToCart(row, variantId, sizeName);
+    };
   }
 
-  var addBtn = document.getElementById('qsAddBtn');
-  var addBtnText = document.getElementById('qsAddBtnText');
-  if (addBtn) {
-    addBtn.disabled = true;
-    if (addBtnText) addBtnText.textContent = 'ADDING TO BAG...';
+  container.appendChild(row);
+}
+
+function snitchAddSizeToCart(rowEl, variantId, sizeName) {
+  var statusSpan = rowEl.querySelector('.snitch-size-status');
+  if (statusSpan) {
+    statusSpan.textContent = '✓ ADDED';
   }
+  rowEl.style.background = '#F4EFEB';
 
   // Live Shopify Store
   if (typeof Shopify !== 'undefined' && Shopify.theme || (window.location.pathname.includes('/products/') || window.location.pathname.includes('/collections/') || window.location.pathname === '/')) {
-    if (!isNaN(parseInt(activeQuickSelectedVariantId, 10))) {
+    if (!isNaN(parseInt(variantId, 10))) {
       fetch('/cart/add.js', {
         method: 'POST',
         headers: {
@@ -915,15 +825,12 @@ function submitQuickSizeAdd() {
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          id: parseInt(activeQuickSelectedVariantId, 10),
+          id: parseInt(variantId, 10),
           quantity: 1
         })
       })
       .then(function(res) { return res.json(); })
       .then(function(item) {
-        if (addBtnText) addBtnText.textContent = 'ADDED TO BAG ✓';
-        if (addBtn) addBtn.style.background = '#2E7D32';
-
         fetch('/cart.js')
           .then(function(r) { return r.json(); })
           .then(function(cart) {
@@ -935,37 +842,31 @@ function submitQuickSizeAdd() {
           });
 
         setTimeout(function() {
-          closeQuickSizePopup();
+          closeSnitchSizePopup();
           if (typeof openCartDrawer === 'function') {
             openCartDrawer();
           }
-        }, 600);
+        }, 220);
       })
       .catch(function(err) {
         console.error('Error adding to cart:', err);
-        quickSizeFallbackSuccess();
+        snitchFallbackCartAdd(sizeName);
       });
       return;
     }
   }
 
-  // Fallback for standalone preview or non-numeric variants
-  quickSizeFallbackSuccess();
+  snitchFallbackCartAdd(sizeName);
 }
 
-function quickSizeFallbackSuccess() {
-  var addBtn = document.getElementById('qsAddBtn');
-  var addBtnText = document.getElementById('qsAddBtnText');
-  if (addBtnText) addBtnText.textContent = 'ADDED TO BAG ✓';
-  if (addBtn) addBtn.style.background = '#2E7D32';
-
-  if (typeof cart !== 'undefined' && activeQuickSizeProduct) {
+function snitchFallbackCartAdd(sizeName) {
+  if (typeof cart !== 'undefined' && activeSnitchProduct) {
     cart.push({
-      id: activeQuickSizeProduct.id,
-      title: activeQuickSizeProduct.title,
-      price: activeQuickSizeProduct.price,
-      size: activeQuickSelectedSizeTitle,
-      image: activeQuickSizeProduct.image,
+      id: activeSnitchProduct.id,
+      title: activeSnitchProduct.title,
+      price: activeSnitchProduct.price,
+      size: sizeName,
+      image: activeSnitchProduct.image,
       quantity: 1
     });
     if (typeof updateCartUI === 'function') {
@@ -974,9 +875,41 @@ function quickSizeFallbackSuccess() {
   }
 
   setTimeout(function() {
-    closeQuickSizePopup();
+    closeSnitchSizePopup();
     if (typeof openCartDrawer === 'function') {
       openCartDrawer();
     }
-  }, 600);
+  }, 220);
+}
+
+function toggleSnitchSizeWishlist(btn) {
+  if (!activeSnitchProduct) return;
+  btn.classList.toggle('active');
+  if (typeof toggleWishlistProduct === 'function') {
+    toggleWishlistProduct(activeSnitchProduct.id);
+  } else if (typeof toggleWishlist === 'function') {
+    // create a pseudo button or call
+    var wishId = activeSnitchProduct.id;
+    if (typeof wishlist !== 'undefined') {
+      var idx = wishlist.indexOf(wishId);
+      if (idx === -1) {
+        wishlist.push(wishId);
+      } else {
+        wishlist.splice(idx, 1);
+      }
+      try { localStorage.setItem('meenu_wishlist', JSON.stringify(wishlist)); } catch(e) {}
+    }
+  }
+}
+
+function closeSnitchSizePopup() {
+  var modalBackdrop = document.getElementById('snitchSizeModalBackdrop');
+  if (modalBackdrop) modalBackdrop.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeSnitchSizePopupOnBackdrop(event) {
+  if (event.target.id === 'snitchSizeModalBackdrop') {
+    closeSnitchSizePopup();
+  }
 }

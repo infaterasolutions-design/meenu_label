@@ -1,66 +1,19 @@
-<!-- Quick Size Popup Interface Modal (Meenu Label) -->
-<div class="quick-size-backdrop" id="quickSizeModalBackdrop" onclick="closeQuickSizePopupOnBackdrop(event)">
-  <div class="quick-size-modal" id="quickSizeModal" role="dialog" aria-modal="true" aria-label="Select Size & Add to Bag">
-    <!-- Close Button -->
-    <button type="button" class="quick-size-close-btn" onclick="closeQuickSizePopup()" aria-label="Close size popup">&times;</button>
-    
-    <!-- Product Row -->
-    <div class="quick-size-product-row">
-      <div class="quick-size-thumb">
-        <img id="qsProductImg" src="" alt="Silhouette">
-      </div>
-      <div class="quick-size-meta">
-        <span class="quick-size-tag" id="qsProductTag">DROP 01 &bull; ATELIER PIECE</span>
-        <h4 class="quick-size-title" id="qsProductTitle">Atelier Handcrafted Ensemble</h4>
-        <div class="quick-size-price-row">
-          <span class="quick-size-price" id="qsProductPrice">&#8377;2,999</span>
-          <span class="quick-size-mrp" id="qsProductMrp">&#8377;4,799</span>
-          <span class="quick-size-discount" id="qsProductDiscount">SAVE 38%</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="quick-size-divider"></div>
-
-    <!-- Size Selection Header -->
-    <div class="quick-size-header-row">
-      <span class="quick-size-label">SELECT ATELIER SIZE</span>
-      <button type="button" class="quick-size-chart-link" onclick="if(typeof openSizeGuideModal==='function'){openSizeGuideModal();}else{alert('Standard sizing: XS (34 in), S (36 in), M (38 in), L (40 in), XL (42 in)');}">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21.3 8.7 8.7 21.3a2.4 2.4 0 0 1-3.4 0L2.7 18.7a2.4 2.4 0 0 1 0-3.4L15.3 2.7a2.4 2.4 0 0 1 3.4 0l2.6 2.6a2.4 2.4 0 0 1 0 3.4Z"/>
-          <path d="m14.5 5.5 2 2"/>
-          <path d="m11.5 8.5 2 2"/>
-          <path d="m8.5 11.5 2 2"/>
-          <path d="m5.5 14.5 2 2"/>
+<!-- Snitch-Style Quick Size Drawer (Meenu Label) -->
+<div class="snitch-size-backdrop" id="snitchSizeModalBackdrop" onclick="closeSnitchSizePopupOnBackdrop(event)">
+  <div class="snitch-size-drawer" id="snitchSizeDrawer" role="dialog" aria-modal="true" aria-label="Choose Your Size">
+    <!-- Header: CHOOSE YOUR SIZE + Wishlist Heart -->
+    <div class="snitch-size-header">
+      <span class="snitch-size-header-title">CHOOSE YOUR SIZE</span>
+      <button type="button" class="snitch-size-wishlist-btn" id="snitchSizeWishlistBtn" onclick="toggleSnitchSizeWishlist(this)" title="Save to Wishlist" aria-label="Save to Wishlist">
+        <svg class="snitch-heart-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
         </svg>
-        Size Chart
       </button>
     </div>
 
-    <!-- Size Tiles Grid -->
-    <div class="quick-size-tiles" id="qsSizeTiles">
-      <!-- Injected via JavaScript -->
-    </div>
-
-    <!-- Artisan Scarcity Note -->
-    <div class="quick-size-scarcity-note">
-      <span class="qs-scarcity-dot"></span>
-      <span>Handcrafted in Chandigarh &bull; Strictly 3 Pieces Crafted per Size</span>
-    </div>
-
-    <!-- Add To Bag CTA Button -->
-    <button type="button" class="quick-size-add-btn" id="qsAddBtn" onclick="submitQuickSizeAdd()">
-      <span id="qsAddBtnText">ADD TO ATELIER BAG</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <path d="M16 10a4 4 0 0 1-8 0"></path>
-      </svg>
-    </button>
-
-    <!-- View Full Details Link -->
-    <div class="quick-size-footer">
-      <a href="#" id="qsViewFullLink" class="quick-size-view-full">VIEW FULL ATELIER DETAILS &rarr;</a>
+    <!-- Size Rows List (Exact Snitch Stack) -->
+    <div class="snitch-size-list" id="snitchSizeList">
+      <!-- Dynamically generated rows: XS, S, M, L, XL, XXL -->
     </div>
   </div>
 </div>
