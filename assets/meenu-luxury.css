@@ -5979,6 +5979,7 @@
    FESTIVE MAROON ELEGANCE IN BLOOM - HERO BANNER 1
    ========================================================================= */
 .snitch-slide-hero1,
+.snitch-slide-hero2,
 .snitch-slide-maroon {
   background-size: cover !important;
   background-position: center center !important;
@@ -5986,12 +5987,18 @@
   cursor: pointer !important;
 }
 .snitch-slide.snitch-slide-hero1::after,
+.snitch-slide.snitch-slide-hero2::after,
 .snitch-slide.snitch-slide-maroon::after {
   display: none !important;
   content: none !important;
 }
 @media (max-width: 768px) {
-  .snitch-slide.snitch-slide-hero1,
+  .snitch-slide.snitch-slide-hero1 {
+    background-position: center center !important;
+  }
+  .snitch-slide.snitch-slide-hero2 {
+    background-position: 68% center !important;
+  }
   .snitch-slide.snitch-slide-maroon {
     background-position: center center !important;
   }
