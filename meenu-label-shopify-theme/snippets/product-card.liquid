@@ -36,11 +36,32 @@
       <h3 class="card-title">{{ product.title }}</h3>
     </a>
     <div class="card-price-row">
-      <span class="price-main">{{ product.price | money }}</span>
-      {% if product.compare_at_price > product.price %}
-        <span class="price-mrp" style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; margin-left: 6px;">{{ product.compare_at_price | money }}</span>
-      {% endif %}
-      <a href="{{ product.url }}" class="snitch-plus-trigger" title="Select size & add to bag" aria-label="Select size & add to bag">+</a>
+      <div class="card-price-left">
+        <span class="price-main">{{ product.price | money }}</span>
+        {% if product.compare_at_price > product.price %}
+          <span class="price-mrp" style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; margin-left: 6px;">{{ product.compare_at_price | money }}</span>
+        {% endif %}
+      </div>
+      <button type="button" class="snitch-plus-trigger" 
+              data-product-id="{{ product.id }}"
+              data-product-title="{{ product.title | escape }}"
+              data-product-price="{{ product.price | money | escape }}"
+              data-product-mrp="{% if product.compare_at_price > product.price %}{{ product.compare_at_price | money | escape }}{% endif %}"
+              data-product-image="{{ product.featured_image | default: product.images.first | image_url: width: 400 }}"
+              data-product-url="{{ product.url }}"
+              data-product-tag="{% if product.tags contains 'festive' %}FLAGSHIP HERO{% else %}DROP 01 PIECE{% endif %}"
+              onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" 
+              title="Select Size & Add to Bag" 
+              aria-label="Select Size & Add to Bag">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+          <line x1="6" y1="9" x2="18" y2="9"></line>
+          <line x1="4" y1="19" x2="20" y2="19"></line>
+        </svg>
+      </button>
+      <script type="application/json" class="product-variants-json">
+        {{ product.variants | json }}
+      </script>
     </div>
   </div>
 </div>
