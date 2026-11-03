@@ -847,7 +847,7 @@ function snitchAddSizeToCart(rowEl, variantId, sizeName) {
         }
 
         // 2. Update all badge elements across header and drawers
-        var allBadges = document.querySelectorAll('#headerCartCount, .header-badge-pill, .cart-count-badge, .header-cart-count, #cartCountBadge, .nav-drawer-cart-count, #cartDrawerCount');
+        var allBadges = document.querySelectorAll('#headerCartCount, .header-cart-pill, .cart-count-badge, .header-cart-count, #cartCountBadge, .nav-drawer-cart-count, #cartDrawerCount');
         allBadges.forEach(function(b) {
           b.textContent = cart.item_count || 0;
           b.style.display = cart.item_count > 0 ? 'inline-flex' : 'none';
