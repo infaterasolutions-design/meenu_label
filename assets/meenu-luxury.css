@@ -1265,6 +1265,8 @@
       gap: 14px;
       border-bottom: 2px solid var(--text-main);
       padding-bottom: 10px;
+      padding-right: 84px;
+      position: relative;
     }
     .search-input-box svg {
       width: 22px;
@@ -1332,17 +1334,28 @@
       position: absolute;
       top: 0;
       right: 0;
-      background: none;
-      border: none;
+      z-index: 280;
+      pointer-events: auto;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 12px;
+      min-height: 36px;
+      min-width: 65px;
       font-size: 13px;
       font-weight: 600;
       color: var(--text-muted);
-      cursor: pointer;
-      padding: 4px 8px;
+      background: none;
+      border: none;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      transition: color 0.18s ease, transform 0.18s ease;
     }
-    .search-close-action:hover { color: var(--text-main); }
+    .search-close-action:hover {
+      color: var(--text-main);
+      transform: scale(1.05);
+    }
 
     /* Card Wishlist Button */
     .card-wishlist-btn {
@@ -5834,9 +5847,36 @@
 .search-input-box {
   position: relative !important;
   z-index: 260 !important;
+  padding-right: 84px !important;
 }
 .search-input-box input {
   pointer-events: auto !important;
+}
+.search-close-action {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 280 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 12px !important;
+  min-height: 36px !important;
+  min-width: 65px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--text-muted) !important;
+  background: transparent !important;
+  border: none !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  transition: color 0.18s ease, transform 0.18s ease !important;
+}
+.search-close-action:hover {
+  color: var(--text-main) !important;
+  transform: scale(1.05) !important;
 }
 
 

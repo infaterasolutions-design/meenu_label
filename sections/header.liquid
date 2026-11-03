@@ -9,7 +9,7 @@
           <line x1="3" y1="18" x2="21" y2="18"></line>
         </svg>
       </button>
-      <button class="header-icon-action header-search-btn" onclick="toggleSearchBar()" title="Search Drop 01" aria-label="Search">
+      <button class="header-icon-action header-search-btn" onclick="toggleSearchBar(event)" title="Search Drop 01" aria-label="Search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
           <circle cx="11" cy="11" r="7.5"></circle>
           <line x1="16.5" y1="16.5" x2="22" y2="22"></line>
@@ -56,7 +56,7 @@
   <!-- Slide-Down Search Overlay -->
   <div class="search-overlay-bar" id="searchOverlayBar">
     <div class="search-overlay-inner">
-      <button type="button" class="search-close-action" onclick="toggleSearchBar()" title="Close Search">Close &times;</button>
+      <button type="button" class="search-close-action" id="searchCloseBtn" onclick="closeSearchBar(event)" title="Close Search" aria-label="Close Search">Close &times;</button>
       <form action="/search" method="get" class="search-input-box" role="search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
           <circle cx="11" cy="11" r="7.5"></circle>

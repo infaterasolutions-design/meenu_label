@@ -427,17 +427,47 @@ function closeSizeGuideModal() {
   if (modal) modal.style.display = 'none';
 }
 
-function toggleSearchBar() {
+function closeSearchBar(e) {
+  if (e) {
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+  }
+  var bar = document.getElementById('searchOverlayBar');
+  if (bar) bar.classList.remove('open');
+}
+
+function toggleSearchBar(e) {
+  if (e) {
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+  }
   var bar = document.getElementById('searchOverlayBar');
   if (!bar) return;
+  var willOpen = !bar.classList.contains('open');
   bar.classList.toggle('open');
-  if (bar.classList.contains('open')) {
+  if (willOpen) {
     var inp = document.getElementById('searchInput');
     if (inp) {
       setTimeout(function() { inp.focus(); }, 120);
     }
   }
 }
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' || e.key === 'Esc' || e.keyCode === 27) {
+    closeSearchBar();
+  }
+});
+
+document.addEventListener('click', function(e) {
+  var bar = document.getElementById('searchOverlayBar');
+  if (!bar || !bar.classList.contains('open')) return;
+  var isSearchTrigger = e.target.closest && e.target.closest('.header-search-btn, .search-close-action, [onclick*="toggleSearchBar"], [onclick*="closeSearchBar"]');
+  var isInsideBar = bar.contains(e.target);
+  if (!isInsideBar && !isSearchTrigger) {
+    closeSearchBar();
+  }
+});
 
 function checkTricityPincode(pin) {
   var res = document.getElementById('PincodeResult');
