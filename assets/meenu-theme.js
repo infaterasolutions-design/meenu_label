@@ -559,7 +559,7 @@ var STORE_POLICIES = {
   },
   exchange: {
     title: "Atelier Sizing Guarantee & Exchange Terms",
-    html: "<h3>7-Day Hassle-Free Doorstep Exchange</h3><p>At Meenu Label, we want your silhouette to fit like it was custom-tailored for you. If your piece doesn't fit exactly as desired, we offer a seamless <strong>7-Day Doorstep Size Exchange</strong>.</p><h3>How Exchange Works</h3><ol><li><strong>Initiate:</strong> Send a WhatsApp message to our Concierge Team at <strong>+91 99888 98845</strong> with your Order Number and desired replacement size (M, L, or XL).</li><li><strong>Doorstep Pickup:</strong> Our courier partner will arrive at your address to inspect and pick up the original garment.</li><li><strong>Priority Re-dispatch:</strong> Your fresh replacement piece will be dispatched immediately with zero extra delivery charges.</li></ol><h3>Eligibility Conditions</h3><ul><li>Garment must be unworn, unwashed, and undamaged with all original atelier brand tags intact.</li><li>Must be returned in the original reusable EVA zipper pouch provided.</li><li>Exchange request must be submitted within 7 calendar days of delivery.</li></ul>"
+    html: "<h3>7-Day Hassle-Free Doorstep Exchange</h3><p>At Meenu Label, we want your silhouette to fit like it was custom-tailored for you. If your piece doesn't fit exactly as desired, we offer a seamless <strong>7-Day Doorstep Size Exchange</strong>.</p><h3>How Exchange Works</h3><ol><li><strong>Initiate:</strong> Send a WhatsApp message to our Concierge Team at <strong>+91 85116 16133</strong> with your Order Number and desired replacement size (M, L, or XL).</li><li><strong>Doorstep Pickup:</strong> Our courier partner will arrive at your address to inspect and pick up the original garment.</li><li><strong>Priority Re-dispatch:</strong> Your fresh replacement piece will be dispatched immediately with zero extra delivery charges.</li></ol><h3>Eligibility Conditions</h3><ul><li>Garment must be unworn, unwashed, and undamaged with all original atelier brand tags intact.</li><li>Must be returned in the original reusable EVA zipper pouch provided.</li><li>Exchange request must be submitted within 7 calendar days of delivery.</li></ul>"
   },
   privacy: {
     title: "Privacy Policy & Terms of Service",
@@ -567,7 +567,7 @@ var STORE_POLICIES = {
   },
   contact: {
     title: "Contact Us & Customer Care Concierge",
-    html: "<h3>Chandigarh Atelier & Client Concierge</h3><p>We are delighted to assist you with sizing advice, custom styling recommendations, or order inquiries.</p><ul><li><strong>WhatsApp Concierge (Fastest Response):</strong> <a href='https://wa.me/919988898845' target='_blank' style='color:#25D366; font-weight:700;'>+91 99888 98845</a> (10:00 AM – 7:00 PM IST, Monday to Saturday)</li><li><strong>Official Email Support:</strong> <a href='mailto:support@meenulabel.com' style='color:#6E1A24; font-weight:700;'>support@meenulabel.com</a></li><li><strong>Atelier Headquarters:</strong> Meenu Label, Chandigarh Tricity, Punjab & Haryana, India</li><li><strong>Official Domain:</strong> <a href='https://meenulabel.com' target='_blank'>meenulabel.com</a> / <a href='https://meenulabel.in' target='_blank'>meenulabel.in</a></li></ul>"
+    html: "<h3>Chandigarh Atelier & Client Concierge</h3><p>We are delighted to assist you with sizing advice, custom styling recommendations, or order inquiries.</p><ul><li><strong>WhatsApp Concierge (Fastest Response):</strong> <a href='https://wa.me/918511616133' target='_blank' style='color:#25D366; font-weight:700;'>+91 85116 16133</a> (10:00 AM – 7:00 PM IST, Monday to Saturday)</li><li><strong>Official Email Support:</strong> <a href='mailto:support@meenulabel.com' style='color:#6E1A24; font-weight:700;'>support@meenulabel.com</a></li><li><strong>Atelier Headquarters:</strong> Meenu Label, Chandigarh Tricity, Punjab & Haryana, India</li><li><strong>Official Domain:</strong> <a href='https://meenulabel.com' target='_blank'>meenulabel.com</a> / <a href='https://meenulabel.in' target='_blank'>meenulabel.in</a></li></ul>"
   }
 };
 
@@ -637,7 +637,7 @@ function toggleWaPopup(e) {
 }
 
 function sendWaPreset(text) {
-  var phone = '919988898845';
+  var phone = '918511616133';
   var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(text);
   window.open(url, '_blank');
   var card = document.getElementById('waPopupCard');
@@ -854,7 +854,7 @@ function createSnitchSizeRow(container, sizeName, variantId, isAvailable) {
     row.onclick = function() {
       closeSnitchSizePopup();
       var msg = 'Hi Meenu Label! Please notify me when "' + (activeSnitchProduct ? activeSnitchProduct.title : 'this silhouette') + '" in Size ' + sizeName + ' is back in stock. Please share restock timeline.';
-      var waUrl = 'https://wa.me/919988898845?text=' + encodeURIComponent(msg);
+      var waUrl = 'https://wa.me/918511616133?text=' + encodeURIComponent(msg);
       window.open(waUrl, '_blank');
       if (typeof showMeenuToast === 'function') {
         showMeenuToast('Opening WhatsApp Concierge for Size ' + sizeName + '... 💬');
@@ -1165,7 +1165,7 @@ function updateNotifyConciergeLink() {
   var conciergeBtn = document.getElementById('notifyConciergeWhatsAppBtn');
   if (conciergeBtn) {
     var msg = 'Hi Meenu Label! I would like to reserve or be notified when "' + (activeNotifyProduct.title || 'this ensemble') + '" in Size ' + (activeNotifyProduct.size || 'M') + ' is crafted again. Please share restock timeline.';
-    conciergeBtn.href = 'https://wa.me/919988898845?text=' + encodeURIComponent(msg);
+    conciergeBtn.href = 'https://wa.me/918511616133?text=' + encodeURIComponent(msg);
   }
 }
 
@@ -1221,7 +1221,7 @@ function submitNotifyMeRequest() {
   // Direct WhatsApp Concierge (Option A): Open WhatsApp chat directly so the merchant receives phone number & request!
   if (channel === 'whatsapp') {
     var waMsg = 'Hi Meenu Label! My contact number is ' + contactValue + '. Please notify me when "' + (activeNotifyProduct.title || 'this silhouette') + '" in Size ' + (activeNotifyProduct.size || 'M') + ' is back in stock. Please share restock timeline.';
-    var waUrl = 'https://wa.me/919988898845?text=' + encodeURIComponent(waMsg);
+    var waUrl = 'https://wa.me/918511616133?text=' + encodeURIComponent(waMsg);
     window.open(waUrl, '_blank');
   }
 
