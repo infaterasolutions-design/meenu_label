@@ -1,0 +1,92 @@
+<!-- Luxury Restock Alert / Notify Me Modal (Meenu Label) -->
+<div class="meenu-notify-backdrop" id="meenuNotifyBackdrop" onclick="closeNotifyMeModalOnBackdrop(event)">
+  <div class="meenu-notify-modal" id="meenuNotifyModal" role="dialog" aria-modal="true" aria-labelledby="notifyModalTitle">
+    <!-- Close button -->
+    <button type="button" class="meenu-notify-close" onclick="closeNotifyMeModal()" aria-label="Close notification modal">&times;</button>
+
+    <!-- Normal Form View -->
+    <div id="notifyFormView">
+      <!-- Header -->
+      <div class="meenu-notify-header">
+        <span class="notify-atelier-tag">CHANDIGARH ATELIER RESTOCK WAITLIST</span>
+        <h3 class="notify-title" id="notifyModalTitle">Notify Me When Available</h3>
+        <p class="notify-subtitle">Strictly limited atelier runs. Join the priority waitlist to be alerted first when this silhouette is re-crafted.</p>
+      </div>
+
+      <!-- Product Snapshot -->
+      <div class="notify-product-preview">
+        <img id="notifyProductImg" src="" alt="Product Thumbnail" class="notify-thumb">
+        <div class="notify-product-meta">
+          <h4 id="notifyProductTitle" class="notify-prod-title"></h4>
+          <div class="notify-prod-row">
+            <span id="notifyProductPrice" class="notify-prod-price"></span>
+            <span class="notify-stock-status">SOLD OUT</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Size Choice -->
+      <div class="notify-size-picker">
+        <label class="notify-label">Select Your Desired Size:</label>
+        <div class="notify-size-pills" id="notifySizePills">
+          <button type="button" class="notify-size-pill" data-size="XS" onclick="selectNotifySize('XS', this)">XS</button>
+          <button type="button" class="notify-size-pill" data-size="S" onclick="selectNotifySize('S', this)">S</button>
+          <button type="button" class="notify-size-pill active" data-size="M" onclick="selectNotifySize('M', this)">M</button>
+          <button type="button" class="notify-size-pill" data-size="L" onclick="selectNotifySize('L', this)">L</button>
+          <button type="button" class="notify-size-pill" data-size="XL" onclick="selectNotifySize('XL', this)">XL</button>
+          <button type="button" class="notify-size-pill" data-size="XXL" onclick="selectNotifySize('XXL', this)">XXL</button>
+        </div>
+      </div>
+
+      <!-- Notification Channel Selector (Tabs) -->
+      <div class="notify-channels-wrap">
+        <div class="notify-tabs">
+          <button type="button" class="notify-tab active" id="notifyTabWhatsApp" onclick="switchNotifyTab('whatsapp')">
+            <span class="notify-tab-icon">&#128172;</span> WhatsApp Alert
+          </button>
+          <button type="button" class="notify-tab" id="notifyTabEmail" onclick="switchNotifyTab('email')">
+            <span class="notify-tab-icon">&#9993;</span> Email Alert
+          </button>
+        </div>
+
+        <!-- WhatsApp Input Group -->
+        <div class="notify-input-group" id="notifyWhatsAppGroup">
+          <label class="notify-label" for="notifyPhoneInput">WhatsApp Mobile Number</label>
+          <div class="notify-phone-row">
+            <span class="notify-country-code">+91</span>
+            <input type="tel" id="notifyPhoneInput" placeholder="Enter 10-digit mobile number" maxlength="10" inputmode="numeric">
+          </div>
+          <div class="notify-error" id="notifyPhoneError" style="display:none;">Please enter a valid 10-digit mobile number.</div>
+        </div>
+
+        <!-- Email Input Group -->
+        <div class="notify-input-group" id="notifyEmailGroup" style="display:none;">
+          <label class="notify-label" for="notifyEmailInput">Email Address</label>
+          <input type="email" id="notifyEmailInput" placeholder="name@example.com" class="notify-email-input">
+          <div class="notify-error" id="notifyEmailError" style="display:none;">Please enter a valid email address.</div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="button" class="notify-submit-btn" id="notifySubmitBtn" onclick="submitNotifyMeRequest()">
+        <span id="notifySubmitText">NOTIFY ME WHEN RESTOCKED &rarr;</span>
+      </button>
+
+      <!-- Quick Concierge Direct WhatsApp -->
+      <div class="notify-concierge-divider"><span>OR TALK TO ATELIER NOW</span></div>
+      <a id="notifyConciergeWhatsAppBtn" class="notify-concierge-btn" href="#" target="_blank">
+        <span style="font-size:16px;">&#128172;</span> Chat with Stylist on WhatsApp for Custom Order
+      </a>
+    </div>
+
+    <!-- Success State View (Initially Hidden) -->
+    <div class="notify-success-view" id="notifySuccessView" style="display:none;">
+      <div class="notify-success-check">&#10003;</div>
+      <h3 class="notify-success-title">You're On The Priority List!</h3>
+      <p class="notify-success-msg" id="notifySuccessMsg">
+        We have registered your restock alert for Size <strong id="notifySuccessSize">M</strong>. Our Chandigarh atelier will notify you as soon as this piece is ready.
+      </p>
+      <button type="button" class="notify-done-btn" onclick="closeNotifyMeModal()">CONTINUE BROWSING</button>
+    </div>
+  </div>
+</div>
