@@ -3553,6 +3553,96 @@
     font-size: 23px;
   }
 }
+
+/* =========================================================================
+   DIRECT WHATSAPP CONCIERGE RESTOCK ENGINE (OPTION A)
+   ========================================================================= */
+
+/* Primary WhatsApp Notify Button on PDP */
+.pdp-btn-notify-whatsapp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 24px;
+  background: #25D366;
+  color: #FFFFFF !important;
+  border: 1.5px solid #1EBE5D;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.28);
+}
+
+.pdp-btn-notify-whatsapp:hover {
+  background: #1EBE5D;
+  border-color: #16A34A;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 22px rgba(37, 211, 102, 0.4);
+  transform: translateY(-2px);
+}
+
+.pdp-btn-notify-whatsapp svg {
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+/* Secondary Waitlist Trigger Button on PDP */
+.pdp-btn-notify-waitlist {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 18px;
+  background: #FAF7F2;
+  color: #57534E;
+  border: 1px dashed #C8A364;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 6px;
+}
+
+.pdp-btn-notify-waitlist:hover {
+  background: #F5EBE1;
+  color: #1C1917;
+  border-color: #A37E3A;
+  border-style: solid;
+}
+
+/* Grid Card WhatsApp Notify Trigger */
+.snitch-notify-trigger.whatsapp-notify-trigger {
+  background: #1C1917;
+  color: #25D366;
+  border-color: rgba(37, 211, 102, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  text-decoration: none !important;
+}
+
+.snitch-notify-trigger.whatsapp-notify-trigger:hover {
+  background: #25D366;
+  color: #FFFFFF;
+  border-color: #25D366;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+}
+
+.snitch-notify-trigger.whatsapp-notify-trigger svg {
+  fill: currentColor;
+}
+
 </style>
 </head>
 <body>
@@ -4481,13 +4571,13 @@
           <span class="price-main">&#8377;2,999</span>
           <span class="price-mrp">&#8377;4,799</span>
           <span class="price-discount">38% OFF</span>
-          <button type="button" class="snitch-notify-trigger" data-product-id="JAB25ST02661" onclick="event.preventDefault(); event.stopPropagation(); openNotifyMeModal('JAB25ST02661', 'M', 'The Noor Petrol Teal Chanderi Suit', '', '&#8377;2,999')" title="Sold Out - Notify Me When Available" aria-label="Notify Me When Available">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          <a class="snitch-notify-trigger whatsapp-notify-trigger" data-product-id="JAB25ST02661" href="https://wa.me/919988898845?text=Hi%20Meenu%20Label!%20Please%20notify%20me%20when%20%22The%20Noor%20Petrol%20Teal%20Chanderi%20Suit%22%20is%20back%20in%20stock.%20Please%20share%20restock%20timeline." target="_blank" onclick="event.stopPropagation();" title="Notify Me on WhatsApp When Restocked" aria-label="Notify Me on WhatsApp When Restocked">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.98-.276-.1-.477-.15-.678.15-.2.301-.778.98-.953 1.18-.175.2-.351.226-.652.075-.301-.15-1.272-.469-2.423-1.496-.896-.799-1.501-1.786-1.677-2.087-.175-.301-.019-.464.132-.614.135-.135.301-.351.451-.527.151-.176.201-.301.301-.502.101-.201.05-.376-.025-.527-.075-.15-.678-1.634-.929-2.237-.245-.588-.493-.508-.678-.518-.175-.01-.376-.01-.577-.01-.201 0-.527.075-.803.376s-1.054 1.029-1.054 2.511c0 1.482 1.079 2.913 1.23 3.114.15.201 2.122 3.24 5.14 4.544.718.31 1.279.496 1.716.635.722.23 1.379.197 1.9.119.58-.088 1.78-.727 2.03-1.43.251-.703.251-1.305.176-1.43-.075-.126-.276-.201-.577-.351z"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.05 21.95l4.908-1.353C8.414 21.49 10.15 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.61 0-3.13-.45-4.43-1.23l-.317-.189-2.906.801.815-2.833-.207-.328A8.152 8.152 0 0 1 3.8 12c0-4.52 3.68-8.2 8.2-8.2 4.52 0 8.2 3.68 8.2 8.2 0 4.52-3.68 8.2-8.2 8.2z"/>
             </svg>
-            <span class="notify-btn-text">NOTIFY ME</span>
-          </button>
+            <span class="notify-btn-text">NOTIFY ON WHATSAPP</span>
+          </a>
         </div>
         <div class="card-sizes-row">
           <div class="size-pills">
@@ -4714,13 +4804,22 @@
           <div class="pdp-actions-row">
             <button class="pdp-btn-primary" id="pdpAddToCartBtn" onclick="addPdpProductToCart()">ADD TO SHOPPING BAG</button>
             <button class="pdp-btn-buy" id="pdpBuyNowBtn" onclick="buyPdpProductNow()">BUY IT NOW &rarr;</button>
-            <button class="pdp-btn-notify" id="pdpNotifyBtn" style="display:none;" onclick="triggerPdpNotifyMe()">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+
+            <!-- Direct WhatsApp Concierge Button (Option A) -->
+            <a id="pdpNotifyWhatsAppBtn" class="pdp-btn-notify-whatsapp" style="display:none;" href="#" target="_blank">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.98-.276-.1-.477-.15-.678.15-.2.301-.778.98-.953 1.18-.175.2-.351.226-.652.075-.301-.15-1.272-.469-2.423-1.496-.896-.799-1.501-1.786-1.677-2.087-.175-.301-.019-.464.132-.614.135-.135.301-.351.451-.527.151-.176.201-.301.301-.502.101-.201.05-.376-.025-.527-.075-.15-.678-1.634-.929-2.237-.245-.588-.493-.508-.678-.518-.175-.01-.376-.01-.577-.01-.201 0-.527.075-.803.376s-1.054 1.029-1.054 2.511c0 1.482 1.079 2.913 1.23 3.114.15.201 2.122 3.24 5.14 4.544.718.31 1.279.496 1.716.635.722.23 1.379.197 1.9.119.58-.088 1.78-.727 2.03-1.43.251-.703.251-1.305.176-1.43-.075-.126-.276-.201-.577-.351z"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.05 21.95l4.908-1.353C8.414 21.49 10.15 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.61 0-3.13-.45-4.43-1.23l-.317-.189-2.906.801.815-2.833-.207-.328A8.152 8.152 0 0 1 3.8 12c0-4.52 3.68-8.2 8.2-8.2 4.52 0 8.2 3.68 8.2 8.2 0 4.52-3.68 8.2-8.2 8.2z"/>
               </svg>
-              SOLD OUT &bull; NOTIFY ME WHEN AVAILABLE
+              <span>NOTIFY ME ON WHATSAPP WHEN RESTOCKED</span>
+            </a>
+
+            <!-- Secondary Waitlist Trigger -->
+            <button type="button" class="pdp-btn-notify-waitlist" id="pdpNotifyWaitlistBtn" style="display:none;" onclick="triggerPdpNotifyMe()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <span>OR JOIN RESTOCK WAITLIST (EMAIL / SMS)</span>
             </button>
+
             <a id="pdpWhatsAppBtn" class="pdp-btn-whatsapp" href="#" target="_blank">
               <span style="font-size:20px;">&#128172;</span> ORDER VIA WHATSAPP ATELIER CONCIERGE
             </a>
@@ -5551,16 +5650,26 @@
 
         var addBtn = document.getElementById('pdpAddToCartBtn');
         var buyBtn = document.getElementById('pdpBuyNowBtn');
-        var notifyBtn = document.getElementById('pdpNotifyBtn');
+        var waNotifyBtn = document.getElementById('pdpNotifyWhatsAppBtn');
+        var waitlistBtn = document.getElementById('pdpNotifyWaitlistBtn');
+        var regularWaBtn = document.getElementById('pdpWhatsAppBtn');
 
         if (isSoldOut) {
           if (addBtn) addBtn.style.display = 'none';
           if (buyBtn) buyBtn.style.display = 'none';
-          if (notifyBtn) notifyBtn.style.display = 'flex';
+          if (regularWaBtn) regularWaBtn.style.display = 'none';
+          if (waNotifyBtn) {
+            waNotifyBtn.style.display = 'flex';
+            var msg = 'Hi Meenu Label! Please notify me when "' + p.name + '" (Style #' + p.code + ') in Size ' + size + ' is back in stock. Please share restock timeline.';
+            waNotifyBtn.href = 'https://wa.me/919988898845?text=' + encodeURIComponent(msg);
+          }
+          if (waitlistBtn) waitlistBtn.style.display = 'flex';
         } else {
           if (addBtn) addBtn.style.display = 'block';
           if (buyBtn) buyBtn.style.display = 'block';
-          if (notifyBtn) notifyBtn.style.display = 'none';
+          if (regularWaBtn) regularWaBtn.style.display = 'flex';
+          if (waNotifyBtn) waNotifyBtn.style.display = 'none';
+          if (waitlistBtn) waitlistBtn.style.display = 'none';
         }
       }
     }
@@ -6637,7 +6746,7 @@ function createSnitchSizeRow(container, sizeName, variantId, isAvailable) {
   var statusSpan = document.createElement('span');
   statusSpan.className = 'snitch-size-status' + (!isAvailable ? ' sold-out-status' : '');
   if (!isAvailable) {
-    statusSpan.textContent = 'SOLD OUT • NOTIFY ME';
+    statusSpan.innerHTML = '<span style="color:#25D366; font-size:12px; margin-right:4px;">&#128172;</span> NOTIFY ON WHATSAPP';
   }
   row.appendChild(statusSpan);
 
@@ -6648,13 +6757,12 @@ function createSnitchSizeRow(container, sizeName, variantId, isAvailable) {
   } else {
     row.onclick = function() {
       closeSnitchSizePopup();
-      openNotifyMeModal(
-        activeSnitchProduct.id,
-        sizeName,
-        activeSnitchProduct.title,
-        activeSnitchProduct.image,
-        activeSnitchProduct.price
-      );
+      var msg = 'Hi Meenu Label! Please notify me when "' + (activeSnitchProduct ? activeSnitchProduct.title : 'this silhouette') + '" in Size ' + sizeName + ' is back in stock. Please share restock timeline.';
+      var waUrl = 'https://wa.me/919988898845?text=' + encodeURIComponent(msg);
+      window.open(waUrl, '_blank');
+      if (typeof showMeenuToast === 'function') {
+        showMeenuToast('Opening WhatsApp Concierge for Size ' + sizeName + '... 💬');
+      }
     };
   }
 
@@ -6984,6 +7092,30 @@ function submitNotifyMeRequest() {
     localStorage.setItem('meenu_restock_alerts', JSON.stringify(alerts));
   } catch(e) {}
 
+  // Direct WhatsApp Concierge (Option A): Open WhatsApp chat directly so the merchant receives phone number & request!
+  if (channel === 'whatsapp') {
+    var waMsg = 'Hi Meenu Label! My contact number is ' + contactValue + '. Please notify me when "' + (activeNotifyProduct.title || 'this silhouette') + '" in Size ' + (activeNotifyProduct.size || 'M') + ' is back in stock. Please share restock timeline.';
+    var waUrl = 'https://wa.me/919988898845?text=' + encodeURIComponent(waMsg);
+    window.open(waUrl, '_blank');
+  }
+
+  // Also submit to Shopify native /contact endpoint in the background
+  try {
+    var formData = new FormData();
+    formData.append('form_type', 'contact');
+    formData.append('utf8', '✓');
+    formData.append('contact[tags]', 'restock-waitlist, ' + (activeNotifyProduct.title || '') + ', Size ' + (activeNotifyProduct.size || ''));
+    formData.append('contact[body]', 'Restock Alert Request for ' + (activeNotifyProduct.title || '') + ' (Size ' + (activeNotifyProduct.size || '') + '). Customer Contact: ' + contactValue);
+    if (channel === 'email') {
+      formData.append('contact[email]', contactValue);
+    } else {
+      var safeDigits = contactValue.replace(/\D/g, '');
+      formData.append('contact[email]', 'restock-' + safeDigits + '@meenulabel.com');
+      formData.append('contact[note][WhatsApp_Phone]', contactValue);
+    }
+    fetch('/contact', { method: 'POST', body: formData }).catch(function(){});
+  } catch(e) {}
+
   setTimeout(function() {
     var formView = document.getElementById('notifyFormView');
     var successView = document.getElementById('notifySuccessView');
@@ -6992,6 +7124,13 @@ function submitNotifyMeRequest() {
     if (sizeDisplay) sizeDisplay.textContent = activeNotifyProduct.size;
     if (formView) formView.style.display = 'none';
     if (successView) successView.style.display = 'block';
+
+    if (channel === 'whatsapp') {
+      var successMsg = document.getElementById('notifySuccessMsg');
+      if (successMsg) {
+        successMsg.innerHTML = 'Connecting with our Chandigarh stylist via WhatsApp! We have recorded your request for Size <strong>' + activeNotifyProduct.size + '</strong> and will message you the moment it is ready.';
+      }
+    }
 
     if (typeof showMeenuToast === 'function') {
       showMeenuToast('Waitlist confirmed for Size ' + activeNotifyProduct.size + ' ✨');

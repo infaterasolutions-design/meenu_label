@@ -842,7 +842,7 @@ function createSnitchSizeRow(container, sizeName, variantId, isAvailable) {
   var statusSpan = document.createElement('span');
   statusSpan.className = 'snitch-size-status' + (!isAvailable ? ' sold-out-status' : '');
   if (!isAvailable) {
-    statusSpan.textContent = 'SOLD OUT • NOTIFY ME';
+    statusSpan.innerHTML = '<span style="color:#25D366; font-size:12px; margin-right:4px;">&#128172;</span> NOTIFY ON WHATSAPP';
   }
   row.appendChild(statusSpan);
 
@@ -853,13 +853,12 @@ function createSnitchSizeRow(container, sizeName, variantId, isAvailable) {
   } else {
     row.onclick = function() {
       closeSnitchSizePopup();
-      openNotifyMeModal(
-        activeSnitchProduct.id,
-        sizeName,
-        activeSnitchProduct.title,
-        activeSnitchProduct.image,
-        activeSnitchProduct.price
-      );
+      var msg = 'Hi Meenu Label! Please notify me when "' + (activeSnitchProduct ? activeSnitchProduct.title : 'this silhouette') + '" in Size ' + sizeName + ' is back in stock. Please share restock timeline.';
+      var waUrl = 'https://wa.me/919988898845?text=' + encodeURIComponent(msg);
+      window.open(waUrl, '_blank');
+      if (typeof showMeenuToast === 'function') {
+        showMeenuToast('Opening WhatsApp Concierge for Size ' + sizeName + '... 💬');
+      }
     };
   }
 
@@ -1219,6 +1218,30 @@ function submitNotifyMeRequest() {
     localStorage.setItem('meenu_restock_alerts', JSON.stringify(alerts));
   } catch(e) {}
 
+  // Direct WhatsApp Concierge (Option A): Open WhatsApp chat directly so the merchant receives phone number & request!
+  if (channel === 'whatsapp') {
+    var waMsg = 'Hi Meenu Label! My contact number is ' + contactValue + '. Please notify me when "' + (activeNotifyProduct.title || 'this silhouette') + '" in Size ' + (activeNotifyProduct.size || 'M') + ' is back in stock. Please share restock timeline.';
+    var waUrl = 'https://wa.me/919988898845?text=' + encodeURIComponent(waMsg);
+    window.open(waUrl, '_blank');
+  }
+
+  // Also submit to Shopify native /contact endpoint in the background
+  try {
+    var formData = new FormData();
+    formData.append('form_type', 'contact');
+    formData.append('utf8', '✓');
+    formData.append('contact[tags]', 'restock-waitlist, ' + (activeNotifyProduct.title || '') + ', Size ' + (activeNotifyProduct.size || ''));
+    formData.append('contact[body]', 'Restock Alert Request for ' + (activeNotifyProduct.title || '') + ' (Size ' + (activeNotifyProduct.size || '') + '). Customer Contact: ' + contactValue);
+    if (channel === 'email') {
+      formData.append('contact[email]', contactValue);
+    } else {
+      var safeDigits = contactValue.replace(/\D/g, '');
+      formData.append('contact[email]', 'restock-' + safeDigits + '@meenulabel.com');
+      formData.append('contact[note][WhatsApp_Phone]', contactValue);
+    }
+    fetch('/contact', { method: 'POST', body: formData }).catch(function(){});
+  } catch(e) {}
+
   setTimeout(function() {
     var formView = document.getElementById('notifyFormView');
     var successView = document.getElementById('notifySuccessView');
@@ -1227,6 +1250,13 @@ function submitNotifyMeRequest() {
     if (sizeDisplay) sizeDisplay.textContent = activeNotifyProduct.size;
     if (formView) formView.style.display = 'none';
     if (successView) successView.style.display = 'block';
+
+    if (channel === 'whatsapp') {
+      var successMsg = document.getElementById('notifySuccessMsg');
+      if (successMsg) {
+        successMsg.innerHTML = 'Connecting with our Chandigarh stylist via WhatsApp! We have recorded your request for Size <strong>' + activeNotifyProduct.size + '</strong> and will message you the moment it is ready.';
+      }
+    }
 
     if (typeof showMeenuToast === 'function') {
       showMeenuToast('Waitlist confirmed for Size ' + activeNotifyProduct.size + ' ✨');
