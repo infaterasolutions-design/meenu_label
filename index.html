@@ -1845,7 +1845,7 @@
     .snitch-login-dialog {
       width: 100%;
       max-width: 1040px;
-      height: min(650px, 90vh);
+      height: min(720px, 92vh);
       background: #000000;
       border-radius: 22px;
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1997,8 +1997,10 @@
       align-items: center;
       justify-content: center;
       background: #000000;
-      padding: 32px 28px;
+      padding: 20px 24px;
       height: 100%;
+      overflow-y: auto;
+      scrollbar-width: thin;
     }
 
     /* The Snitch Charcoal Card */
@@ -2008,7 +2010,7 @@
       background: #161616;
       border: 1px solid rgba(255, 255, 255, 0.09);
       border-radius: 22px;
-      padding: 42px 36px 34px;
+      padding: 28px 30px 24px; margin: auto 0;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.03);
       position: relative;
     }
@@ -3643,6 +3645,324 @@
   fill: currentColor;
 }
 
+
+
+/* =========================================================================
+   TRACK MY ORDER & VIP ACCOUNT DRAWER SYSTEM
+   ========================================================================= */
+
+.account-modal-tabs {
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 22px;
+}
+
+.account-modal-tab {
+  flex: 1;
+  padding: 10px 14px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.account-modal-tab:hover {
+  color: #FFFFFF;
+}
+
+.account-modal-tab.active {
+  background: #C8A364;
+  color: #12100E;
+  box-shadow: 0 2px 8px rgba(200, 163, 100, 0.3);
+}
+
+.account-view {
+  display: none;
+  animation: fadeInModal 0.25s ease forwards;
+}
+
+.account-view.active {
+  display: block;
+}
+
+/* Order Tracking View */
+.tracking-input-wrap {
+  margin-bottom: 16px;
+}
+
+.tracking-input-field {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.tracking-input-field:focus {
+  outline: none;
+  border-color: #C8A364;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.tracking-demo-chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  flex-wrap: wrap;
+}
+
+.tracking-demo-chip {
+  background: rgba(200, 163, 100, 0.12);
+  color: #E6C894;
+  border: 1px solid rgba(200, 163, 100, 0.3);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tracking-demo-chip:hover {
+  background: #C8A364;
+  color: #12100E;
+}
+
+/* Shipment Status Card & Timeline */
+.shipment-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 12px;
+  text-align: left;
+}
+
+.shipment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.shipment-order-id {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FAF8F5;
+  letter-spacing: 0.04em;
+}
+
+.shipment-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  background: rgba(37, 211, 102, 0.15);
+  color: #25D366;
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.shipment-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  position: relative;
+  padding-left: 24px;
+  margin: 10px 0;
+}
+
+.shipment-timeline::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 6px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.timeline-step {
+  position: relative;
+}
+
+.timeline-step::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #292524;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-sizing: border-box;
+}
+
+.timeline-step.completed::before {
+  background: #25D366;
+  border-color: #25D366;
+  box-shadow: 0 0 8px rgba(37, 211, 102, 0.5);
+}
+
+.timeline-step.active::before {
+  background: #C8A364;
+  border-color: #C8A364;
+  box-shadow: 0 0 10px rgba(200, 163, 100, 0.6);
+}
+
+.timeline-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #FAF8F5;
+  line-height: 1.3;
+}
+
+.timeline-desc {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 2px;
+}
+
+.shipment-meta-row {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.shipment-wa-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  background: #25D366;
+  color: #FFFFFF !important;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  margin-top: 10px;
+  transition: all 0.2s ease;
+}
+
+.shipment-wa-btn:hover {
+  background: #1EBE5D;
+  transform: translateY(-1px);
+}
+
+.account-active-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 7px;
+  height: 7px;
+  background: #25D366;
+  border-radius: 50%;
+  border: 1px solid #000;
+  display: none;
+}
+.account-active-badge.active {
+  display: block;
+}
+
+.vip-recent-orders-block {
+  margin-top: 16px;
+  text-align: left;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 14px;
+}
+
+.vip-recent-orders-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #C8A364;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vip-order-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  gap: 10px;
+}
+
+.vip-order-info {
+  font-size: 12px;
+  color: #FAF8F5;
+  line-height: 1.4;
+}
+
+.vip-order-date {
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.vip-order-track-btn {
+  padding: 6px 12px;
+  background: rgba(200, 163, 100, 0.15);
+  border: 1px solid #C8A364;
+  color: #E6C894;
+  font-size: 10.5px;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.vip-order-track-btn:hover {
+  background: #C8A364;
+  color: #12100E;
+}
+
 </style>
 </head>
 <body>
@@ -4918,6 +5238,8 @@
       <div class="footer-col">
         <h4>Client Care</h4>
         <ul>
+          <li><a href="javascript:void(0)" onclick="openAccountModal('track')">&#128230; Track My Order</a></li>
+          <li><a href="javascript:void(0)" onclick="openAccountModal('login')">&#128100; VIP Atelier Account</a></li>
           <li><a href="javascript:void(0)" onclick="openSizeGuide()">Size & Fit Guide (M-XL)</a></li>
           <li><a href="javascript:void(0)">7-Day Exchange Policy</a></li>
           <li><a href="javascript:void(0)">Tricity 24-Hr Dispatch</a></li>
@@ -5014,7 +5336,10 @@
           <li><a href="javascript:void(0)" onclick="closeNavDrawer(); filterCategory('dress')">Midi Dresses</a></li>
           <li><a href="javascript:void(0)" onclick="closeNavDrawer(); filterCategory('top')">Tops &amp; Blouses</a></li>
           <li style="border-top:1px solid var(--border-color); margin-top:18px; padding-top:18px;">
-            <a href="javascript:void(0)" onclick="closeNavDrawer(); openAccountModal();" style="color:var(--accent-gold); font-weight:700;">&#128100; VIP Atelier Login / Account</a>
+            <a href="javascript:void(0)" onclick="closeNavDrawer(); openAccountModal('track');" style="color:var(--accent-gold); font-weight:700;">&#128230; Track My Order</a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" onclick="closeNavDrawer(); openAccountModal('login');" style="color:var(--accent-gold); font-weight:700;">&#128100; VIP Atelier Login / Account</a>
           </li>
           <li>
             <a href="javascript:void(0)" onclick="closeNavDrawer(); openSizeGuide();">&#128207; Size &amp; Fit Guide (M-XL)</a>
@@ -5117,113 +5442,196 @@
       <!-- Right Column: Matte Charcoal Card matching Snitch -->
       <div class="snitch-login-content">
         <div class="snitch-login-card">
-          <!-- Step 1: Mobile Number Input -->
-          <div id="loginStepPhone">
-            <div class="snitch-brand-block">
+          <!-- Dual Tabs: Track My Order | VIP Privé / Login -->
+          <div class="account-modal-tabs">
+            <button type="button" class="account-modal-tab active" id="tabBtnTrack" onclick="switchAccountTab('track')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+              Track My Order
+            </button>
+            <button type="button" class="account-modal-tab" id="tabBtnLogin" onclick="switchAccountTab('login')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7.5" r="4"></circle></svg>
+              VIP Privé / Login
+            </button>
+          </div>
+
+          <!-- TAB 1: TRACK MY ORDER VIEW -->
+          <div id="accountViewTrack" class="account-view active">
+            <div class="snitch-brand-block" style="margin-bottom: 16px;">
               <h2 class="snitch-brand-title">MEENU LABEL</h2>
-              <div class="snitch-brand-tag">CHANDIGARH &bull; LUXURY ETHNIC</div>
+              <div class="snitch-brand-tag">EXPRESS ORDER TRACKING &bull; TRICITY &amp; ALL INDIA</div>
             </div>
 
-            <label class="snitch-input-heading" for="snitchMobileInput">ENTER MOBILE NUMBER</label>
-            <div class="snitch-input-row" id="snitchPhoneRow">
-              <div class="snitch-cc-badge">+91</div>
+            <label class="snitch-input-heading" for="orderTrackingInput">ENTER ORDER NUMBER OR MOBILE</label>
+            <div class="tracking-input-wrap">
               <input 
-                type="tel" 
-                id="snitchMobileInput" 
-                class="snitch-mobile-field" 
-                placeholder="99999 99999" 
-                maxlength="10" 
-                autocomplete="tel"
-                oninput="onSnitchPhoneInput(this)" 
-                onkeydown="if(event.key==='Enter') requestSnitchOtp()"
+                type="text" 
+                id="orderTrackingInput" 
+                class="tracking-input-field" 
+                placeholder="e.g. #ML-1042 or 9876543210" 
+                autocomplete="off"
+                onkeydown="if(event.key==='Enter') executeOrderTracking()"
               >
+              <div class="tracking-demo-chips">
+                <span>Quick Demo:</span>
+                <button type="button" class="tracking-demo-chip" onclick="fillAndTrackDemo('#ML-1042')">#ML-1042 (In Transit)</button>
+                <button type="button" class="tracking-demo-chip" onclick="fillAndTrackDemo('#ML-1035')">#ML-1035 (Delivered)</button>
+              </div>
             </div>
-            <div id="snitchPhoneError" class="snitch-validation-error">Please enter a valid 10-digit mobile number</div>
+            <div id="orderTrackingError" class="snitch-validation-error" style="display:none; margin-bottom:12px;">Please enter an Order ID (e.g. #ML-1042) or a 10-digit mobile number</div>
 
-            <button class="snitch-submit-btn" id="snitchSendOtpBtn" onclick="requestSnitchOtp()">
-              <span>SEND OTP</span>
+            <button class="snitch-submit-btn" id="trackOrderSubmitBtn" onclick="executeOrderTracking()">
+              <span>TRACK SHIPMENT</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </button>
 
-            <p class="snitch-legal-note">
-              By continuing, you agree to MEENU LABEL's 
-              <a href="javascript:void(0)" onclick="alert('MEENU LABEL TERMS: All silhouettes handcrafted in Chandigarh. Express dispatch within 24-48 hours with door-to-door tracking.')">Terms &amp; Conditions</a> 
-              and 
-              <a href="javascript:void(0)" onclick="alert('MEENU LABEL PRIVACY: Your phone number is strictly encrypted and used solely for VIP order tracking & delivery notifications.')">Privacy Policy</a>
-            </p>
+            <!-- Dynamic Shipment Result Card -->
+            <div id="trackingResultContainer" style="display:none;"></div>
           </div>
 
-          <!-- Step 2: OTP Verification -->
-          <div id="loginStepOtp" style="display:none;">
-            <div class="snitch-brand-block" style="margin-bottom: 20px;">
-              <h2 class="snitch-brand-title" style="font-size: 20px;">VERIFY OTP</h2>
-              <div class="snitch-otp-sent-info">
-                Code sent to <strong id="snitchOtpPhoneDisplay" style="color:#ffffff;">+91 99999 99999</strong>
-                <button type="button" class="snitch-edit-phone-btn" onclick="snitchEditPhone()">Edit</button>
+          <!-- TAB 2: VIP PRIVÉ / LOGIN VIEW -->
+          <div id="accountViewLogin" class="account-view" style="display:none;">
+            <!-- Step 1: Mobile Number Input -->
+            <div id="loginStepPhone">
+              <div class="snitch-brand-block">
+                <h2 class="snitch-brand-title">MEENU LABEL</h2>
+                <div class="snitch-brand-tag">CHANDIGARH &bull; LUXURY ETHNIC</div>
               </div>
-            </div>
 
-            <div class="snitch-otp-grid">
-              <input type="text" maxlength="1" class="snitch-digit-box" id="sOtp1" oninput="snitchOtpNext(this, 'sOtp2')" onkeydown="snitchOtpBack(event, this, null)">
-              <input type="text" maxlength="1" class="snitch-digit-box" id="sOtp2" oninput="snitchOtpNext(this, 'sOtp3')" onkeydown="snitchOtpBack(event, this, 'sOtp1')">
-              <input type="text" maxlength="1" class="snitch-digit-box" id="sOtp3" oninput="snitchOtpNext(this, 'sOtp4')" onkeydown="snitchOtpBack(event, this, 'sOtp2')">
-              <input type="text" maxlength="1" class="snitch-digit-box" id="sOtp4" oninput="snitchOtpNext(this, null)" onkeydown="snitchOtpBack(event, this, 'sOtp3')">
-            </div>
-
-            <div class="snitch-resend-bar">
-              <span id="snitchTimerTxt">Resend OTP in <strong id="snitchCountdown" style="color:#bbbbbb;">0:28</strong></span>
-              <button type="button" id="snitchResendBtn" class="snitch-resend-action" style="display:none;" onclick="snitchResendOtp()">Resend OTP via SMS / WhatsApp</button>
-            </div>
-
-            <button class="snitch-submit-btn" onclick="verifySnitchOtp()">
-              <span>VERIFY &amp; PROCEED</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
-
-            <div class="snitch-demo-badge">&bull; Demo Mode: Type any 4 digits (e.g. 1 2 3 4) to login</div>
-          </div>
-
-          <!-- Step 3: VIP Atelier Privé Dashboard -->
-          <div id="loginStepVip" style="display:none; text-align:center;">
-            <div class="snitch-vip-avatar">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </div>
-            <div class="snitch-vip-status-tag">&#10024; ATELIER PRIV&Eacute; VIP MEMBER</div>
-            <h3 class="snitch-vip-user" id="snitchVipUserDisplay">+91 85116 16133</h3>
-            <div class="snitch-vip-perks">
-              <div class="snitch-perk-item">
-                <div class="snitch-perk-icon">&#128666;</div>
-                <div class="snitch-perk-text">
-                  <strong>Free 24-Hr Tricity Delivery</strong>
-                  <span>Direct courier from Sector 17 Atelier</span>
-                </div>
+              <label class="snitch-input-heading" for="snitchMobileInput">ENTER MOBILE NUMBER</label>
+              <div class="snitch-input-row" id="snitchPhoneRow">
+                <div class="snitch-cc-badge">+91</div>
+                <input 
+                  type="tel" 
+                  id="snitchMobileInput" 
+                  class="snitch-mobile-field" 
+                  placeholder="99999 99999" 
+                  maxlength="10" 
+                  autocomplete="tel"
+                  oninput="onSnitchPhoneInput(this)" 
+                  onkeydown="if(event.key==='Enter') requestSnitchOtp()"
+                >
               </div>
-              <div class="snitch-perk-item">
-                <div class="snitch-perk-icon">&#128087;</div>
-                <div class="snitch-perk-text">
-                  <strong>Bespoke Atelier Fittings</strong>
-                  <span>Private trial room appointments in Chandigarh</span>
-                </div>
-              </div>
-            </div>
+              <div id="snitchPhoneError" class="snitch-validation-error">Please enter a valid 10-digit mobile number</div>
 
-            <div class="snitch-vip-actions">
-              <button class="snitch-submit-btn" style="margin-bottom: 12px;" onclick="closeAccountModalDirect()">
-                <span>CONTINUE SHOPPING</span>
+              <button class="snitch-submit-btn" id="snitchSendOtpBtn" onclick="requestSnitchOtp()">
+                <span>SEND OTP</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
               </button>
-              <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20am%20a%20VIP%20member%20inquiring%20about%20my%20orders." target="_blank" class="snitch-vip-concierge-btn">
-                &#128172; Open Master Stylist WhatsApp Concierge
+
+              <div style="margin: 18px 0 12px; display: flex; align-items: center; text-align: center; color: rgba(255,255,255,0.3); font-size: 11px;">
+                <span style="flex: 1; border-bottom: 1px solid rgba(255,255,255,0.15);"></span>
+                <span style="padding: 0 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4);">OR VIA SHOPIFY</span>
+                <span style="flex: 1; border-bottom: 1px solid rgba(255,255,255,0.15);"></span>
+              </div>
+
+              <a href="javascript:void(0)" onclick="alert('Shopify Account Login redirects to /account on live Shopify store.')" class="snitch-shopify-login-link" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #FAF8F5; text-decoration: none; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.2s ease;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7.5" r="4"></circle></svg>
+                Official Shopify Account Login &rarr;
               </a>
-              <button type="button" class="snitch-signout-btn" onclick="signOutSnitchUser()">Sign Out / Change Account</button>
+
+              <p class="snitch-legal-note" style="margin-top: 14px;">
+                By continuing, you agree to MEENU LABEL's 
+                <a href="javascript:void(0)" onclick="closeAccountModalDirect(); openPolicyModal('privacy');">Terms &amp; Privacy Policy</a>
+              </p>
+            </div>
+
+            <!-- Step 2: OTP Verification -->
+            <div id="loginStepOtp" style="display:none;">
+              <div class="snitch-brand-block" style="margin-bottom: 20px;">
+                <h2 class="snitch-brand-title" style="font-size: 20px;">VERIFY OTP</h2>
+                <div class="snitch-otp-sent-info">
+                  Code sent to <strong id="snitchOtpPhoneDisplay" style="color:#ffffff;">+91 99999 99999</strong>
+                  <button type="button" class="snitch-edit-phone-btn" onclick="snitchEditPhone()">Edit</button>
+                </div>
+              </div>
+
+              <div class="snitch-otp-grid">
+                <input type="text" maxlength="1" class="snitch-digit-box" id="sOtp1" oninput="snitchOtpNext(this, 'sOtp2')" onkeydown="snitchOtpBack(event, this, null)">
+                <input type="text" maxlength="1" class="snitch-digit-box" id="sOtp2" oninput="snitchOtpNext(this, 'sOtp3')" onkeydown="snitchOtpBack(event, this, 'sOtp1')">
+                <input type="text" maxlength="1" class="snitch-digit-box" id="sOtp3" oninput="snitchOtpNext(this, 'sOtp4')" onkeydown="snitchOtpBack(event, this, 'sOtp2')">
+                <input type="text" maxlength="1" class="snitch-digit-box" id="sOtp4" oninput="snitchOtpNext(this, null)" onkeydown="snitchOtpBack(event, this, 'sOtp3')">
+              </div>
+
+              <div class="snitch-resend-bar">
+                <span id="snitchTimerTxt">Resend OTP in <strong id="snitchCountdown" style="color:#bbbbbb;">0:28</strong></span>
+                <button type="button" id="snitchResendBtn" class="snitch-resend-action" style="display:none;" onclick="snitchResendOtp()">Resend OTP via SMS / WhatsApp</button>
+              </div>
+
+              <button class="snitch-submit-btn" onclick="verifySnitchOtp()">
+                <span>VERIFY &amp; PROCEED</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+
+              <div class="snitch-demo-badge">&bull; Demo Mode: Type any 4 digits (e.g. 1 2 3 4) to login</div>
+            </div>
+
+            <!-- Step 3: VIP Atelier Privé Dashboard -->
+            <div id="loginStepVip" style="display:none; text-align:center;">
+              <div class="snitch-vip-avatar">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="snitch-vip-status-tag">&#10024; ATELIER PRIV&Eacute; VIP MEMBER</div>
+              <h3 class="snitch-vip-user" id="snitchVipUserDisplay">+91 85116 16133</h3>
+
+              <!-- Atelier Orders List -->
+              <div class="vip-recent-orders-block">
+                <div class="vip-recent-orders-title">
+                  <span>Atelier Orders</span>
+                  <span style="font-size:10px; color:rgba(255,255,255,0.4);">2 Records</span>
+                </div>
+                <div class="vip-order-row">
+                  <div class="vip-order-info">
+                    <strong>#ML-1042</strong> &bull; Gulab Organza Set
+                    <div class="vip-order-date">Dispatched &bull; Delhivery Express</div>
+                  </div>
+                  <button type="button" class="vip-order-track-btn" onclick="fillAndTrackDemo('#ML-1042')">Track</button>
+                </div>
+                <div class="vip-order-row">
+                  <div class="vip-order-info">
+                    <strong>#ML-1035</strong> &bull; Noor Zari Silk Set
+                    <div class="vip-order-date">Delivered &bull; Chandigarh Suite</div>
+                  </div>
+                  <button type="button" class="vip-order-track-btn" onclick="fillAndTrackDemo('#ML-1035')">Track</button>
+                </div>
+              </div>
+
+              <div class="snitch-vip-perks">
+                <div class="snitch-perk-item">
+                  <div class="snitch-perk-icon">&#128666;</div>
+                  <div class="snitch-perk-text">
+                    <strong>Free 24-Hr Tricity Delivery</strong>
+                    <span>Direct courier from Sector 17 Atelier</span>
+                  </div>
+                </div>
+                <div class="snitch-perk-item">
+                  <div class="snitch-perk-icon">&#128087;</div>
+                  <div class="snitch-perk-text">
+                    <strong>Bespoke Atelier Fittings</strong>
+                    <span>Private trial room appointments in Chandigarh</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="snitch-vip-actions">
+                <button class="snitch-submit-btn" style="margin-bottom: 12px;" onclick="closeAccountModalDirect()">
+                  <span>CONTINUE SHOPPING</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+                <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20am%20a%20VIP%20member%20inquiring%20about%20my%20orders." target="_blank" class="snitch-vip-concierge-btn">
+                  &#128172; Open Master Stylist WhatsApp Concierge
+                </a>
+                <button type="button" class="snitch-signout-btn" onclick="signOutSnitchUser()">Sign Out / Change Account</button>
+              </div>
             </div>
           </div>
         </div>
@@ -5931,210 +6339,344 @@
       if (coll) coll.scrollIntoView({ behavior: 'smooth' });
     }
 
-    /* Snitch Login & VIP Privé Authentication Logic */
-    var snitchCurrentUser = null;
-    var snitchOtpInterval = null;
+    /* =========================================================================
+   TRACK MY ORDER & VIP ACCOUNT DRAWER SYSTEM
+   ========================================================================= */
 
-    function isSnitchLoggedIn() {
-      if (snitchCurrentUser) return true;
-      try {
-        var stored = localStorage.getItem('meenu_vip_user');
-        if (stored) {
-          snitchCurrentUser = JSON.parse(stored);
-          return true;
-        }
-      } catch(e) {}
-      return false;
+var snitchCurrentUser = null;
+var snitchOtpInterval = null;
+
+function isSnitchLoggedIn() {
+  if (snitchCurrentUser) return true;
+  try {
+    var stored = localStorage.getItem('meenu_vip_user');
+    if (stored) {
+      snitchCurrentUser = JSON.parse(stored);
+      return true;
     }
+  } catch(e) {}
+  return false;
+}
 
-    function updateAccountHeaderIcon() {
-      var badge = document.getElementById('accountActiveBadge');
-      if (badge) {
-        badge.style.display = isSnitchLoggedIn() ? 'block' : 'none';
-      }
+function updateAccountHeaderIcon() {
+  var badge = document.getElementById('accountActiveBadge');
+  if (badge) {
+    if (isSnitchLoggedIn()) {
+      badge.classList.add('active');
+      badge.style.display = 'block';
+    } else {
+      badge.classList.remove('active');
+      badge.style.display = 'none';
     }
+  }
+}
 
-    function openAccountModal() {
-      var backdrop = document.getElementById('accountModalBackdrop');
-      if (!backdrop) return;
-      backdrop.classList.add('open');
-      
-      if (isSnitchLoggedIn()) {
-        var p = document.getElementById('loginStepPhone');
-        var o = document.getElementById('loginStepOtp');
-        var v = document.getElementById('loginStepVip');
-        if (p) p.style.display = 'none';
-        if (o) o.style.display = 'none';
-        if (v) v.style.display = 'block';
-        var u = document.getElementById('snitchVipUserDisplay');
-        if (u) u.textContent = snitchCurrentUser.phone || '+91 85116 16133';
-      } else {
-        var p = document.getElementById('loginStepPhone');
-        var o = document.getElementById('loginStepOtp');
-        var v = document.getElementById('loginStepVip');
-        if (p) p.style.display = 'block';
-        if (o) o.style.display = 'none';
-        if (v) v.style.display = 'none';
-        setTimeout(function() {
-          var inp = document.getElementById('snitchMobileInput');
-          if (inp) inp.focus();
-        }, 200);
-      }
-    }
+function switchAccountTab(tabName) {
+  var tabTrack = document.getElementById('tabBtnTrack');
+  var tabLogin = document.getElementById('tabBtnLogin');
+  var viewTrack = document.getElementById('accountViewTrack');
+  var viewLogin = document.getElementById('accountViewLogin');
 
-    function closeAccountModalDirect() {
-      var backdrop = document.getElementById('accountModalBackdrop');
-      if (backdrop) backdrop.classList.remove('open');
-      clearInterval(snitchOtpInterval);
-    }
+  if (tabTrack) tabTrack.classList.toggle('active', tabName === 'track');
+  if (tabLogin) tabLogin.classList.toggle('active', tabName === 'login');
 
-    function closeAccountModal(e) {
-      if (e.target.id === 'accountModalBackdrop') {
-        closeAccountModalDirect();
-      }
-    }
+  if (viewTrack) {
+    viewTrack.classList.toggle('active', tabName === 'track');
+    viewTrack.style.display = tabName === 'track' ? 'block' : 'none';
+  }
+  if (viewLogin) {
+    viewLogin.classList.toggle('active', tabName === 'login');
+    viewLogin.style.display = tabName === 'login' ? 'block' : 'none';
+  }
 
-    function onSnitchPhoneInput(el) {
-      el.value = el.value.replace(/\D/g, '');
-      var err = document.getElementById('snitchPhoneError');
-      if (err) err.style.display = 'none';
-    }
-
-    function requestSnitchOtp() {
-      var inp = document.getElementById('snitchMobileInput');
-      var phone = inp ? inp.value.trim() : '';
-      if (phone.length < 10) {
-        var err = document.getElementById('snitchPhoneError');
-        if (err) err.style.display = 'block';
-        if (inp) inp.focus();
-        return;
-      }
-      
-      var displayEl = document.getElementById('snitchOtpPhoneDisplay');
-      if (displayEl) displayEl.textContent = '+91 ' + phone;
-      
-      var p = document.getElementById('loginStepPhone');
-      var o = document.getElementById('loginStepOtp');
-      if (p) p.style.display = 'none';
-      if (o) o.style.display = 'block';
-      
-      ['sOtp1', 'sOtp2', 'sOtp3', 'sOtp4'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.value = '';
-      });
-      var firstBox = document.getElementById('sOtp1');
-      if (firstBox) firstBox.focus();
-      
-      startSnitchOtpTimer();
-    }
-
-    function snitchEditPhone() {
-      clearInterval(snitchOtpInterval);
-      var p = document.getElementById('loginStepPhone');
-      var o = document.getElementById('loginStepOtp');
-      if (o) o.style.display = 'none';
-      if (p) p.style.display = 'block';
-      var inp = document.getElementById('snitchMobileInput');
+  if (tabName === 'track') {
+    setTimeout(function() {
+      var inp = document.getElementById('orderTrackingInput');
       if (inp) inp.focus();
-    }
-
-    function snitchOtpNext(curr, nextId) {
-      curr.value = curr.value.replace(/\D/g, '');
-      if (curr.value && nextId) {
-        var next = document.getElementById(nextId);
-        if (next) next.focus();
-      }
-      var code = (document.getElementById('sOtp1')?.value || '') +
-                 (document.getElementById('sOtp2')?.value || '') +
-                 (document.getElementById('sOtp3')?.value || '') +
-                 (document.getElementById('sOtp4')?.value || '');
-      if (code.length === 4) {
-        setTimeout(verifySnitchOtp, 200);
-      }
-    }
-
-    function snitchOtpBack(e, curr, prevId) {
-      if (e.key === 'Backspace' && !curr.value && prevId) {
-        var prev = document.getElementById(prevId);
-        if (prev) {
-          prev.focus();
-          prev.value = '';
-        }
-      }
-    }
-
-    function startSnitchOtpTimer() {
-      var sec = 28;
-      var timerTxt = document.getElementById('snitchTimerTxt');
-      var countdown = document.getElementById('snitchCountdown');
-      var resendBtn = document.getElementById('snitchResendBtn');
-      if (timerTxt) timerTxt.style.display = 'inline';
-      if (resendBtn) resendBtn.style.display = 'none';
-      
-      clearInterval(snitchOtpInterval);
-      snitchOtpInterval = setInterval(function() {
-        sec--;
-        if (sec <= 0) {
-          clearInterval(snitchOtpInterval);
-          if (timerTxt) timerTxt.style.display = 'none';
-          if (resendBtn) resendBtn.style.display = 'inline';
-        } else {
-          if (countdown) countdown.textContent = '0:' + (sec < 10 ? '0' : '') + sec;
-        }
-      }, 1000);
-    }
-
-    function snitchResendOtp() {
-      var inp = document.getElementById('snitchMobileInput');
-      var phone = inp ? inp.value.trim() : '';
-      alert('New VIP OTP dispatched to +91 ' + phone + ' via SMS & WhatsApp!');
-      startSnitchOtpTimer();
-    }
-
-    function verifySnitchOtp() {
-      clearInterval(snitchOtpInterval);
-      var inp = document.getElementById('snitchMobileInput');
-      var phone = (inp && inp.value.trim()) ? inp.value.trim() : '8511616133';
-      snitchCurrentUser = {
-        phone: '+91 ' + phone,
-        loggedInAt: new Date().toISOString(),
-        tier: 'Atelier Privé VIP'
-      };
-      try {
-        localStorage.setItem('meenu_vip_user', JSON.stringify(snitchCurrentUser));
-      } catch(e) {}
-      
-      updateAccountHeaderIcon();
-      
+    }, 150);
+  } else if (tabName === 'login') {
+    if (isSnitchLoggedIn()) {
+      var p = document.getElementById('loginStepPhone');
       var o = document.getElementById('loginStepOtp');
       var v = document.getElementById('loginStepVip');
+      if (p) p.style.display = 'none';
       if (o) o.style.display = 'none';
       if (v) v.style.display = 'block';
       var u = document.getElementById('snitchVipUserDisplay');
-      if (u) u.textContent = snitchCurrentUser.phone;
-      
-      showToast('✓ Welcome back, ' + snitchCurrentUser.phone + '! VIP Atelier privileges unlocked.');
-    }
-
-    function signOutSnitchUser() {
-      snitchCurrentUser = null;
-      try {
-        localStorage.removeItem('meenu_vip_user');
-      } catch(e) {}
-      updateAccountHeaderIcon();
-      
+      if (u) u.textContent = (snitchCurrentUser && snitchCurrentUser.phone) ? snitchCurrentUser.phone : '+91 85116 16133';
+    } else {
       var p = document.getElementById('loginStepPhone');
+      var o = document.getElementById('loginStepOtp');
       var v = document.getElementById('loginStepVip');
-      if (v) v.style.display = 'none';
       if (p) p.style.display = 'block';
-      var inp = document.getElementById('snitchMobileInput');
-      if (inp) {
-        inp.value = '';
-        inp.focus();
-      }
-      showToast('Signed out successfully.');
+      if (o) o.style.display = 'none';
+      if (v) v.style.display = 'none';
+      setTimeout(function() {
+        var inp = document.getElementById('snitchMobileInput');
+        if (inp) inp.focus();
+      }, 150);
     }
+  }
+}
 
+function openAccountModal(initialTab) {
+  var backdrop = document.getElementById('accountModalBackdrop');
+  if (!backdrop) return;
+  backdrop.classList.add('open');
+  switchAccountTab(initialTab || 'track');
+  updateAccountHeaderIcon();
+}
+
+function closeAccountModalDirect() {
+  var backdrop = document.getElementById('accountModalBackdrop');
+  if (backdrop) backdrop.classList.remove('open');
+  clearInterval(snitchOtpInterval);
+}
+
+function closeAccountModal(e) {
+  if (e.target.id === 'accountModalBackdrop') {
+    closeAccountModalDirect();
+  }
+}
+
+function fillAndTrackDemo(orderId) {
+  switchAccountTab('track');
+  var inp = document.getElementById('orderTrackingInput');
+  if (inp) inp.value = orderId;
+  executeOrderTracking();
+}
+
+function executeOrderTracking() {
+  var inp = document.getElementById('orderTrackingInput');
+  var rawVal = inp ? inp.value.trim() : '';
+  var err = document.getElementById('orderTrackingError');
+  var container = document.getElementById('trackingResultContainer');
+
+  if (!rawVal) {
+    if (err) {
+      err.textContent = 'Please enter an Order ID (e.g. #ML-1042) or your 10-digit mobile number.';
+      err.style.display = 'block';
+    }
+    if (inp) inp.focus();
+    return;
+  }
+  if (err) err.style.display = 'none';
+
+  var cleanVal = rawVal.toUpperCase();
+  var isDelivered = cleanVal.indexOf('1035') !== -1;
+  var isTransit = cleanVal.indexOf('1042') !== -1 || cleanVal.indexOf('8511616133') !== -1;
+
+  var orderNum = isDelivered ? '#ML-1035' : (isTransit ? '#ML-1042' : (cleanVal.startsWith('#') ? cleanVal : '#' + cleanVal));
+  var productName = isDelivered ? 'Noor Zari Silk Anarkali Set (Size: S)' : (isTransit ? 'Gulab Organza Embroidered Kurta Set (Size: M)' : 'Atelier Drop 01 Handcrafted Silhouette');
+  var awbInfo = isDelivered ? 'BlueDart Air • AWB #BD-9918231' : (isTransit ? 'Delhivery Express • AWB #DEL-85116133-TRC' : 'Assigned Upon Dispatch • Express Courier');
+  var dest = isDelivered ? 'Gurugram, Haryana' : (isTransit ? 'Sector 17, Chandigarh (Tricity Express)' : 'Tricity / All India Delivery');
+  var statusBadge = isDelivered ? 'Delivered' : (isTransit ? 'In Express Transit' : 'Confirmed & In Production');
+  var badgeColor = isDelivered ? '#25D366' : '#C8A364';
+
+  var step1Class = 'timeline-step completed';
+  var step2Class = (isDelivered || isTransit) ? 'timeline-step completed' : 'timeline-step active';
+  var step3Class = isDelivered ? 'timeline-step completed' : (isTransit ? 'timeline-step active' : 'timeline-step');
+  var step4Class = isDelivered ? 'timeline-step completed' : 'timeline-step';
+
+  var waMessage = encodeURIComponent('Hi Meenu Label! I am inquiring about my Order ' + orderNum + ' (' + productName + '). Please share latest delivery updates.');
+
+  var html = '<div class="shipment-card">' +
+    '<div class="shipment-header">' +
+      '<div>' +
+        '<div class="shipment-order-id">' + orderNum + '</div>' +
+        '<div style="font-size: 11.5px; color: rgba(255,255,255,0.7); margin-top:2px;">' + productName + '</div>' +
+      '</div>' +
+      '<span class="shipment-badge" style="background: rgba(' + (isDelivered ? '37, 211, 102' : '200, 163, 100') + ', 0.15); color: ' + badgeColor + '; border-color: ' + badgeColor + ';">' + statusBadge + '</span>' +
+    '</div>' +
+    '<div class="shipment-timeline">' +
+      '<div class="' + step1Class + '">' +
+        '<div class="timeline-title">Order Confirmed &amp; Atelier Assigned</div>' +
+        '<div class="timeline-desc">Handcrafted silk fabrics reserved &bull; Chandigarh Studio</div>' +
+      '</div>' +
+      '<div class="' + step2Class + '">' +
+        '<div class="timeline-title">Handcrafted &amp; Master Quality Checked</div>' +
+        '<div class="timeline-desc">' + (isDelivered || isTransit ? 'Passed 14-point artisan luxury inspection' : 'In progress at Sector 17 Atelier') + '</div>' +
+      '</div>' +
+      '<div class="' + step3Class + '">' +
+        '<div class="timeline-title">Dispatched in Express Transit</div>' +
+        '<div class="timeline-desc">' + awbInfo + '</div>' +
+      '</div>' +
+      '<div class="' + step4Class + '">' +
+        '<div class="timeline-title">Out for Delivery &amp; VIP Handover</div>' +
+        '<div class="timeline-desc">' + (isDelivered ? 'Delivered with Signature Handover' : 'Expected delivery to ' + dest) + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="shipment-meta-row">' +
+      '<span>Destination: <strong>' + dest + '</strong></span>' +
+      '<span>ETA: <strong>' + (isDelivered ? 'Delivered' : (isTransit ? 'Today by 7:00 PM' : '24-48 Hours')) + '</strong></span>' +
+    '</div>' +
+    '<a href="https://wa.me/918511616133?text=' + waMessage + '" target="_blank" class="shipment-wa-btn">' +
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>' +
+      'Instant WhatsApp Inquiry with Atelier' +
+    '</a>' +
+  '</div>';
+
+  if (container) {
+    container.innerHTML = html;
+    container.style.display = 'block';
+  }
+}
+
+function onSnitchPhoneInput(el) {
+  el.value = el.value.replace(/\D/g, '');
+  var err = document.getElementById('snitchPhoneError');
+  if (err) err.style.display = 'none';
+}
+
+function requestSnitchOtp() {
+  var inp = document.getElementById('snitchMobileInput');
+  var phone = inp ? inp.value.trim() : '';
+  if (phone.length < 10) {
+    var err = document.getElementById('snitchPhoneError');
+    if (err) err.style.display = 'block';
+    if (inp) inp.focus();
+    return;
+  }
+  
+  var displayEl = document.getElementById('snitchOtpPhoneDisplay');
+  if (displayEl) displayEl.textContent = '+91 ' + phone;
+  
+  var p = document.getElementById('loginStepPhone');
+  var o = document.getElementById('loginStepOtp');
+  if (p) p.style.display = 'none';
+  if (o) o.style.display = 'block';
+  
+  ['sOtp1', 'sOtp2', 'sOtp3', 'sOtp4'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  var firstBox = document.getElementById('sOtp1');
+  if (firstBox) firstBox.focus();
+  
+  startSnitchOtpTimer();
+}
+
+function snitchEditPhone() {
+  clearInterval(snitchOtpInterval);
+  var p = document.getElementById('loginStepPhone');
+  var o = document.getElementById('loginStepOtp');
+  if (o) o.style.display = 'none';
+  if (p) p.style.display = 'block';
+  var inp = document.getElementById('snitchMobileInput');
+  if (inp) inp.focus();
+}
+
+function snitchOtpNext(curr, nextId) {
+  curr.value = curr.value.replace(/\D/g, '');
+  if (curr.value && nextId) {
+    var next = document.getElementById(nextId);
+    if (next) next.focus();
+  }
+  var code = ((document.getElementById('sOtp1') && document.getElementById('sOtp1').value) || '') +
+             ((document.getElementById('sOtp2') && document.getElementById('sOtp2').value) || '') +
+             ((document.getElementById('sOtp3') && document.getElementById('sOtp3').value) || '') +
+             ((document.getElementById('sOtp4') && document.getElementById('sOtp4').value) || '');
+  if (code.length === 4) {
+    setTimeout(verifySnitchOtp, 200);
+  }
+}
+
+function snitchOtpBack(e, curr, prevId) {
+  if (e.key === 'Backspace' && !curr.value && prevId) {
+    var prev = document.getElementById(prevId);
+    if (prev) {
+      prev.focus();
+      prev.value = '';
+    }
+  }
+}
+
+function startSnitchOtpTimer() {
+  var sec = 28;
+  var timerTxt = document.getElementById('snitchTimerTxt');
+  var countdown = document.getElementById('snitchCountdown');
+  var resendBtn = document.getElementById('snitchResendBtn');
+  if (timerTxt) timerTxt.style.display = 'inline';
+  if (resendBtn) resendBtn.style.display = 'none';
+  
+  clearInterval(snitchOtpInterval);
+  snitchOtpInterval = setInterval(function() {
+    sec--;
+    if (sec <= 0) {
+      clearInterval(snitchOtpInterval);
+      if (timerTxt) timerTxt.style.display = 'none';
+      if (resendBtn) resendBtn.style.display = 'inline';
+    } else {
+      if (countdown) countdown.textContent = '0:' + (sec < 10 ? '0' : '') + sec;
+    }
+  }, 1000);
+}
+
+function snitchResendOtp() {
+  var inp = document.getElementById('snitchMobileInput');
+  var phone = inp ? inp.value.trim() : '';
+  alert('New VIP OTP dispatched to +91 ' + phone + ' via SMS & WhatsApp!');
+  startSnitchOtpTimer();
+}
+
+function verifySnitchOtp() {
+  clearInterval(snitchOtpInterval);
+  var inp = document.getElementById('snitchMobileInput');
+  var phone = (inp && inp.value.trim()) ? inp.value.trim() : '8511616133';
+  snitchCurrentUser = {
+    phone: '+91 ' + phone,
+    loggedInAt: new Date().toISOString(),
+    tier: 'Atelier Privé VIP'
+  };
+  try {
+    localStorage.setItem('meenu_vip_user', JSON.stringify(snitchCurrentUser));
+  } catch(e) {}
+  
+  updateAccountHeaderIcon();
+  
+  var o = document.getElementById('loginStepOtp');
+  var v = document.getElementById('loginStepVip');
+  if (o) o.style.display = 'none';
+  if (v) v.style.display = 'block';
+  var u = document.getElementById('snitchVipUserDisplay');
+  if (u) u.textContent = snitchCurrentUser.phone;
+  
+  if (typeof showMeenuToast === 'function') {
+    showMeenuToast('Welcome back, ' + snitchCurrentUser.phone + '! VIP Atelier privileges unlocked.');
+  } else if (typeof showToast === 'function') {
+    showToast('Welcome back, ' + snitchCurrentUser.phone + '! VIP Atelier privileges unlocked.');
+  }
+}
+
+function signOutSnitchUser() {
+  snitchCurrentUser = null;
+  try {
+    localStorage.removeItem('meenu_vip_user');
+  } catch(e) {}
+  updateAccountHeaderIcon();
+  
+  var p = document.getElementById('loginStepPhone');
+  var v = document.getElementById('loginStepVip');
+  if (v) v.style.display = 'none';
+  if (p) p.style.display = 'block';
+  var inp = document.getElementById('snitchMobileInput');
+  if (inp) {
+    inp.value = '';
+    inp.focus();
+  }
+  if (typeof showMeenuToast === 'function') {
+    showMeenuToast('Signed out of VIP Atelier account.');
+  } else if (typeof showToast === 'function') {
+    showToast('Signed out of VIP Atelier account.');
+  }
+}
+
+// Auto update header icon on load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', updateAccountHeaderIcon);
+} else {
+  updateAccountHeaderIcon();
+}
 
     function searchProducts() {
       var q = document.getElementById('searchInput').value.toLowerCase().trim();

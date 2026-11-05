@@ -1,0 +1,920 @@
+import re
+
+refined_liquid = '''<section class="shopify-product-layout">
+  <!-- Left Column: Compact Luxury Multi-Image Gallery -->
+  <div class="shopify-pdp-gallery-col">
+    <!-- Main Showcase Image Container -->
+    <div class="shopify-pdp-main-image-wrap" id="shopifyPdpMainWrap">
+      <div class="shopify-pdp-badges">
+        <span class="pdp-atelier-badge">HANDCRAFTED PREVIEW</span>
+      </div>
+
+      {% if product.images.size > 1 %}
+        <span class="pdp-image-counter" id="shopifyImageCounter">1 / {{ product.images.size }}</span>
+      {% endif %}
+
+      {% if product.images.size > 0 %}
+        <img id="shopifyMainImg" 
+             src="{{ product.featured_image | default: product.images.first | image_url: width: 1200 }}" 
+             alt="{{ product.title | escape }}" 
+             loading="eager"
+             onclick="openShopifyLightbox(this.src)"
+             title="Click to zoom">
+      {% else %}
+        <div class="shopify-img-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          <span class="placeholder-title">{{ product.title }}</span>
+          <span class="placeholder-sub">Handcrafted Edition &bull; Awaiting Photography</span>
+        </div>
+      {% endif %}
+
+      {% if product.images.size > 1 %}
+        <!-- Prev & Next Navigation Arrows (Centred, Compact) -->
+        <button type="button" class="shopify-gallery-arrow shopify-gallery-prev" onclick="changeShopifyGalleryImage(-1)" aria-label="Previous photo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button type="button" class="shopify-gallery-arrow shopify-gallery-next" onclick="changeShopifyGalleryImage(1)" aria-label="Next photo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      {% endif %}
+    </div>
+
+    <!-- Multi-Image Thumbnails Rail (Compact, Directly Visible) -->
+    {% if product.images.size > 1 %}
+      <div class="shopify-pdp-thumbnails" id="shopifyPdpThumbs">
+        {% for image in product.images %}
+          <button type="button" 
+                  class="shopify-thumb-btn {% if forloop.first %}active{% endif %}" 
+                  data-index="{{ forloop.index0 }}"
+                  data-src="{{ image | image_url: width: 1200 }}"
+                  onclick="selectShopifyGalleryImage(this, '{{ image | image_url: width: 1200 }}', {{ forloop.index0 }})"
+                  aria-label="View photo {{ forloop.index }} of {{ product.images.size }}">
+            <img src="{{ image | image_url: width: 160, height: 200, crop: 'center' }}" 
+                 alt="{{ image.alt | default: product.title | escape }}" 
+                 loading="lazy">
+          </button>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Atelier Craftsmanship Guarantees -->
+    <div class="shopify-pdp-trust-grid">
+      <div class="trust-tile">
+        <span class="trust-icon">&#10024;</span>
+        <strong>Chandigarh Atelier</strong>
+        <small>Handcrafted Precision</small>
+      </div>
+      <div class="trust-tile">
+        <span class="trust-icon">&#128666;</span>
+        <strong>Tricity 24-Hr</strong>
+        <small>Priority Courier</small>
+      </div>
+      <div class="trust-tile">
+        <span class="trust-icon">&#128207;</span>
+        <strong>Custom Fit</strong>
+        <small>Complimentary Hems</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Product Details & Purchase Form -->
+  <div class="shopify-pdp-info-col">
+    <div class="pdp-scarcity-tag">
+      &#128293; ONLY 1 PIECE LEFT PER SIZE
+    </div>
+    <h1 class="pdp-main-title">{{ product.title }}</h1>
+    <div class="pdp-sku-line">SKU: {{ product.selected_or_first_available_variant.sku | default: 'MEENU-DROP01' }}</div>
+
+    <!-- Price Row (Enforced Single Line, No Wrapping) -->
+    <div class="shopify-pdp-price-row">
+      <span class="pdp-price-current">{{ product.price | money }}</span>
+      {% if product.compare_at_price > product.price %}
+        <span class="pdp-price-original">{{ product.compare_at_price | money }}</span>
+        <span class="pdp-savings-pill">SAVINGS INCLUDED</span>
+      {% endif %}
+    </div>
+
+    <!-- Size Selector -->
+    <div class="shopify-size-section" id="shopifySizeSection">
+      <div class="shopify-size-header">
+        <span>SELECT SIZE (INDIAN BUST MEASUREMENTS) <span id="shopifySelectedSizeLabel" class="shopify-selected-size-label"></span></span>
+        <a href="javascript:void(0)" onclick="openSizeGuideModal()" class="size-chart-link">&#128207; Size Chart</a>
+      </div>
+      <div id="shopifySizeGrid" class="shopify-size-grid">
+        {% for variant in product.variants %}
+          <button type="button" 
+                  class="shopify-size-tile" 
+                  data-variant-id="{{ variant.id }}" 
+                  data-size-title="{{ variant.title }}" 
+                  {% if variant.featured_image %}data-variant-image="{{ variant.featured_image | image_url: width: 1200 }}"{% elsif variant.image %}data-variant-image="{{ variant.image | image_url: width: 1200 }}"{% endif %}
+                  onclick="selectShopifyVariant('{{ variant.id }}', '{{ variant.title }}', this)">
+            <strong>{{ variant.title }}</strong>
+            <span>Only 1 Left!</span>
+          </button>
+        {% endfor %}
+      </div>
+      <div id="shopifySizeRequiredNotice" class="shopify-size-notice">
+        &#9888;&#65039; Please select your size (M, L, or XL) before adding to bag
+      </div>
+    </div>
+
+    <!-- Pincode Checker -->
+    <div class="shopify-pincode-box">
+      <div class="pincode-title">&#128205; Check Tricity Express Delivery</div>
+      <div class="pincode-input-row">
+        <input type="text" id="pdpPincode" placeholder="Enter 6-digit Pincode" maxlength="6">
+        <button type="button" class="btn-primary pincode-check-btn" onclick="checkTricityPincode(document.getElementById('pdpPincode').value)">Check</button>
+      </div>
+      <div id="PincodeResult" class="pincode-result"></div>
+    </div>
+
+    <!-- Shopify Product Form -->
+    {% form 'product', product, id: 'shopifyProductForm', onsubmit: 'return validateShopifyForm(event)' %}
+      <input type="hidden" name="id" id="selectedVariantId" value="">
+      <button type="submit" id="pdpAddToCartBtn" class="btn-primary pdp-submit-btn">ADD TO BAG &#128717;&#65039;</button>
+    {% endform %}
+
+    <!-- Save to Wishlist Button -->
+    <button type="button" id="pdpWishlistBtn" class="pdp-wishlist-toggle" 
+      data-wishlist-id="{{ product.id | default: 'drop01_1' }}" 
+      data-wishlist-title="{{ product.title | escape }}" 
+      data-wishlist-price="{{ product.price | money | escape }}" 
+      data-wishlist-image="{{ product.featured_image | default: product.images.first | image_url: width: 300 }}" 
+      data-wishlist-url="{{ product.url }}" 
+      onclick="toggleWishlist(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span class="pdp-wishlist-txt">SAVE TO WISHLIST</span>
+    </button>
+
+    <!-- Direct WhatsApp Order -->
+    <a id="shopifyWhatsAppBtn" href="https://wa.me/{{ settings.whatsapp_number | default: '919988898845' }}?text=Hi%20Meenu%20Label!%20I%20would%20like%20to%20order%20{{ product.title | url_encode }}%20from%20Drop%2001.%20Please%20help%20me%20choose%20the%20right%20size." target="_blank" class="shopify-whatsapp-cta">
+      &#128172; Order Directly via WhatsApp
+    </a>
+    <div class="whatsapp-benefit-box">
+      <span class="wa-icon">&#128172;</span>
+      <div>
+        <strong>Shoppers with size doubts or customization questions:</strong>
+        Chat directly with our Chandigarh atelier stylist to verify exact measurements, request custom sleeve/kurta length, or view unedited daylight fabric videos before ordering.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- High-Resolution Lightbox Zoom Modal -->
+<div id="shopifyLightboxModal" class="shopify-lightbox-modal" onclick="closeShopifyLightbox()">
+  <button type="button" class="shopify-lightbox-close" onclick="closeShopifyLightbox()" aria-label="Close high-resolution zoom">&times;</button>
+  <img id="shopifyLightboxImg" src="" alt="{{ product.title | escape }}" onclick="event.stopPropagation()">
+</div>
+
+<style>
+  /* Balanced Luxury PDP Layout */
+  .shopify-product-layout {
+    max-width: 1080px;
+    margin: 28px auto 48px;
+    padding: 0 32px;
+    display: grid;
+    grid-template-columns: 440px 1fr;
+    gap: 44px;
+    align-items: start;
+  }
+  @media (max-width: 960px) {
+    .shopify-product-layout {
+      grid-template-columns: 1fr;
+      gap: 28px;
+      padding: 0 20px;
+      margin: 16px auto 36px;
+    }
+  }
+
+  /* Sticky Gallery Column */
+  .shopify-pdp-gallery-col {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 110px;
+    align-self: start;
+    z-index: 20;
+  }
+  @media (max-width: 960px) {
+    .shopify-pdp-gallery-col {
+      position: relative !important;
+      top: 0 !important;
+    }
+  }
+
+  /* Main Showcase Wrap (Controlled Height, Uncropped Fit) */
+  .shopify-pdp-main-image-wrap {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border-color, #E8E2D9);
+    background: #FAF7F2;
+    height: 460px;
+    max-height: 68vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
+  }
+  @media (max-width: 600px) {
+    .shopify-pdp-main-image-wrap {
+      height: 380px;
+    }
+  }
+  .shopify-pdp-main-image-wrap img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    cursor: zoom-in;
+    transition: opacity 0.2s ease;
+  }
+
+  /* Top Badges (Subtle, Non-Obtrusive) */
+  .shopify-pdp-badges {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .pdp-atelier-badge {
+    background: rgba(26, 26, 26, 0.85);
+    backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 16px;
+    display: inline-block;
+  }
+  .pdp-image-counter {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(26, 26, 26, 0.75);
+    backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 16px;
+    z-index: 5;
+  }
+
+  /* Centered Arrow Controls */
+  .shopify-gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    color: #1A1A1A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  .shopify-gallery-arrow:hover {
+    background: #FFFFFF;
+    color: var(--accent-burgundy, #6E1A24);
+    transform: translateY(-50%) scale(1.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+  .shopify-gallery-arrow svg {
+    width: 16px;
+    height: 16px;
+  }
+  .shopify-gallery-prev {
+    left: 10px;
+  }
+  .shopify-gallery-next {
+    right: 10px;
+  }
+
+  /* Thumbnails Rail (Directly Visible Below Main Image) */
+  .shopify-pdp-thumbnails {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .shopify-pdp-thumbnails::-webkit-scrollbar {
+    height: 3px;
+  }
+  .shopify-pdp-thumbnails::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.18);
+    border-radius: 3px;
+  }
+  .shopify-thumb-btn {
+    flex: 0 0 54px;
+    width: 54px;
+    height: 65px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    padding: 0;
+    background: #FAF7F2;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.6;
+  }
+  .shopify-thumb-btn:hover {
+    opacity: 0.95;
+    border-color: rgba(110, 26, 36, 0.35);
+  }
+  .shopify-thumb-btn.active {
+    opacity: 1;
+    border-color: var(--accent-burgundy, #6E1A24);
+    box-shadow: 0 0 0 1px var(--accent-burgundy, #6E1A24);
+  }
+  .shopify-thumb-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+
+  /* Placeholder */
+  .shopify-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #8C827A;
+    background: #FAF5ED;
+    padding: 24px;
+    text-align: center;
+  }
+  .shopify-img-placeholder svg {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 8px;
+    opacity: 0.5;
+  }
+  .shopify-img-placeholder .placeholder-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1A1A1A;
+    margin-bottom: 4px;
+  }
+  .shopify-img-placeholder .placeholder-sub {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Trust Micro-Grid */
+  .shopify-pdp-trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 14px;
+    text-align: center;
+  }
+  .shopify-pdp-trust-grid .trust-tile {
+    background: #FAF7F2;
+    border: 1px solid var(--border-color, #E8E2D9);
+    padding: 8px 4px;
+    border-radius: 6px;
+  }
+  .shopify-pdp-trust-grid .trust-icon {
+    font-size: 14px;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .shopify-pdp-trust-grid strong {
+    font-size: 10px;
+    display: block;
+    color: var(--text-main, #1A1A1A);
+  }
+  .shopify-pdp-trust-grid small {
+    font-size: 9px;
+    color: var(--text-muted, #7A7269);
+  }
+
+  /* Right Column Styling */
+  .shopify-pdp-info-col {
+    display: flex;
+    flex-direction: column;
+  }
+  .pdp-scarcity-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-rose, #C95D63);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .pdp-main-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 28px;
+    font-weight: 600;
+    margin: 4px 0 2px;
+    line-height: 1.25;
+    color: var(--text-main, #1A1A1A);
+  }
+  .pdp-sku-line {
+    font-size: 11px;
+    color: var(--text-muted, #7A7269);
+    margin-bottom: 14px;
+  }
+
+  /* Price Row (Single Line, Never Wraps) */
+  .shopify-pdp-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border-color, #E8E2D9);
+    border-bottom: 1px solid var(--border-color, #E8E2D9);
+    margin-bottom: 18px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+  .pdp-price-current {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-main, #1A1A1A);
+    white-space: nowrap;
+    font-variant-numeric: lining-nums;
+  }
+  .pdp-price-original {
+    font-size: 15px;
+    text-decoration: line-through;
+    color: var(--text-muted, #7A7269);
+    white-space: nowrap;
+    font-variant-numeric: lining-nums;
+  }
+  .pdp-savings-pill {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-green, #2E7D32);
+    background: #EBF7EE;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+
+  /* Size Selector */
+  .shopify-size-section {
+    margin-bottom: 18px;
+  }
+  .shopify-size-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .shopify-selected-size-label {
+    display: none;
+    color: var(--accent-burgundy, #6E1A24);
+    font-weight: 700;
+    margin-left: 6px;
+  }
+  .size-chart-link {
+    color: var(--accent-gold, #C5A059);
+    text-decoration: none;
+  }
+  .shopify-size-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .shopify-size-tile {
+    background: #FFFFFF;
+    border: 1.5px solid var(--border-color, #E8E2D9);
+    padding: 8px 6px;
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .shopify-size-tile strong {
+    display: block;
+    font-size: 13px;
+  }
+  .shopify-size-tile span {
+    display: block;
+    font-size: 9px;
+    color: var(--accent-rose, #C95D63);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .shopify-size-tile.selected {
+    background: var(--text-main, #1A1A1A) !important;
+    border-color: var(--text-main, #1A1A1A) !important;
+    color: #FFFFFF !important;
+  }
+  .shopify-size-tile.selected strong {
+    color: #FFFFFF !important;
+  }
+  .shopify-size-tile.selected span {
+    color: #FFD54F !important;
+  }
+  .shopify-size-notice {
+    display: none;
+    color: #B91C1C;
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  /* Pincode Box */
+  .shopify-pincode-box {
+    background: #FAF5ED;
+    padding: 11px 13px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    border: 1px solid var(--border-color, #E8E2D9);
+  }
+  .pincode-title {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .pincode-input-row {
+    display: flex;
+    gap: 8px;
+  }
+  .pincode-input-row input {
+    padding: 7px 10px;
+    border: 1px solid var(--border-color, #E8E2D9);
+    border-radius: 4px;
+    flex: 1;
+    font-size: 12px;
+  }
+  .pincode-check-btn {
+    padding: 7px 12px;
+    font-size: 11px;
+  }
+  .pincode-result {
+    font-size: 11px;
+    margin-top: 5px;
+    font-weight: 600;
+  }
+
+  /* Form Actions */
+  .pdp-submit-btn {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .pdp-wishlist-toggle {
+    width: 100%;
+    background: #FFFFFF;
+    border: 1.5px solid var(--border-color, #E8E2D9);
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    transition: all 0.2s ease;
+    color: var(--text-main, #1A1A1A);
+  }
+  .pdp-wishlist-toggle svg {
+    width: 15px;
+    height: 15px;
+    pointer-events: none;
+  }
+  .shopify-whatsapp-cta {
+    display: block;
+    text-align: center;
+    background: #E8F5E9;
+    color: #1B5E20;
+    border: 1px solid #C8E6C9;
+    padding: 11px;
+    border-radius: 6px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 12px;
+  }
+  .whatsapp-benefit-box {
+    margin-top: 10px;
+    background: #FAF7F2;
+    border: 1px solid var(--border-color, #E8E2D9);
+    border-radius: 6px;
+    padding: 10px;
+    display: flex;
+    gap: 8px;
+    font-size: 10px;
+    color: var(--text-muted, #7A7269);
+    line-height: 1.45;
+  }
+  .whatsapp-benefit-box .wa-icon {
+    font-size: 14px;
+  }
+  .whatsapp-benefit-box strong {
+    color: var(--text-main, #1A1A1A);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* Lightbox Modal */
+  .shopify-lightbox-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 14, 12, 0.94);
+    backdrop-filter: blur(12px);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    cursor: zoom-out;
+  }
+  .shopify-lightbox-modal.open {
+    display: flex;
+  }
+  .shopify-lightbox-modal img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    cursor: default;
+    animation: shopifyZoomIn 0.22s ease-out;
+  }
+  .shopify-lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #FFFFFF;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 24px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .shopify-lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: scale(1.08);
+  }
+  @keyframes shopifyZoomIn {
+    from { opacity: 0; transform: scale(0.93); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes sizeTileShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+  }
+  .size-error-shake {
+    animation: sizeTileShake 0.4s ease-in-out;
+    outline: 2px solid #E53935 !important;
+    border-radius: 8px;
+  }
+</style>
+
+<script>
+  var currentSelectedVariantId = null;
+  var currentSelectedSizeTitle = null;
+
+  var shopifyGalleryImages = [
+    {% for image in product.images %}
+      {{ image | image_url: width: 1200 | json }}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+  var currentShopifyGalleryIndex = 0;
+
+  function selectShopifyGalleryImage(btn, src, index) {
+    var mainImg = document.getElementById('shopifyMainImg');
+    if (mainImg) {
+      mainImg.style.opacity = '0.35';
+      setTimeout(function() {
+        mainImg.src = src;
+        mainImg.style.opacity = '1';
+      }, 90);
+    }
+
+    currentShopifyGalleryIndex = index;
+
+    var allThumbs = document.querySelectorAll('.shopify-thumb-btn');
+    allThumbs.forEach(function(t) { t.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+
+    var counter = document.getElementById('shopifyImageCounter');
+    if (counter && shopifyGalleryImages.length > 1) {
+      counter.textContent = (currentShopifyGalleryIndex + 1) + ' / ' + shopifyGalleryImages.length;
+    }
+  }
+
+  function changeShopifyGalleryImage(dir) {
+    if (!shopifyGalleryImages || shopifyGalleryImages.length <= 1) return;
+    var nextIdx = currentShopifyGalleryIndex + dir;
+    if (nextIdx < 0) nextIdx = shopifyGalleryImages.length - 1;
+    if (nextIdx >= shopifyGalleryImages.length) nextIdx = 0;
+
+    var thumbs = document.querySelectorAll('.shopify-thumb-btn');
+    if (thumbs[nextIdx]) {
+      selectShopifyGalleryImage(thumbs[nextIdx], shopifyGalleryImages[nextIdx], nextIdx);
+      thumbs[nextIdx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  }
+
+  function openShopifyLightbox(src) {
+    var modal = document.getElementById('shopifyLightboxModal');
+    var img = document.getElementById('shopifyLightboxImg');
+    if (modal && img) {
+      img.src = src;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeShopifyLightbox() {
+    var modal = document.getElementById('shopifyLightboxModal');
+    if (modal) {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Keyboard navigation
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeShopifyLightbox();
+    } else if (e.key === 'ArrowLeft') {
+      changeShopifyGalleryImage(-1);
+    } else if (e.key === 'ArrowRight') {
+      changeShopifyGalleryImage(1);
+    }
+  });
+
+  // Touch Swipe
+  (function() {
+    var wrap = document.getElementById('shopifyPdpMainWrap');
+    if (!wrap) return;
+    var touchStartX = 0;
+    var touchEndX = 0;
+    wrap.addEventListener('touchstart', function(e) {
+      if (e.changedTouches && e.changedTouches.length > 0) {
+        touchStartX = e.changedTouches[0].screenX;
+      }
+    }, { passive: true });
+    wrap.addEventListener('touchend', function(e) {
+      if (e.changedTouches && e.changedTouches.length > 0) {
+        touchEndX = e.changedTouches[0].screenX;
+        var diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 40) {
+          if (diff > 0) {
+            changeShopifyGalleryImage(1);
+          } else {
+            changeShopifyGalleryImage(-1);
+          }
+        }
+      }
+    }, { passive: true });
+  })();
+
+  function selectShopifyVariant(variantId, sizeTitle, btn) {
+    currentSelectedVariantId = variantId;
+    currentSelectedSizeTitle = sizeTitle;
+    var inp = document.getElementById('selectedVariantId');
+    if (inp) inp.value = variantId;
+
+    var tiles = document.querySelectorAll('.shopify-size-tile');
+    tiles.forEach(function(t) { t.classList.remove('selected'); });
+    if (btn) btn.classList.add('selected');
+
+    // Switch image if variant has image
+    if (btn) {
+      var varImg = btn.getAttribute('data-variant-image');
+      if (varImg) {
+        var matchThumb = document.querySelector('.shopify-thumb-btn[data-src="' + varImg + '"]');
+        if (matchThumb) {
+          matchThumb.click();
+        }
+      }
+    }
+
+    var notice = document.getElementById('shopifySizeRequiredNotice');
+    if (notice) notice.style.display = 'none';
+
+    var sec = document.getElementById('shopifySizeGrid');
+    if (sec) sec.classList.remove('size-error-shake');
+
+    var lbl = document.getElementById('shopifySelectedSizeLabel');
+    if (lbl) {
+      lbl.textContent = '— Size ' + sizeTitle + ' Selected';
+      lbl.style.display = 'inline';
+    }
+
+    var waBtn = document.getElementById('shopifyWhatsAppBtn');
+    if (waBtn) {
+      var prodTitle = {{ product.title | json }};
+      var text = encodeURIComponent('Hi Meenu Label! I would like to order "' + prodTitle + '" in Size ' + sizeTitle + ' from Drop 01. Please confirm piece reservation.');
+      waBtn.href = 'https://wa.me/{{ settings.whatsapp_number | default: "919988898845" }}?text=' + text;
+    }
+  }
+
+  function validateShopifyForm(e) {
+    if (!currentSelectedVariantId) {
+      if (e) e.preventDefault();
+      var notice = document.getElementById('shopifySizeRequiredNotice');
+      if (notice) notice.style.display = 'block';
+
+      var sec = document.getElementById('shopifySizeGrid');
+      if (sec) {
+        sec.classList.remove('size-error-shake');
+        void sec.offsetWidth;
+        sec.classList.add('size-error-shake');
+        setTimeout(function() { sec.classList.remove('size-error-shake'); }, 1200);
+        sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return false;
+    }
+
+    if (e) e.preventDefault();
+    var btn = document.getElementById('pdpAddToCartBtn');
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = 'ADDING TO BAG...';
+    }
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: [{
+          id: currentSelectedVariantId,
+          quantity: 1
+        }]
+      })
+    })
+    .then(function() {
+      window.location.href = '/cart';
+    })
+    .catch(function(err) {
+      console.warn('Cart add notice:', err);
+      var form = document.getElementById('shopifyProductForm');
+      if (form) {
+        form.submit();
+      } else {
+        window.location.href = '/cart';
+      }
+    });
+
+    return false;
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product Main",
+  "settings": []
+}
+{% endschema %}
+'''
+
+for path in ['sections/main-product.liquid', 'meenu-label-shopify-theme/sections/main-product.liquid']:
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(refined_liquid)
+    print(f"Updated {path}")

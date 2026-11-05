@@ -1,0 +1,663 @@
+pdp_liquid = '''<div class="pdp-section">
+  <!-- PDP Top Navigation & Breadcrumbs (Matches Exact Screenshot) -->
+  <div class="pdp-top-bar">
+    <a class="pdp-back-btn" href="{{ collection.url | default: '/collections/all' }}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      BACK TO DROP 01
+    </a>
+    <div class="pdp-breadcrumb">
+      <a href="/">HOME</a> &nbsp;/&nbsp;
+      <span id="pdpBreadcrumbCat">{{ product.type | default: 'COLLECTION' | upcase }}</span> &nbsp;/&nbsp;
+      <span id="pdpBreadcrumbTitle" style="color:var(--text-main); font-weight:700;">{{ product.title | upcase }} ({{ product.selected_or_first_available_variant.sku | default: 'DROP01' }})</span>
+    </div>
+  </div>
+
+  <!-- Main PDP 2-Column Grid (Exact Screenshot Layout) -->
+  <div class="pdp-grid">
+    <!-- Left: Visual Gallery -->
+    <div class="pdp-gallery-col">
+      <div class="pdp-main-image-wrap" id="pdpMainImageWrap">
+        <div class="pdp-gallery-badges">
+          <span class="pdp-badge-pill" id="pdpBadgePill">{% if product.tags contains 'festive' %}FLAGSHIP HERO{% else %}DROP 01 STAR{% endif %}</span>
+          <span class="pdp-badge-pill pdp-badge-gold" id="pdpCounterPill">{% if product.images.size > 1 %}1 / {{ product.images.size }}{% else %}STRICTLY 3 PIECES CRAFTED{% endif %}</span>
+        </div>
+        <button type="button" class="pdp-wishlist-toggle" id="pdpWishlistBtn" 
+                data-wishlist-id="{{ product.id }}" 
+                data-wishlist-title="{{ product.title | escape }}" 
+                data-wishlist-price="{{ product.price | money | escape }}" 
+                data-wishlist-image="{{ product.featured_image | default: product.images.first | image_url: width: 300 }}" 
+                data-wishlist-url="{{ product.url }}" 
+                onclick="toggleWishlist(this)" 
+                title="Save to Wishlist" 
+                aria-label="Save to Wishlist">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+        </button>
+
+        {% if product.images.size > 0 %}
+          <img id="pdpMainImg" 
+               src="{{ product.featured_image | default: product.images.first | image_url: width: 1200 }}" 
+               alt="{{ product.title | escape }}" 
+               class="pdp-main-image"
+               loading="eager"
+               onclick="openShopifyLightbox(this.src)"
+               title="Click to view full screen">
+        {% else %}
+          <div style="width:100%; aspect-ratio:4/5; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#FAF5ED; color:#8C827A; padding:30px; text-align:center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="width:48px; height:48px; margin-bottom:10px; opacity:0.5;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            <span style="font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:#1A1A1A;">{{ product.title }}</span>
+            <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.1em;">Awaiting Model Photography</span>
+          </div>
+        {% endif %}
+
+        {% if product.images.size > 1 %}
+          <!-- Prev / Next Navigation Arrows -->
+          <button type="button" class="pdp-gallery-arrow pdp-gallery-prev" onclick="changeShopifyGalleryImage(-1)" aria-label="Previous photo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button type="button" class="pdp-gallery-arrow pdp-gallery-next" onclick="changeShopifyGalleryImage(1)" aria-label="Next photo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        {% endif %}
+      </div>
+
+      <!-- Multi-Image Thumbnails Rail (Cleanly Positioned Directly Below) -->
+      {% if product.images.size > 1 %}
+        <div class="pdp-thumbnails-rail" id="shopifyPdpThumbs">
+          {% for image in product.images %}
+            <button type="button" 
+                    class="pdp-thumb-item {% if forloop.first %}active{% endif %}" 
+                    data-index="{{ forloop.index0 }}"
+                    data-src="{{ image | image_url: width: 1200 }}"
+                    onclick="selectShopifyGalleryImage(this, '{{ image | image_url: width: 1200 }}', {{ forloop.index0 }})"
+                    aria-label="View photo {{ forloop.index }} of {{ product.images.size }}">
+              <img src="{{ image | image_url: width: 160, height: 200, crop: 'center' }}" 
+                   alt="{{ image.alt | default: product.title | escape }}" 
+                   loading="lazy">
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Trust Badges (Matches Exact Screenshot) -->
+      <div class="pdp-trust-pills">
+        <div class="pdp-trust-pill">
+          <span class="pdp-trust-pill-icon">&#10024;</span>
+          <span>Chandigarh Atelier</span>
+          <span style="font-size:10px; color:var(--text-muted); font-weight:400;">Handcrafted Precision</span>
+        </div>
+        <div class="pdp-trust-pill">
+          <span class="pdp-trust-pill-icon">&#128666;</span>
+          <span>Free 24-Hr Express</span>
+          <span style="font-size:10px; color:var(--text-muted); font-weight:400;">Tricity Priority Courier</span>
+        </div>
+        <div class="pdp-trust-pill">
+          <span class="pdp-trust-pill-icon">&#128207;</span>
+          <span>Complimentary Fit</span>
+          <span style="font-size:10px; color:var(--text-muted); font-weight:400;">Studio Hem Adjustments</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Comprehensive Product Info & Checkout Actions (Exact Screenshot Layout) -->
+    <div class="pdp-info-col">
+      <div class="pdp-tag-row">
+        <span class="pdp-collection-tag">MEENU LABEL &bull; AUTUMN/WINTER 2026 DEBUT</span>
+        <span class="pdp-code-tag" id="pdpCodeTag">STYLE #{{ product.selected_or_first_available_variant.sku | default: 'JAB26ST05010' }}</span>
+      </div>
+
+      <h1 class="pdp-title" id="pdpTitle">{{ product.title }}</h1>
+
+      <div class="pdp-price-row">
+        <span class="pdp-price-main" id="pdpPriceMain">{{ product.price | money }}</span>
+        {% if product.compare_at_price > product.price %}
+          <span class="pdp-price-mrp" id="pdpPriceMrp">{{ product.compare_at_price | money }}</span>
+          <span class="pdp-price-discount" id="pdpDiscount">
+            {% assign savings = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
+            {{ savings }}% OFF
+          </span>
+        {% endif %}
+      </div>
+      <div class="pdp-tax-note">Inclusive of all taxes &bull; Free express delivery across India</div>
+
+      <!-- Scarcity Callout (Exact Amber Box from Screenshot) -->
+      <div class="pdp-scarcity-banner">
+        <span class="pdp-scarcity-dot"></span>
+        <span>STRICT ATELIER SCARCITY: Strictly 1 piece per size (M, L, XL). Only 3 pieces produced nationwide.</span>
+      </div>
+
+      <!-- Meta Highlights Grid (Exact 2-Col Box from Screenshot) -->
+      <div class="pdp-meta-grid">
+        <div>
+          <div class="pdp-meta-label">Fabric & Weave</div>
+          <div class="pdp-meta-val" id="pdpMetaFabric">
+            {% if product.tags contains 'chanderi' %}Pure Handloom Chanderi Silk with Intricate Zari
+            {% elsif product.tags contains 'organza' %}Lightweight Breathable Organza Silk Blend
+            {% elsif product.tags contains 'crepe' %}Fluid Mulberry Crepe Silk
+            {% elsif product.tags contains 'dobby' %}Textured Pure Cotton Dobby
+            {% else %}Pure Handloom Silk & Cotton Pret Blend{% endif %}
+          </div>
+        </div>
+        <div>
+          <div class="pdp-meta-label">Color Palette</div>
+          <div class="pdp-meta-val" id="pdpMetaColor">
+            {% if product.title contains 'Wine' %}Royal Wine & Antique Gold
+            {% elsif product.title contains 'Teal' or product.title contains 'Petrol' %}Petrol Teal & Brushed Gold
+            {% elsif product.title contains 'Gulabi' %}Rani Pink & Rose Gold
+            {% elsif product.title contains 'Champagne' %}Roohani Champagne & Silver Zari
+            {% elsif product.title contains 'Lilac' %}Shahi Lilac & Pearl Sheen
+            {% elsif product.title contains 'Lime' %}Sitara Lime & Gilded Accent
+            {% else %}Signature Atelier Colorway{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Size Selection (Exact 3-Tile Design from Screenshot) -->
+      <div class="pdp-size-section">
+        <div class="pdp-size-header">
+          <span class="pdp-size-label">Select Size (Standard Indian Pret)</span>
+          <span class="pdp-size-chart-link" onclick="openSizeGuideModal()">&#128207; View Detailed Measurements</span>
+        </div>
+        <div class="pdp-size-pills" id="shopifySizeGrid">
+          {% for variant in product.variants %}
+            <button type="button" 
+                    class="pdp-size-btn {% if forloop.first %}selected{% endif %}" 
+                    id="pdpSizeBtn_{{ variant.title }}" 
+                    data-variant-id="{{ variant.id }}" 
+                    data-size-title="{{ variant.title }}" 
+                    {% if variant.featured_image %}data-variant-image="{{ variant.featured_image | image_url: width: 1200 }}"{% elsif variant.image %}data-variant-image="{{ variant.image | image_url: width: 1200 }}"{% endif %}
+                    onclick="selectShopifyPdpSize('{{ variant.id }}', '{{ variant.title }}', this)">
+              <span class="pdp-size-name">{{ variant.title }}{% if variant.title == 'M' %} (38){% elsif variant.title == 'L' %} (40){% elsif variant.title == 'XL' %} (42){% endif %}</span>
+              <span class="pdp-size-sub">{% if variant.title contains 'M' %}Bust 38" | Waist 34"{% elsif variant.title contains 'L' %}Bust 40" | Waist 36"{% elsif variant.title contains 'XL' %}Bust 42" | Waist 38"{% else %}Standard Pret Fit{% endif %}</span>
+              <span class="pdp-size-stock">Only 1 Left</span>
+            </button>
+          {% endfor %}
+        </div>
+        <div id="shopifySizeRequiredNotice" style="display:none; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:6px; padding:10px 14px; font-size:12px; font-weight:600; text-align:center; margin-top:8px;">
+          &#9888;&#65039; Please select your size (M, L, or XL) before adding to bag
+        </div>
+      </div>
+
+      <!-- Actions (ADD TO SHOPPING BAG Button & Direct Ordering) -->
+      {% form 'product', product, id: 'shopifyProductForm', onsubmit: 'return validateShopifyForm(event)' %}
+        <input type="hidden" name="id" id="selectedVariantId" value="{{ product.selected_or_first_available_variant.id }}">
+        <div class="pdp-actions-row">
+          <button type="submit" id="pdpAddToCartBtn" class="pdp-btn-primary">ADD TO SHOPPING BAG</button>
+          <button type="button" class="pdp-btn-buy" onclick="buyShopifyProductNow()">BUY IT NOW &rarr;</button>
+          <a id="pdpWhatsAppBtn" class="pdp-btn-whatsapp" href="https://wa.me/{{ settings.whatsapp_number | default: '919988898845' }}?text=Hi%20Meenu%20Label!%20I%20would%20like%20to%20order%20{{ product.title | url_encode }}%20from%20Drop%2001." target="_blank">
+            <span style="font-size:20px;">&#128172;</span> ORDER VIA WHATSAPP ATELIER CONCIERGE
+          </a>
+          <div class="whatsapp-benefit-box">
+            <span class="wa-icon">&#128172;</span>
+            <div>
+              <strong>Shoppers with size doubts, customization questions, or first-time hesitation:</strong>
+              Chat directly with our Chandigarh atelier stylist to verify exact measurements, request custom sleeve/kurta length, or view unedited daylight fabric videos before ordering.
+            </div>
+          </div>
+        </div>
+      {% endform %}
+
+      <!-- Pincode Checker -->
+      <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:14px 16px; margin-top:14px;">
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; color:var(--text-muted); margin-bottom:8px;">Check Express Dispatch to Your Pincode</div>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="pdpPincodeInput" placeholder="Enter 6-digit Pincode (e.g. 160017)" maxlength="6" style="flex:1; padding:8px 12px; border:1px solid var(--border-color); border-radius:4px; font-size:13px; outline:none; background:#FFF;">
+          <button type="button" onclick="checkPdpPincode()" style="padding:8px 16px; background:var(--text-main); color:#FFF; border:none; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">CHECK</button>
+        </div>
+        <div id="pdpPincodeResult" style="font-size:12px; margin-top:8px; font-weight:600; display:none;"></div>
+      </div>
+
+      <!-- Accordions -->
+      <div class="pdp-accordions" style="margin-top:20px;">
+        <div class="pdp-accordion-item open">
+          <div class="pdp-accordion-header" onclick="togglePdpAccordion(this)">
+            <span>The Silhouette & Drape</span>
+            <span class="pdp-accordion-icon">&minus;</span>
+          </div>
+          <div class="pdp-accordion-content" style="display:block;">
+            {{ product.description | default: 'Handcrafted with exquisite precision in our Chandigarh atelier. Styled for effortless luxury pret occasions, pairing traditional Indian artisanal embroidery with clean contemporary contours.' }}
+          </div>
+        </div>
+
+        <div class="pdp-accordion-item">
+          <div class="pdp-accordion-header" onclick="togglePdpAccordion(this)">
+            <span>Fabric & Handloom Heritage</span>
+            <span class="pdp-accordion-icon">&plus;</span>
+          </div>
+          <div class="pdp-accordion-content">
+            Woven from pure natural handloom fibers sourced directly from traditional heritage clusters. Features delicate zari zardozi embellishment and lightweight breathable lining tailored for day-long festive comfort.
+          </div>
+        </div>
+
+        <div class="pdp-accordion-item">
+          <div class="pdp-accordion-header" onclick="togglePdpAccordion(this)">
+            <span>Garment Care & Maintenance</span>
+            <span class="pdp-accordion-icon">&plus;</span>
+          </div>
+          <div class="pdp-accordion-content">
+            Professional dry clean recommended for silk and Chanderi pret to preserve natural luster and delicate zari embroidery. Always steam iron on reverse side. Store in the breathable archival muslin dust bag provided with your order.
+          </div>
+        </div>
+
+        <div class="pdp-accordion-item">
+          <div class="pdp-accordion-header" onclick="togglePdpAccordion(this)">
+            <span>Complimentary Atelier Alterations & Returns</span>
+            <span class="pdp-accordion-icon">&plus;</span>
+          </div>
+          <div class="pdp-accordion-content">
+            Because each Drop 01 silhouette is strictly 1 piece per size, we provide complimentary bespoke sleeve and hem tailoring at our Sector 17-C Chandigarh Design Studio or through our WhatsApp styling team. Standard 7-day hassle-free exchange policy applies if unworn and tags remain intact.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- High-Resolution Lightbox Zoom Modal -->
+<div id="shopifyLightboxModal" class="shopify-lightbox-modal" onclick="closeShopifyLightbox()">
+  <button type="button" class="shopify-lightbox-close" onclick="closeShopifyLightbox()" aria-label="Close high-resolution zoom">&times;</button>
+  <img id="shopifyLightboxImg" src="" alt="{{ product.title | escape }}" onclick="event.stopPropagation()">
+</div>
+
+<style>
+  /* Gallery Arrows & Counter */
+  .pdp-gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    color: #1A1A1A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  }
+  .pdp-gallery-arrow:hover {
+    background: #FFFFFF;
+    color: var(--accent-burgundy, #6E1A24);
+    transform: translateY(-50%) scale(1.08);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+  }
+  .pdp-gallery-prev { left: 14px; }
+  .pdp-gallery-next { right: 14px; }
+
+  /* Thumbnails Rail */
+  .pdp-thumbnails-rail {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pdp-thumbnails-rail::-webkit-scrollbar {
+    height: 4px;
+  }
+  .pdp-thumbnails-rail::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+  }
+  .pdp-thumb-item {
+    flex: 0 0 72px;
+    width: 72px;
+    aspect-ratio: 4 / 5;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    padding: 0;
+    background: #F4EFEB;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.65;
+  }
+  .pdp-thumb-item:hover {
+    opacity: 0.95;
+    border-color: rgba(110, 26, 36, 0.35);
+  }
+  .pdp-thumb-item.active {
+    opacity: 1;
+    border-color: var(--accent-burgundy, #6E1A24);
+    box-shadow: 0 0 0 1px var(--accent-burgundy, #6E1A24);
+    transform: translateY(-1px);
+  }
+  .pdp-thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+
+  /* Lightbox Zoom */
+  .shopify-lightbox-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 14, 12, 0.94);
+    backdrop-filter: blur(12px);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    cursor: zoom-out;
+  }
+  .shopify-lightbox-modal.open {
+    display: flex;
+  }
+  .shopify-lightbox-modal img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    cursor: default;
+    animation: shopifyZoomIn 0.22s ease-out;
+  }
+  .shopify-lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #FFFFFF;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 26px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .shopify-lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: scale(1.08);
+  }
+  @keyframes shopifyZoomIn {
+    from { opacity: 0; transform: scale(0.93); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes sizeTileShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .size-error-shake {
+    animation: sizeTileShake 0.4s ease-in-out;
+    outline: 2px solid #E53935 !important;
+    border-radius: 8px;
+  }
+</style>
+
+<script>
+  var currentSelectedVariantId = {{ product.selected_or_first_available_variant.id | json }};
+  var currentSelectedSizeTitle = {{ product.selected_or_first_available_variant.title | json }};
+
+  var shopifyGalleryImages = [
+    {% for image in product.images %}
+      {{ image | image_url: width: 1200 | json }}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+  var currentShopifyGalleryIndex = 0;
+
+  function selectShopifyGalleryImage(btn, src, index) {
+    var mainImg = document.getElementById('pdpMainImg');
+    if (mainImg) {
+      mainImg.style.opacity = '0.35';
+      setTimeout(function() {
+        mainImg.src = src;
+        mainImg.style.opacity = '1';
+      }, 100);
+    }
+
+    currentShopifyGalleryIndex = index;
+
+    var allThumbs = document.querySelectorAll('.pdp-thumb-item');
+    allThumbs.forEach(function(t) { t.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+
+    var counter = document.getElementById('pdpCounterPill');
+    if (counter && shopifyGalleryImages.length > 1) {
+      counter.textContent = (currentShopifyGalleryIndex + 1) + ' / ' + shopifyGalleryImages.length;
+    }
+  }
+
+  function changeShopifyGalleryImage(dir) {
+    if (!shopifyGalleryImages || shopifyGalleryImages.length <= 1) return;
+    var nextIdx = currentShopifyGalleryIndex + dir;
+    if (nextIdx < 0) nextIdx = shopifyGalleryImages.length - 1;
+    if (nextIdx >= shopifyGalleryImages.length) nextIdx = 0;
+
+    var thumbs = document.querySelectorAll('.pdp-thumb-item');
+    if (thumbs[nextIdx]) {
+      selectShopifyGalleryImage(thumbs[nextIdx], shopifyGalleryImages[nextIdx], nextIdx);
+      thumbs[nextIdx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  }
+
+  function openShopifyLightbox(src) {
+    var modal = document.getElementById('shopifyLightboxModal');
+    var img = document.getElementById('shopifyLightboxImg');
+    if (modal && img) {
+      img.src = src;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeShopifyLightbox() {
+    var modal = document.getElementById('shopifyLightboxModal');
+    if (modal) {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Keyboard navigation for gallery & lightbox
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeShopifyLightbox();
+    } else if (e.key === 'ArrowLeft') {
+      changeShopifyGalleryImage(-1);
+    } else if (e.key === 'ArrowRight') {
+      changeShopifyGalleryImage(1);
+    }
+  });
+
+  // Touch Swipe on Main Image Container
+  (function() {
+    var wrap = document.getElementById('pdpMainImageWrap');
+    if (!wrap) return;
+    var touchStartX = 0;
+    var touchEndX = 0;
+    wrap.addEventListener('touchstart', function(e) {
+      if (e.changedTouches && e.changedTouches.length > 0) {
+        touchStartX = e.changedTouches[0].screenX;
+      }
+    }, { passive: true });
+    wrap.addEventListener('touchend', function(e) {
+      if (e.changedTouches && e.changedTouches.length > 0) {
+        touchEndX = e.changedTouches[0].screenX;
+        var diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 40) {
+          if (diff > 0) {
+            changeShopifyGalleryImage(1);
+          } else {
+            changeShopifyGalleryImage(-1);
+          }
+        }
+      }
+    }, { passive: true });
+  })();
+
+  function selectShopifyPdpSize(variantId, sizeTitle, btn) {
+    currentSelectedVariantId = variantId;
+    currentSelectedSizeTitle = sizeTitle;
+    var inp = document.getElementById('selectedVariantId');
+    if (inp) inp.value = variantId;
+
+    var tiles = document.querySelectorAll('.pdp-size-btn');
+    tiles.forEach(function(t) { t.classList.remove('selected'); });
+    if (btn) btn.classList.add('selected');
+
+    // Switch image if variant has assigned image
+    if (btn) {
+      var varImg = btn.getAttribute('data-variant-image');
+      if (varImg) {
+        var matchThumb = document.querySelector('.pdp-thumb-item[data-src="' + varImg + '"]');
+        if (matchThumb) {
+          matchThumb.click();
+        }
+      }
+    }
+
+    var notice = document.getElementById('shopifySizeRequiredNotice');
+    if (notice) notice.style.display = 'none';
+
+    var sec = document.getElementById('shopifySizeGrid');
+    if (sec) sec.classList.remove('size-error-shake');
+
+    var waBtn = document.getElementById('pdpWhatsAppBtn');
+    if (waBtn) {
+      var prodTitle = {{ product.title | json }};
+      var text = encodeURIComponent('Hi Meenu Label! I would like to order "' + prodTitle + '" in Size ' + sizeTitle + ' from Drop 01. Please confirm piece reservation.');
+      waBtn.href = 'https://wa.me/{{ settings.whatsapp_number | default: "919988898845" }}?text=' + text;
+    }
+  }
+
+  function validateShopifyForm(e) {
+    if (!currentSelectedVariantId) {
+      if (e) e.preventDefault();
+      var notice = document.getElementById('shopifySizeRequiredNotice');
+      if (notice) notice.style.display = 'block';
+
+      var sec = document.getElementById('shopifySizeGrid');
+      if (sec) {
+        sec.classList.remove('size-error-shake');
+        void sec.offsetWidth;
+        sec.classList.add('size-error-shake');
+        setTimeout(function() { sec.classList.remove('size-error-shake'); }, 1200);
+        sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return false;
+    }
+
+    if (e) e.preventDefault();
+    var btn = document.getElementById('pdpAddToCartBtn');
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = 'ADDING TO BAG...';
+    }
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: [{
+          id: currentSelectedVariantId,
+          quantity: 1
+        }]
+      })
+    })
+    .then(function() {
+      window.location.href = '/cart';
+    })
+    .catch(function(err) {
+      console.warn('Cart add notice:', err);
+      var form = document.getElementById('shopifyProductForm');
+      if (form) {
+        form.submit();
+      } else {
+        window.location.href = '/cart';
+      }
+    });
+
+    return false;
+  }
+
+  function buyShopifyProductNow() {
+    if (!currentSelectedVariantId) {
+      validateShopifyForm();
+      return;
+    }
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: [{
+          id: currentSelectedVariantId,
+          quantity: 1
+        }]
+      })
+    })
+    .then(function() {
+      window.location.href = '/checkout';
+    })
+    .catch(function() {
+      window.location.href = '/checkout';
+    });
+  }
+
+  function togglePdpAccordion(header) {
+    var item = header.parentElement;
+    var content = item.querySelector('.pdp-accordion-content');
+    var icon = item.querySelector('.pdp-accordion-icon');
+    var isOpen = item.classList.contains('open');
+
+    if (isOpen) {
+      item.classList.remove('open');
+      if (content) content.style.display = 'none';
+      if (icon) icon.innerHTML = '&plus;';
+    } else {
+      item.classList.add('open');
+      if (content) content.style.display = 'block';
+      if (icon) icon.innerHTML = '&minus;';
+    }
+  }
+
+  function checkPdpPincode() {
+    var val = (document.getElementById('pdpPincodeInput').value || '').trim();
+    var res = document.getElementById('pdpPincodeResult');
+    if (!res) return;
+    res.style.display = 'block';
+    if (!/^[1-9][0-9]{5}$/.test(val)) {
+      res.style.color = '#C95D63';
+      res.textContent = 'Please enter a valid 6-digit Indian pincode.';
+      return;
+    }
+    var tricity = ['160017','160018','160019','160020','160022','160036','160047','160055','160059','160062','160070','160071','140603','134109','134112','134113'];
+    if (tricity.indexOf(val) !== -1 || val.startsWith('160') || val.startsWith('134') || val.startsWith('140')) {
+      res.style.color = '#1B5E20';
+      res.textContent = 'Eligible for Free 24-Hr Express Dispatch from Sector 17-C Studio.';
+    } else {
+      res.style.color = '#C5A059';
+      res.textContent = 'Eligible for Free Priority Air Courier across India (Delivered in 2-4 days).';
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product Main",
+  "settings": []
+}
+{% endschema %}
+'''
+
+for path in ['sections/main-product.liquid', 'meenu-label-shopify-theme/sections/main-product.liquid']:
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(pdp_liquid)
+    print(f"Updated {path}")

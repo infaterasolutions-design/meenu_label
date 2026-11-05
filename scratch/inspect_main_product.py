@@ -1,5 +1,7 @@
-import zipfile, sys
+with open('sections/main-product.liquid', 'r', encoding='utf-8') as f:
+    content = f.read()
 
-with zipfile.ZipFile(r"C:\Users\sande\Downloads\Meenu_Label_Shopify_Theme.zip", "r") as z:
-    content = z.read('sections/main-product.liquid')
-    sys.stdout.buffer.write(content)
+print("File length:", len(content))
+lines = content.splitlines()
+for i, l in enumerate(lines[:30]):
+    print(f"{i+1}: {l}")

@@ -1,0 +1,72 @@
+new_card_content = """<div class="product-card" data-category="{{ product.type | handleize }} {{ product.tags | join: ' ' | handleize }}">
+  <div class="card-thumb">
+    <button type="button" class="card-wishlist-btn" 
+      data-wishlist-id="{{ product.id }}" 
+      data-wishlist-title="{{ product.title | escape }}" 
+      data-wishlist-price="{{ product.price | money | escape }}" 
+      data-wishlist-image="{{ product.featured_image | default: product.images.first | image_url: width: 300 }}" 
+      data-wishlist-url="{{ product.url }}" 
+      onclick="event.preventDefault(); event.stopPropagation(); toggleWishlist(this)" 
+      title="Save to Wishlist" 
+      aria-label="Save to Wishlist">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+    </button>
+    <a href="{{ product.url }}">
+      {% if product.featured_image %}
+        <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy" class="card-img-primary">
+        {% if product.images.size > 1 %}
+          <img src="{{ product.images[1] | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy" class="card-img-secondary">
+        {% endif %}
+      {% elsif product.images.size > 0 %}
+        <img src="{{ product.images.first | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy" class="card-img-primary">
+        {% if product.images.size > 1 %}
+          <img src="{{ product.images[1] | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy" class="card-img-secondary">
+        {% endif %}
+      {% else %}
+        <div style="width: 100%; height: 100%; min-height: 280px; background: #FAF5ED; display: flex; align-items: center; justify-content: center; color: #8C827A; font-size: 13px; font-weight: 500;">
+          {{ product.title }}
+        </div>
+      {% endif %}
+    </a>
+  </div>
+  <div class="card-body">
+    <a href="{{ product.url }}">
+      <h3 class="card-title">{{ product.title }}</h3>
+    </a>
+    <div class="card-price-row">
+      <div class="card-price-left">
+        <span class="price-main">{{ product.price | money }}</span>
+        {% if product.compare_at_price > product.price %}
+          <span class="price-mrp" style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; margin-left: 6px;">{{ product.compare_at_price | money }}</span>
+        {% endif %}
+      </div>
+      <button type="button" class="snitch-plus-trigger" 
+              data-product-id="{{ product.id }}"
+              data-product-title="{{ product.title | escape }}"
+              data-product-price="{{ product.price | money | escape }}"
+              data-product-mrp="{% if product.compare_at_price > product.price %}{{ product.compare_at_price | money | escape }}{% endif %}"
+              data-product-image="{{ product.featured_image | default: product.images.first | image_url: width: 400 }}"
+              data-product-url="{{ product.url }}"
+              data-product-tag="{% if product.tags contains 'festive' %}FLAGSHIP HERO{% else %}DROP 01 PIECE{% endif %}"
+              onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" 
+              title="Select Size & Add to Bag" 
+              aria-label="Select Size & Add to Bag">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+          <line x1="6" y1="9" x2="18" y2="9"></line>
+          <line x1="4" y1="19" x2="20" y2="19"></line>
+        </svg>
+      </button>
+      <script type="application/json" class="product-variants-json">
+        {{ product.variants | json }}
+      </script>
+    </div>
+  </div>
+</div>
+"""
+
+with open('snippets/product-card.liquid', 'w', encoding='utf-8') as f:
+    f.write(new_card_content)
+print("Updated snippets/product-card.liquid successfully!")
