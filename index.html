@@ -5159,7 +5159,7 @@
           <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:14px 16px;">
             <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; color:var(--text-muted); margin-bottom:8px;">Check Express Dispatch to Your Pincode</div>
             <div style="display:flex; gap:8px;">
-              <input type="text" id="pdpPincodeInput" placeholder="Enter 6-digit Pincode (e.g. 160017)" maxlength="6" style="flex:1; padding:8px 12px; border:1px solid var(--border-color); border-radius:4px; font-size:13px; outline:none; background:#FFF;">
+              <input type="text" id="pdpPincodeInput" class="pdp-pincode-input" placeholder="Enter 6-digit Pincode (e.g. 160017)" maxlength="6" inputmode="numeric" pattern="[0-9]*" style="flex:1; padding:10px 14px; border:1px solid var(--border-color); border-radius:4px; font-size:16px; outline:none; background:#FFF; color:var(--text-main); -webkit-text-size-adjust:100%;">
               <button onclick="checkPdpPincode()" style="padding:8px 16px; background:var(--text-main); color:#FFF; border:none; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">CHECK</button>
             </div>
             <div id="pdpPincodeResult" style="font-size:12px; margin-top:8px; font-weight:600; display:none;"></div>
@@ -5303,7 +5303,7 @@
         <div style="margin-bottom: 20px; background: var(--bg-surface); padding: 12px 16px; border-radius: 8px;">
           <div style="font-size: 11px; font-weight: 700; margin-bottom: 6px;">DELIVERY CHECKER</div>
           <div style="display: flex; gap: 8px;">
-            <input type="text" id="pincodeInput" placeholder="Enter 6-digit Pincode (e.g. 160017)" style="padding: 7px 12px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 12px; flex: 1;">
+            <input type="text" id="pincodeInput" class="pdp-pincode-input" placeholder="Enter 6-digit Pincode (e.g. 160017)" maxlength="6" inputmode="numeric" pattern="[0-9]*" style="padding: 10px 14px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 16px; flex: 1; outline:none; background:#FFF; color:var(--text-main); -webkit-text-size-adjust:100%;">
             <button onclick="checkPincode()" style="padding: 7px 14px; background: var(--text-main); color: #FFF; border: none; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer;">CHECK</button>
           </div>
           <div id="pincodeResult" style="font-size: 11px; margin-top: 6px; font-weight: 600;"></div>

@@ -7295,3 +7295,44 @@
 .size-error-shake {
   animation: sizeShake 0.4s ease;
 }
+
+
+/* =========================================================================
+   MOBILE INPUT AUTO-ZOOM PREVENTION
+   Prevents mobile browsers (iOS Safari, WebKit, Chrome Mobile) from zooming
+   in when focusing on the pincode search bar, search fields, or form inputs.
+   iOS Safari automatically zooms the page if input font-size is below 16px.
+   Enforcing 16px font-size and touch-action: manipulation keeps the viewport
+   stable at 1:1 scale without unwanted zoom-in.
+   ========================================================================= */
+html, body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+#pdpPincodeInput,
+#pincodeInput,
+.pdp-pincode-input,
+.pdp-pincode-input:focus {
+  font-size: 16px !important;
+  -webkit-text-size-adjust: 100% !important;
+  touch-action: manipulation !important;
+}
+
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="search"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="password"],
+  select,
+  textarea,
+  #pdpPincodeInput,
+  #pincodeInput,
+  .pdp-pincode-input {
+    font-size: 16px !important;
+    touch-action: manipulation !important;
+    -webkit-text-size-adjust: 100% !important;
+  }
+}
