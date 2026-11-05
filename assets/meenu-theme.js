@@ -1397,3 +1397,29 @@ function executeOrderTracking() {
     container.style.display = 'block';
   }
 }
+
+
+/* =========================================================================
+   SCROLL POSITION PRESERVATION ON NAVIGATION
+   ========================================================================= */
+document.addEventListener('click', function(e) {
+  var productLink = e.target.closest('a[href*="/products/"]');
+  if (productLink) {
+    var curScroll = window.pageYOffset || document.documentElement.scrollTop || 0;
+    try {
+      sessionStorage.setItem('meenu_catalog_scroll_' + window.location.pathname, curScroll);
+    } catch(err) {}
+  }
+});
+
+window.addEventListener('pageshow', function(e) {
+  try {
+    var key = 'meenu_catalog_scroll_' + window.location.pathname;
+    var saved = sessionStorage.getItem(key);
+    if (saved !== null && (e.persisted || (window.performance && window.performance.navigation && window.performance.navigation.type === 2) || (window.performance && window.performance.getEntriesByType && window.performance.getEntriesByType('navigation')[0] && window.performance.getEntriesByType('navigation')[0].type === 'back_forward'))) {
+      var scrollY = parseInt(saved, 10);
+      window.scrollTo(0, scrollY);
+      setTimeout(function() { window.scrollTo(0, scrollY); }, 50);
+    }
+  } catch(err) {}
+});

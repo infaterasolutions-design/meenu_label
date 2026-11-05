@@ -7285,3 +7285,13 @@
   background: #C8A364;
   color: #12100E;
 }
+
+
+@keyframes sizeShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+.size-error-shake {
+  animation: sizeShake 0.4s ease;
+}

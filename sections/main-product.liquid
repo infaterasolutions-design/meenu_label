@@ -1,7 +1,7 @@
 <div class="pdp-section">
   <!-- PDP Top Navigation & Breadcrumbs (Matches Exact Screenshot) -->
   <div class="pdp-top-bar">
-    <a class="pdp-back-btn" href="{{ collection.url | default: '/collections/all' }}">
+    <a class="pdp-back-btn" href="javascript:void(0)" onclick="if(window.history.length > 1){window.history.back();}else{window.location.href='{{ collection.url | default: "/collections/all" }}';}" aria-label="Back to Collection">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
       BACK TO DROP 01
     </a>
@@ -162,7 +162,7 @@
         <div class="pdp-size-pills" id="shopifySizeGrid">
           {% for variant in product.variants %}
             <button type="button" 
-                    class="pdp-size-btn {% if forloop.first and variant.available %}selected{% endif %} {% unless variant.available %}sold-out{% endunless %}" 
+                    class="pdp-size-btn {% unless variant.available %}sold-out{% endunless %}" 
                     id="pdpSizeBtn_{{ variant.title }}" 
                     data-variant-id="{{ variant.id }}" 
                     data-size-title="{{ variant.title }}" 
@@ -182,7 +182,7 @@
 
       <!-- Actions (ADD TO SHOPPING BAG Button & Direct Ordering) -->
       {% form 'product', product, id: 'shopifyProductForm', onsubmit: 'return validateShopifyForm(event)' %}
-        <input type="hidden" name="id" id="selectedVariantId" value="{{ product.selected_or_first_available_variant.id }}">
+        <input type="hidden" name="id" id="selectedVariantId" value="">
         <div class="pdp-actions-row">
           <button type="submit" id="pdpAddToCartBtn" class="pdp-btn-primary" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>ADD TO SHOPPING BAG</button>
           <button type="button" id="pdpBuyNowBtn" class="pdp-btn-buy" onclick="buyShopifyProductNow()" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>BUY IT NOW &rarr;</button>
@@ -660,8 +660,8 @@
 </style>
 
 <script>
-  var currentSelectedVariantId = {{ product.selected_or_first_available_variant.id | json }};
-  var currentSelectedSizeTitle = {{ product.selected_or_first_available_variant.title | json }};
+  var currentSelectedVariantId = null;
+  var currentSelectedSizeTitle = null;
 
   var shopifyGalleryImages = [
     {% for image in product.images %}
