@@ -3963,6 +3963,122 @@
   color: #12100E;
 }
 
+
+/* ========================================================
+   HYPER-CLEAN CARD PRICE & DISCOUNT PERCENTAGE
+   Ensures compare price ('Rs.' and digits) NEVER break across lines.
+   Displays clear discount percentage badge (e.g. 37% OFF).
+   ======================================================== */
+.card-price-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 6px !important;
+  margin-top: 4px !important;
+  padding-top: 0 !important;
+}
+
+.card-price-left {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: baseline !important;
+  gap: 3px 6px !important;
+  min-width: 0 !important;
+  flex: 1 !important;
+}
+
+.price-main {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #111111 !important;
+  font-variant-numeric: lining-nums !important;
+  letter-spacing: -0.02em !important;
+  white-space: nowrap !important;
+  line-height: 1.2 !important;
+}
+
+.card-price-compare-wrap {
+  display: inline-flex !important;
+  align-items: baseline !important;
+  gap: 5px !important;
+  white-space: nowrap !important;
+  line-height: 1.2 !important;
+}
+
+.price-mrp,
+.pdp-price-mrp,
+.modal-price-mrp {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-size: 12.5px !important;
+  color: #8C827A !important;
+  text-decoration: line-through !important;
+  white-space: nowrap !important; /* CRITICAL: Never split currency and digits */
+  font-variant-numeric: lining-nums !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.2 !important;
+}
+
+.price-discount,
+.pdp-price-discount {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #B83A3A !important; /* Luxury crimson rose discount highlight */
+  white-space: nowrap !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.2 !important;
+}
+
+/* Mobile 2-Column Responsive Layout */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 10px 10px 12px !important;
+  }
+  .card-price-row {
+    align-items: center !important;
+    gap: 4px !important;
+  }
+  .card-price-left {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 2px !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+  }
+  .price-main {
+    font-size: 13.5px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+  }
+  .card-price-compare-wrap {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    white-space: nowrap !important;
+  }
+  .price-mrp {
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+  }
+  .price-discount {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    color: #B83A3A !important;
+    font-weight: 700 !important;
+  }
+  .snitch-plus-trigger {
+    width: 28px !important;
+    height: 28px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+
 </style>
 </head>
 <body>
@@ -4328,9 +4444,13 @@
         <h3 class="card-title">The Jaipur Chanderi Silk Festive Suit</h3>
         <div class="card-fabric">Pure Handloom Chanderi Silk with Intricate Zari</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;2,799</span>
-          <span class="price-mrp">&#8377;4,499</span>
-          <span class="price-discount">38% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;2,799</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;4,499</span>
+              <span class="price-discount">38% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="JAB26ST05010" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4368,9 +4488,13 @@
         <h3 class="card-title">The Retro Polka Dot Cotton Midi Dress</h3>
         <div class="card-fabric">100% Breathable Crisp Fine Cotton</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;2,399</span>
-          <span class="price-mrp">&#8377;3,799</span>
-          <span class="price-discount">37% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;2,399</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;3,799</span>
+              <span class="price-discount">37% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="JAA26DR03942" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4408,9 +4532,13 @@
         <h3 class="card-title">The Sitara Lime Dobby Palazzo Set</h3>
         <div class="card-fabric">Textured Dobby Chiffon & Flared Palazzo</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;2,499</span>
-          <span class="price-mrp">&#8377;3,999</span>
-          <span class="price-discount">38% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;2,499</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;3,999</span>
+              <span class="price-discount">38% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="SET916" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4448,9 +4576,13 @@
         <h3 class="card-title">The Gulabi Organza Festive Suit</h3>
         <div class="card-fabric">Airy Cotton-Silk Blend with Embroidered Organza</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;2,499</span>
-          <span class="price-mrp">&#8377;3,999</span>
-          <span class="price-discount">38% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;2,499</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;3,999</span>
+              <span class="price-discount">38% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="JAC25ST03063" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4488,9 +4620,13 @@
         <h3 class="card-title">The Gulzar Angrakha Crepe Silk Set</h3>
         <div class="card-fabric">Artisanal Crepe Silk & Chiffon Dupatta</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;2,399</span>
-          <span class="price-mrp">&#8377;3,799</span>
-          <span class="price-discount">37% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;2,399</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;3,799</span>
+              <span class="price-discount">37% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="SET974" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4528,9 +4664,13 @@
         <h3 class="card-title">The Neelam Botanical Georgette Midi</h3>
         <div class="card-fabric">Featherlight Flowing Georgette</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;2,499</span>
-          <span class="price-mrp">&#8377;3,999</span>
-          <span class="price-discount">38% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;2,499</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;3,999</span>
+              <span class="price-discount">38% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="JAA26DR04449" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4568,9 +4708,13 @@
         <h3 class="card-title">The Mehr Lime Silk Blend Tunic Set</h3>
         <div class="card-fabric">Pure Silk Blend with Intricate Zari V-Neck</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;2,499</span>
-          <span class="price-mrp">&#8377;3,999</span>
-          <span class="price-discount">38% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;2,499</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;3,999</span>
+              <span class="price-discount">38% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="TXC26KB04820" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4608,9 +4752,13 @@
         <h3 class="card-title">The Porcelain Ivory Resort Co-ord</h3>
         <div class="card-fabric">Breathable Cotton Blend Comfort Weave</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;2,399</span>
-          <span class="price-mrp">&#8377;3,799</span>
-          <span class="price-discount">37% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;2,399</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;3,799</span>
+              <span class="price-discount">37% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="JAC25CD03428" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4648,9 +4796,13 @@
         <h3 class="card-title">The White Porcelain Floral Wrap Dress</h3>
         <div class="card-fabric">Lined Premium Georgette Wrap</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;2,399</span>
-          <span class="price-mrp">&#8377;3,799</span>
-          <span class="price-discount">37% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;2,399</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;3,799</span>
+              <span class="price-discount">37% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="JNE4046" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4688,9 +4840,13 @@
         <h3 class="card-title">The Midnight Botanical Fusion Set</h3>
         <div class="card-fabric">Fluid Crepe Silk with Botanical Print</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;2,399</span>
-          <span class="price-mrp">&#8377;3,799</span>
-          <span class="price-discount">37% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;2,399</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;3,799</span>
+              <span class="price-discount">37% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="JAB24ST00932" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4728,9 +4884,13 @@
         <h3 class="card-title">The Artisanal Abstract V-Neck Blouse</h3>
         <div class="card-fabric">Semi-Sheer Flowing Fine Chiffon</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;1,899</span>
-          <span class="price-mrp">&#8377;2,999</span>
-          <span class="price-discount">37% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;1,899</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;2,999</span>
+              <span class="price-discount">37% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="TXC26TP04108" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4768,9 +4928,13 @@
         <h3 class="card-title">The Monochrome Foliage V-Neck Top</h3>
         <div class="card-fabric">Smooth Poly-Crepe Fluid Drape</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;1,799</span>
-          <span class="price-mrp">&#8377;2,899</span>
-          <span class="price-discount">38% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;1,799</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;2,899</span>
+              <span class="price-discount">38% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="TXC26TP04098" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4808,9 +4972,13 @@
         <h3 class="card-title">The Contemporary Floral Everyday Blouse</h3>
         <div class="card-fabric">Wrinkle-Resistant Poly-Crepe Comfort Weave</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;1,899</span>
-          <span class="price-mrp">&#8377;2,999</span>
-          <span class="price-discount">37% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;1,899</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;2,999</span>
+              <span class="price-discount">37% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="ZAC26TP04826" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4848,9 +5016,13 @@
         <h3 class="card-title">The Roohani Champagne Sharara Set</h3>
         <div class="card-fabric">Lustrous Silk Blend with Gold Zari & Scalloped Dupatta</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;3,199</span>
-          <span class="price-mrp">&#8377;4,999</span>
-          <span class="price-discount">36% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;3,199</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;4,999</span>
+              <span class="price-discount">36% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="JAB26SS05740" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -4888,9 +5060,13 @@
         <h3 class="card-title">The Noor Petrol Teal Chanderi Suit</h3>
         <div class="card-fabric">Pure Chanderi Silk with Intricate Floral Zari</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;2,999</span>
-          <span class="price-mrp">&#8377;4,799</span>
-          <span class="price-discount">38% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;2,999</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;4,799</span>
+              <span class="price-discount">38% OFF</span>
+            </div>
+          </div>
           <a class="snitch-notify-trigger whatsapp-notify-trigger" data-product-id="JAB25ST02661" href="https://wa.me/918511616133?text=Hi%20Meenu%20Label!%20Please%20notify%20me%20when%20%22The%20Noor%20Petrol%20Teal%20Chanderi%20Suit%22%20is%20back%20in%20stock.%20Please%20share%20restock%20timeline." target="_blank" onclick="event.stopPropagation();" title="Notify Me on WhatsApp When Restocked" aria-label="Notify Me on WhatsApp When Restocked">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.98-.276-.1-.477-.15-.678.15-.2.301-.778.98-.953 1.18-.175.2-.351.226-.652.075-.301-.15-1.272-.469-2.423-1.496-.896-.799-1.501-1.786-1.677-2.087-.175-.301-.019-.464.132-.614.135-.135.301-.351.451-.527.151-.176.201-.301.301-.502.101-.201.05-.376-.025-.527-.075-.15-.678-1.634-.929-2.237-.245-.588-.493-.508-.678-.518-.175-.01-.376-.01-.577-.01-.201 0-.527.075-.803.376s-1.054 1.029-1.054 2.511c0 1.482 1.079 2.913 1.23 3.114.15.201 2.122 3.24 5.14 4.544.718.31 1.279.496 1.716.635.722.23 1.379.197 1.9.119.58-.088 1.78-.727 2.03-1.43.251-.703.251-1.305.176-1.43-.075-.126-.276-.201-.577-.351z"/>
@@ -4928,9 +5104,13 @@
         <h3 class="card-title">The Shahi Lilac Flared Festive Ensemble</h3>
         <div class="card-fabric">Lustrous Silk Blend Front-Slit Kurta with Zari</div>
         <div class="card-price-row">
-          <span class="price-main">&#8377;2,999</span>
-          <span class="price-mrp">&#8377;4,799</span>
-          <span class="price-discount">38% OFF</span>
+          <div class="card-price-left">
+            <span class="price-main">&#8377;2,999</span>
+            <div class="card-price-compare-wrap">
+              <span class="price-mrp">&#8377;4,799</span>
+              <span class="price-discount">38% OFF</span>
+            </div>
+          </div>
                   <button type="button" class="snitch-plus-trigger" data-product-id="JAB26ST05754" onclick="event.preventDefault(); event.stopPropagation(); openQuickSizePopup(this)" title="Select Size & Add to Bag" aria-label="Select Size & Add to Bag">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -6170,9 +6350,13 @@
         html += '<h3 class="card-title">' + r.name + '</h3>';
         html += '<div class="card-fabric">' + r.fabric + '</div>';
         html += '<div class="card-price-row">';
+        html += '<div class="card-price-left">';
         html += '<span class="price-main">&#8377;' + r.price.toLocaleString('en-IN') + '</span>';
+        html += '<div class="card-price-compare-wrap">';
         html += '<span class="price-mrp">&#8377;' + r.mrp.toLocaleString('en-IN') + '</span>';
         html += '<span class="price-discount">' + discount + '% OFF</span>';
+        html += '</div>';
+        html += '</div>';
         html += '</div>';
         html += '</div>';
         html += '</div>';

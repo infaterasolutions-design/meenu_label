@@ -48,7 +48,11 @@
       <div class="card-price-left">
         <span class="price-main">{{ product.price | money }}</span>
         {% if product.compare_at_price > product.price %}
-          <span class="price-mrp" style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; margin-left: 6px;">{{ product.compare_at_price | money }}</span>
+          <div class="card-price-compare-wrap">
+            <span class="price-mrp">{{ product.compare_at_price | money }}</span>
+            {% assign savings = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
+            <span class="price-discount">{{ savings }}% OFF</span>
+          </div>
         {% endif %}
       </div>
       {% if product.available %}
