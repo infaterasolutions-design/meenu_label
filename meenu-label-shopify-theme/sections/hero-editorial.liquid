@@ -1,51 +1,35 @@
+
+<style>
+@media (max-width: 768px) {
+  .slider-chevron { display: none !important; }
+  .snitch-slide.snitch-slide-hero3 {
+    background-image: url('{{ "banner_everyday_dresses_mob.jpg" | asset_url }}') !important;
+    background-position: center center !important;
+  }
+  .snitch-slide.snitch-slide-hero4 {
+    background-image: url('{{ "banner_chic_yellow_coord_mob.jpg" | asset_url }}') !important;
+    background-position: center center !important;
+  }
+}
+</style>
 <section class="snitch-hero-section">
   <div class="snitch-hero-viewport" id="heroSlider">
     <div class="snitch-track" id="sliderTrack">
       
-            <!-- Slide 1: Modern Ethnic Elegance (Flagship Hero Banner) -->
+      <!-- Slide 1: Modern Ethnic Elegance (Flagship Hero Banner) -->
       <div class="snitch-slide snitch-slide-hero1" style="background-image: url('{{ 'banner_modern_ethnic.jpg' | asset_url }}'); cursor: pointer;" onclick="window.location.href='/collections/all'" title="Shop Modern Ethnic Elegance">
       </div>
 
-            <!-- Slide 2: Grace in Every Drape (New Arrivals Hero Banner) -->
+      <!-- Slide 2: Grace in Every Drape (New Arrivals Hero Banner) -->
       <div class="snitch-slide snitch-slide-hero2" style="background-image: url('{{ 'banner_grace_in_every_drape.jpg' | asset_url }}'); cursor: pointer;" onclick="window.location.href='/collections/all'" title="Shop Grace in Every Drape">
       </div>
 
-      <!-- Slide 3: Retro Polka Dot Veranda (Midi Dress) -->
-      <div class="snitch-slide" style="background-image: url('{{ 'hero_slide_3.jpg' | asset_url }}');" onclick="window.location.href='/collections/dresses'">
-        <div class="slide-overlay-content">
-          <h1 class="slide-overlay-title">
-            RETRO,<br>
-            <span class="slide-overlay-light">BREATHABLE, BETTER.</span>
-          </h1>
-          <p class="slide-overlay-desc">
-            100% Breathable Pure Cotton with cinched waist sash, flared A-line drape, and timeless vintage chic.
-          </p>
-          <div class="slide-overlay-specs">
-            <span>Flared Wrap Dress</span> &bull; <span>Pure Cotton</span> &bull; <span>Strictly 3 Pieces</span>
-          </div>
-          <button class="slide-overlay-btn" onclick="event.stopPropagation(); window.location.href='/collections/dresses'">
-            EXPLORE WRAP DRESS &rarr;
-          </button>
-        </div>
+      <!-- Slide 3: Everyday Dresses (New Collection Hero Banner) -->
+      <div class="snitch-slide snitch-slide-hero3" style="background-image: url('{{ 'banner_everyday_dresses.jpg' | asset_url }}'); cursor: pointer;" onclick="window.location.href='/collections/dresses'" title="Shop Everyday Dresses Collection">
       </div>
 
-      <!-- Slide 4: Lime Halter Luxury Terrace (Co-ord Set) -->
-      <div class="snitch-slide" style="background-image: url('{{ 'hero_slide_4.jpg' | asset_url }}');" onclick="window.location.href='/collections/co-ord-sets'">
-        <div class="slide-overlay-content">
-          <h1 class="slide-overlay-title">
-            EFFORTLESS,<br>
-            <span class="slide-overlay-light">FLOWING, CHIC.</span>
-          </h1>
-          <p class="slide-overlay-desc">
-            High-neck halter top in textured dobby chiffon paired with fluid wide-leg palazzo pants in striking chartreuse lime.
-          </p>
-          <div class="slide-overlay-specs">
-            <span>Palazzo Co-ord Set</span> &bull; <span>Dobby Chiffon</span> &bull; <span>Strictly 3 Pieces</span>
-          </div>
-          <button class="slide-overlay-btn" onclick="event.stopPropagation(); window.location.href='/collections/co-ord-sets'">
-            SHOP CO-ORD SET &rarr;
-          </button>
-        </div>
+      <!-- Slide 4: Chic Yellow Co-Ord Sets (New Collection Hero Banner) -->
+      <div class="snitch-slide snitch-slide-hero4" style="background-image: url('{{ 'banner_chic_yellow_coord.jpg' | asset_url }}'); cursor: pointer;" onclick="window.location.href='/collections/co-ord-sets'" title="Shop Chic Yellow Co-Ord Collection">
       </div>
 
     </div>

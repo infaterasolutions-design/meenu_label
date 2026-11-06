@@ -5982,6 +5982,8 @@
    ========================================================================= */
 .snitch-slide-hero1,
 .snitch-slide-hero2,
+.snitch-slide-hero3,
+.snitch-slide-hero4,
 .snitch-slide-maroon {
   background-size: cover !important;
   background-position: center center !important;
@@ -5990,16 +5992,29 @@
 }
 .snitch-slide.snitch-slide-hero1::after,
 .snitch-slide.snitch-slide-hero2::after,
+.snitch-slide.snitch-slide-hero3::after,
+.snitch-slide.snitch-slide-hero4::after,
 .snitch-slide.snitch-slide-maroon::after {
   display: none !important;
   content: none !important;
 }
 @media (max-width: 768px) {
+  .slider-chevron {
+    display: none !important;
+  }
   .snitch-slide.snitch-slide-hero1 {
     background-position: 88% center !important;
   }
   .snitch-slide.snitch-slide-hero2 {
     background-position: 68% center !important;
+  }
+  .snitch-slide.snitch-slide-hero3 {
+    background-image: url('banner_everyday_dresses_mob.jpg') !important;
+    background-position: center center !important;
+  }
+  .snitch-slide.snitch-slide-hero4 {
+    background-image: url('banner_chic_yellow_coord_mob.jpg') !important;
+    background-position: center center !important;
   }
   .snitch-slide.snitch-slide-maroon {
     background-position: center center !important;
