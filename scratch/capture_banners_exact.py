@@ -35,9 +35,9 @@ for idx in [0, 1, 2, 3]:
 # Slide 4 (Chic Yellow Co-Ord): Desktop & Mobile
 targets = [
     ("Slide 3 (Everyday Dresses) Desktop", 2, 1440, 900, "verified_hero_slide3_desktop.png"),
-    ("Slide 3 (Everyday Dresses) Mobile", 2, 390, 844, "verified_hero_slide3_mobile.png"),
+    ("Slide 3 (Everyday Dresses) Mobile", 2, 500, 844, "verified_hero_slide3_mobile.png"),
     ("Slide 4 (Chic Yellow Co-Ord) Desktop", 3, 1440, 900, "verified_hero_slide4_desktop.png"),
-    ("Slide 4 (Chic Yellow Co-Ord) Mobile", 3, 390, 844, "verified_hero_slide4_mobile.png"),
+    ("Slide 4 (Chic Yellow Co-Ord) Mobile", 3, 500, 844, "verified_hero_slide4_mobile.png"),
 ]
 
 for label, s_idx, w, h, fname in targets:

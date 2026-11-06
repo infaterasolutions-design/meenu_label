@@ -4572,8 +4572,8 @@
 
       /* --- 2. HERO BANNER: 100% VISIBLE MODEL & ZERO CLUTTER (Image 5) --- */
       .snitch-hero-viewport {
-        height: 72vh !important;
-        min-height: 480px !important;
+        height: calc(100vw * 1.25) !important;
+        min-height: 440px !important;
         max-height: 600px !important;
         position: relative !important;
       }
