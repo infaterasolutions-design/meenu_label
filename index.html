@@ -5210,10 +5210,10 @@
               </svg>
             </button>
             <img id="pdpMainImg" src="" alt="Silhouette" class="pdp-main-image">
-            <button type="button" class="shopify-gallery-arrow shopify-gallery-prev" onclick="changePreviewGalleryImage(-1)" aria-label="Previous photo" style="display:none;">
+            <button type="button" class="shopify-gallery-arrow shopify-gallery-prev" onclick="event.preventDefault(); changePreviewGalleryImage(-1, event)" aria-label="Previous photo" style="display:none;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </button>
-            <button type="button" class="shopify-gallery-arrow shopify-gallery-next" onclick="changePreviewGalleryImage(1)" aria-label="Next photo" style="display:none;">
+            <button type="button" class="shopify-gallery-arrow shopify-gallery-next" onclick="event.preventDefault(); changePreviewGalleryImage(1, event)" aria-label="Next photo" style="display:none;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </button>
           </div>
@@ -5985,6 +5985,11 @@
       var counter = document.getElementById('pdpCounterPill');
       if (counter && previewPdpImages.length > 1) {
         counter.textContent = (idx + 1) + ' / ' + previewPdpImages.length;
+      }
+      var rail = document.getElementById('pdpThumbnailsRail');
+      if (rail && btns[idx]) {
+        var scrollLeftTarget = btns[idx].offsetLeft - (rail.clientWidth / 2) + (btns[idx].clientWidth / 2);
+        rail.scrollTo({ left: scrollLeftTarget, behavior: 'smooth' });
       }
     }
 
