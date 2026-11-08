@@ -22,7 +22,7 @@
       color: var(--text-main);
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
-      overflow-x: clip;
+      overflow-x: hidden;
     }
 
     /* Top Marquee */
@@ -4133,6 +4133,1879 @@
        COMPLETE MOBILE-FRIENDLY RESPONSIVE SYSTEM (< 768px & < 480px)
        ======================================================== */
     @media (max-width: 768px) {
+      /* Floating Concierge on Mobile */
+      .floating-wa-concierge {
+        bottom: 18px;
+        right: 16px;
+        padding: 8px 12px 8px 8px;
+        box-shadow: 0 6px 20px rgba(15, 56, 32, 0.35);
+      }
+      .wa-concierge-icon-wrap {
+        width: 32px;
+        height: 32px;
+      }
+      .wa-concierge-svg {
+        width: 19px;
+        height: 19px;
+      }
+      .wa-concierge-title {
+        font-size: 11.5px;
+      }
+      .wa-concierge-status {
+        font-size: 9px;
+      }
+
+      /* Header & Announcement */
+      .announcement-bar {
+        font-size: 10.5px !important;
+        padding: 7px 12px !important;
+        line-height: 1.35;
+      }
+      .header-bar {
+        height: 56px !important;
+        padding: 0 16px !important;
+      }
+      .brand-logo-img {
+        max-height: 30px !important;
+      }
+      .header-right {
+        gap: 12px !important;
+      }
+      .header-icon-action svg {
+        width: 20px !important;
+        height: 20px !important;
+      }
+
+      /* Hero Section on Mobile */
+      .snitch-hero-viewport {
+        height: 68vh !important;
+        min-height: 440px !important;
+        max-height: 580px !important;
+      }
+      .snitch-hero-content {
+        bottom: 36px !important;
+        left: 16px !important;
+        right: 16px !important;
+        padding: 0 !important;
+      }
+      .snitch-hero-title {
+        font-size: clamp(26px, 7.5vw, 34px) !important;
+        line-height: 1.18 !important;
+        margin-bottom: 10px !important;
+      }
+      .snitch-hero-subtitle {
+        font-size: 13px !important;
+        line-height: 1.45 !important;
+        margin-bottom: 16px !important;
+        max-width: 90% !important;
+      }
+      .snitch-hero-btn {
+        padding: 11px 22px !important;
+        font-size: 11px !important;
+        letter-spacing: 0.12em !important;
+      }
+
+      /* Catalog Section & Category Filter Bar */
+      .catalog-section {
+        padding: 0 16px !important;
+        margin: 28px auto 30px !important;
+      }
+      .sticky-catalog-header {
+        top: 56px !important;
+        padding: 10px 0 !important;
+        margin-bottom: 20px !important;
+      }
+      .sticky-header-info {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+      }
+      .filter-tabs {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 4px 4px 10px !important;
+        margin: 0 -16px !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        gap: 8px !important;
+        scrollbar-width: none !important;
+      }
+      .filter-tabs::-webkit-scrollbar {
+        display: none !important;
+      }
+      .filter-tab {
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+        padding: 7px 15px !important;
+        font-size: 11.5px !important;
+        border-radius: 999px !important;
+      }
+
+      /* Product 2-Column Grid on Mobile */
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+      }
+      .product-card {
+        border-radius: 6px !important;
+      }
+      .product-card-media {
+        border-radius: 6px !important;
+      }
+      .product-card-info {
+        padding: 10px 4px !important;
+      }
+      .product-card-title {
+        font-size: 13px !important;
+        line-height: 1.35 !important;
+        margin-bottom: 4px !important;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .product-card-price {
+        font-size: 13.5px !important;
+        gap: 6px !important;
+      }
+      .product-badge {
+        font-size: 9px !important;
+        padding: 3px 6px !important;
+        top: 8px !important;
+        left: 8px !important;
+      }
+      .product-card-quick-add {
+        font-size: 10px !important;
+        padding: 9px 0 !important;
+        letter-spacing: 0.1em !important;
+      }
+
+      /* PDP on Mobile */
+      .pdp-section {
+        padding: 16px 16px 70px !important;
+      }
+      .pdp-grid {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+      }
+      .pdp-gallery-col {
+        position: static !important;
+      }
+      .pdp-title {
+        font-size: 26px !important;
+        line-height: 1.25 !important;
+      }
+      .pdp-price-row {
+        margin: 12px 0 18px !important;
+      }
+      .pdp-size-btn {
+        min-height: 44px !important;
+        padding: 10px 14px !important;
+        font-size: 13px !important;
+      }
+      .pdp-btn-add {
+        padding: 14px 20px !important;
+        font-size: 12px !important;
+      }
+      .pdp-btn-whatsapp {
+        padding: 13px 20px !important;
+        font-size: 11.5px !important;
+      }
+
+      /* Cart Page View on Mobile */
+      .cart-page-container {
+        padding: 16px 14px 60px !important;
+      }
+      .cart-page-header-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 14px !important;
+        margin-bottom: 20px !important;
+      }
+      .cart-offer-progress-card {
+        padding: 16px 14px !important;
+        margin-bottom: 22px !important;
+      }
+      .offer-tier-title {
+        font-size: 11px !important;
+      }
+      .offer-tier-sub {
+        font-size: 10px !important;
+      }
+      .cart-item-card {
+        padding: 14px 10px !important;
+        gap: 12px !important;
+      }
+      .cart-item-img {
+        width: 72px !important;
+        height: 94px !important;
+      }
+      .cart-item-title {
+        font-size: 14px !important;
+      }
+      .cart-summary-card {
+        padding: 20px 16px !important;
+      }
+      .checkout-submit-btn {
+        padding: 15px !important;
+        font-size: 12.5px !important;
+      }
+
+      /* Value Props on Mobile */
+      .value-strip {
+        padding: 24px 16px !important;
+        margin: 20px 0 !important;
+      }
+      .value-inner {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+      }
+      .value-title {
+        font-size: 13.5px !important;
+      }
+      .value-desc {
+        font-size: 12px !important;
+      }
+
+      /* Founder Section on Mobile */
+      .founder-section {
+        padding: 40px 16px !important;
+        margin: 30px auto 40px !important;
+      }
+      .founder-content h3 {
+        font-size: 24px !important;
+      }
+      .founder-content p {
+        font-size: 13.5px !important;
+        line-height: 1.65 !important;
+      }
+      .founder-sig {
+        font-size: 28px !important;
+      }
+
+      /* Footer on Mobile */
+      footer {
+        padding: 40px 16px 24px !important;
+      }
+      .footer-inner {
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
+      }
+      .footer-bottom {
+        flex-direction: column !important;
+        gap: 10px !important;
+        text-align: center !important;
+      }
+
+      /* Modals on Mobile */
+      .product-modal {
+        width: 95vw !important;
+        max-height: 90vh !important;
+        overflow-y: auto !important;
+        grid-template-columns: 1fr !important;
+        padding: 20px 16px !important;
+      }
+      .policy-modal-card {
+        width: 95vw !important;
+        max-height: 88vh !important;
+      }
+      .size-guide-dialog {
+        width: 95vw !important;
+        max-height: 88vh !important;
+        padding: 20px 16px !important;
+      }
+      .size-guide-table-wrap {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .product-grid {
+        gap: 8px !important;
+      }
+      .product-card-title {
+        font-size: 12.5px !important;
+      }
+      .product-card-price {
+        font-size: 12.5px !important;
+      }
+      .pdp-title {
+        font-size: 22px !important;
+      }
+    }
+
+
+    /* ========================================================
+       PREMIUM LUXURY MOBILE REFINEMENT (< 768px & < 480px)
+       Eliminating "Massy" (Cluttered) Elements & Perfecting Banner
+       ======================================================== */
+    @media (max-width: 768px) {
+      
+      /* --- CART PAGE 3:4 PORTRAIT RECOMMENDATIONS (NO LANDSCAPE) --- */
+      .crosssell-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+      }
+      .crosssell-img {
+        width: 100% !important;
+        aspect-ratio: 3 / 4 !important;
+        height: auto !important;
+        object-fit: cover !important;
+        object-position: top center !important;
+      }
+      .crosssell-card {
+        padding: 8px !important;
+      }
+      .crosssell-card-title {
+        font-size: 11.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+      .crosssell-card-price {
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        font-variant-numeric: lining-nums !important;
+      }
+      .crosssell-add-btn {
+        padding: 8px 6px !important;
+        font-size: 10px !important;
+      }
+
+      /* --- 1. UNCONGESTED MOBILE LUXURY HEADER --- */
+
+      .header-bar {
+        position: relative !important;
+        height: 52px !important;
+        padding: 0 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        box-sizing: border-box !important;
+      }
+
+      .header-left {
+        flex: 0 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        z-index: 2 !important;
+      }
+
+      .hamburger-btn {
+        width: 34px !important;
+        height: 34px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 4px !important;
+      }
+      .hamburger-btn svg {
+        width: 20px !important;
+        height: 20px !important;
+      }
+
+      /* Mathematical Dead Center Logo */
+      .header-center {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 1 !important;
+        pointer-events: auto !important;
+        max-width: 135px !important;
+      }
+
+      .brand-logo-img {
+        max-height: 25px !important;
+        width: auto !important;
+        display: block !important;
+      }
+
+      .header-right {
+        flex: 0 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 4px !important;
+        z-index: 2 !important;
+      }
+
+      .header-icon-action {
+        width: 34px !important;
+        height: 34px !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      .header-icon-action svg {
+        width: 19px !important;
+        height: 19px !important;
+      }
+
+      .header-badge-pill {
+        min-width: 14px !important;
+        height: 14px !important;
+        line-height: 14px !important;
+        font-size: 8.5px !important;
+        font-weight: 700 !important;
+        top: 1px !important;
+        right: 0 !important;
+        padding: 0 3px !important;
+        background: #C59B27 !important;
+        color: #FFFFFF !important;
+        border-radius: 7px !important;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.2) !important;
+      }
+
+      .search-overlay-bar {
+        padding: 16px 14px !important;
+      }
+
+      /* --- 2. HERO BANNER: 100% VISIBLE MODEL & ZERO CLUTTER (Image 5) --- */
+      .snitch-hero-viewport {
+        height: calc(100vw * 1.25) !important;
+        min-height: 440px !important;
+        max-height: 600px !important;
+        position: relative !important;
+      }
+      
+      /* Reposition slides to focus on Model and Outfit */
+      .snitch-slide {
+        background-position: 78% center !important; /* Centers model on mobile */
+        background-size: cover !important;
+      }
+      /* Dark bottom gradient overlay so text is crisp without hiding the model */
+      .snitch-slide::after {
+        content: "" !important;
+        position: absolute !important;
+        inset: 0 !important;
+        background: linear-gradient(to top, rgba(15,14,13,0.85) 0%, rgba(15,14,13,0.3) 30%, transparent 60%) !important;
+        pointer-events: none !important;
+        z-index: 2 !important;
+      }
+
+      /* Hide bulky desktop chevrons (< >) on mobile */
+      .slider-chevron {
+        display: none !important;
+      }
+
+      /* Anchor Hero Text at bottom with clean luxury hierarchy */
+      .slide-overlay-content,
+      .slide-1-cta-box {
+        position: absolute !important;
+        bottom: 24px !important;
+        top: auto !important;
+        left: 16px !important;
+        right: 16px !important;
+        transform: none !important;
+        max-width: none !important;
+        z-index: 5 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+      }
+
+      /* Clean luxury pill */
+      .slide-overlay-pill {
+        background: rgba(255, 255, 255, 0.95) !important;
+        color: #1E1C19 !important;
+        padding: 4px 12px !important;
+        font-size: 9px !important;
+        letter-spacing: 0.1em !important;
+        margin-bottom: 2px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+      }
+      .slide-overlay-pill .pill-dot {
+        width: 5px !important;
+        height: 5px !important;
+      }
+
+      /* Title: Sleek, high-fashion size with white text & subtle shadow */
+      .slide-overlay-title {
+        font-family: 'Cormorant Garamond', Georgia, serif !important;
+        font-size: 26px !important;
+        line-height: 1.15 !important;
+        color: #FFFFFF !important;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.6) !important;
+        margin: 0 !important;
+      }
+      .slide-overlay-light {
+        color: #FAF8F5 !important;
+        font-weight: 400 !important;
+        font-size: 22px !important;
+      }
+
+      /* HIDE MASSY PARAGRAPHS & SPECS ON MOBILE HERO */
+      .slide-overlay-desc,
+      .slide-overlay-specs {
+        display: none !important;
+      }
+
+      /* Sleek Minimal CTA Button */
+      .slide-overlay-btn {
+        background: #FFFFFF !important;
+        color: #1E1C19 !important;
+        padding: 9px 20px !important;
+        font-size: 10.5px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.12em !important;
+        border-radius: 4px !important;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.25) !important;
+        margin-top: 4px !important;
+      }
+
+      /* Minimal Slider Dots at bottom center */
+      .slider-dots {
+        bottom: 8px !important;
+        z-index: 6 !important;
+      }
+      .slider-dot {
+        width: 6px !important;
+        height: 6px !important;
+      }
+      .slider-dot.active {
+        width: 18px !important;
+        border-radius: 4px !important;
+        background: #C59B27 !important;
+      }
+
+      /* --- 3. STICKY CATEGORY HEADER: COMPACT & AIRY (Image 1) --- */
+      .sticky-catalog-header {
+        position: sticky !important;
+        top: 52px !important;
+        z-index: 85 !important;
+        background: rgba(250, 248, 245, 0.98) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border: none !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
+        border-radius: 0 !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+        padding: 8px 16px 10px !important;
+        margin: 0 -16px 16px !important;
+        width: calc(100% + 32px) !important;
+      }
+      .sticky-header-info {
+        margin-bottom: 6px !important;
+      }
+      .sticky-header-info .section-title {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.06em !important;
+        text-transform: uppercase !important;
+        color: var(--text-main) !important;
+      }
+      /* Hide bulky badge & subtitle that cause clutter */
+      .sticky-count-pill,
+      .sticky-header-info .section-sub {
+        display: none !important;
+      }
+      /* Clean swipeable horizontal tabs */
+      .filter-tabs {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        gap: 6px !important;
+        padding: 2px 0 4px !important;
+        margin: 0 !important;
+        scrollbar-width: none !important;
+      }
+      .filter-tabs::-webkit-scrollbar {
+        display: none !important;
+      }
+      .filter-tab {
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+        padding: 6px 13px !important;
+        font-size: 11px !important;
+        border-radius: 20px !important;
+      }
+
+      /* --- 4. CAMPAIGN EDIT LOOKBOOK SECTION (Image 2) --- */
+      .campaign-edit-section {
+        margin: 32px auto 24px !important;
+        padding: 0 16px !important;
+      }
+      .campaign-header {
+        margin-bottom: 20px !important;
+      }
+      .campaign-eyebrow {
+        font-size: 9.5px !important;
+        letter-spacing: 0.16em !important;
+        margin-bottom: 4px !important;
+      }
+      .campaign-title {
+        font-size: clamp(20px, 5.5vw, 24px) !important;
+        line-height: 1.25 !important;
+        margin: 0 0 6px !important;
+      }
+      .campaign-sub {
+        font-size: 11.5px !important;
+        line-height: 1.45 !important;
+        max-width: 95% !important;
+        margin: 0 auto !important;
+      }
+
+      /* --- 5. PRODUCT CARD REFINEMENT (Image 3) --- */
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+      }
+      .product-card {
+        border-radius: 8px !important;
+        border: 1px solid rgba(0, 0, 0, 0.06) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+      }
+      .card-thumb {
+        border-radius: 8px 8px 0 0 !important;
+        overflow: hidden !important;
+      }
+      .card-thumb img {
+        width: 100% !important;
+        display: block !important;
+        object-fit: cover !important;
+      }
+      /* Remove desktop hover actions bar artifact on touch screen */
+      .card-quick-actions {
+        display: none !important;
+      }
+      .card-body {
+        padding: 8px 8px 10px !important;
+      }
+      .card-cat {
+        font-size: 9px !important;
+        margin-bottom: 2px !important;
+      }
+      .card-title {
+        font-size: 12.5px !important;
+        line-height: 1.3 !important;
+        min-height: 32px !important;
+        margin-bottom: 3px !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+      }
+      .card-fabric {
+        font-size: 10.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        margin-bottom: 4px !important;
+      }
+      .card-price-row {
+        gap: 6px !important;
+        align-items: baseline !important;
+      }
+      .price-main {
+        font-size: 14px !important;
+      }
+      .price-mrp {
+        font-size: 11px !important;
+      }
+      .price-discount {
+        font-size: 10px !important;
+      }
+      .card-sizes-row {
+        margin-top: 6px !important;
+        padding-top: 6px !important;
+      }
+      .size-chip {
+        font-size: 9.5px !important;
+        padding: 2px 5px !important;
+      }
+      .stock-chip {
+        font-size: 9.5px !important;
+      }
+    }
+
+
+    /* ========================================================
+       HYPER-CLEAN PRODUCT CARD & QUICK SIZE POPUP
+       ======================================================== */
+    .card-body {
+      padding: 12px 14px 14px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 4px !important;
+      background: #FFFFFF !important;
+    }
+    .card-title {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+      font-size: 13.5px !important;
+      font-weight: 500 !important;
+      color: #1E1C19 !important;
+      margin: 0 !important;
+      line-height: 1.35 !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 1 !important;
+      -webkit-box-orient: vertical !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      letter-spacing: -0.01em !important;
+    }
+    .product-card:hover .card-title {
+      color: #0F3820 !important;
+    }
+    .card-price-row {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      margin-top: 4px !important;
+      padding-top: 0 !important;
+    }
+    .price-main {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      color: #1E1C19 !important;
+      font-variant-numeric: lining-nums !important;
+      letter-spacing: -0.02em !important;
+    }
+    
+    /* Sleek Modern Plus Icon Button */
+    .card-plus-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: #FFFFFF;
+      color: #1E1C19;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0, 0.1, 1);
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .card-plus-btn:hover {
+      background: #1E1C19;
+      color: #FFFFFF;
+      border-color: #1E1C19;
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    }
+    .card-plus-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* Quick Size Backdrop & Modal */
+    .quick-size-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 99998;
+      background: rgba(15, 14, 13, 0.58);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .quick-size-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .quick-size-modal {
+      width: 90%;
+      max-width: 420px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 24px 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+      transform: translateY(20px) scale(0.96);
+      transition: transform 0.25s cubic-bezier(0.2, 0, 0.1, 1);
+      position: relative;
+    }
+    .quick-size-backdrop.open .quick-size-modal {
+      transform: translateY(0) scale(1);
+    }
+    .quick-size-close {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: #F4F1EA;
+      font-size: 20px;
+      line-height: 1;
+      color: #1E1C19;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .quick-size-close:hover {
+      background: #1E1C19;
+      color: #FFFFFF;
+    }
+    .quick-size-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-right: 32px;
+    }
+    .quick-size-thumb {
+      width: 58px;
+      height: 74px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: #F4F1EA;
+      flex-shrink: 0;
+    }
+    .quick-size-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .quick-size-brand {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+    }
+    .quick-size-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1E1C19;
+      margin: 0;
+      line-height: 1.3;
+    }
+    .quick-size-price {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1E1C19;
+      font-variant-numeric: lining-nums !important;
+    }
+    .quick-size-divider {
+      height: 1px;
+      background: rgba(0, 0, 0, 0.08);
+      margin: 18px 0 16px;
+    }
+    .quick-size-prompt {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .quick-size-prompt span {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6E685F;
+    }
+    .quick-size-guide-link {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-gold);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .quick-size-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .quick-size-tile {
+      background: #FAF8F5;
+      border: 1.5px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      padding: 12px 6px;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.18s ease;
+    }
+    .quick-size-tile:hover {
+      background: #1E1C19;
+      border-color: #1E1C19;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+    }
+    .quick-size-tile:hover .size-tile-name {
+      color: #FAF8F5;
+    }
+    .quick-size-tile:hover .size-tile-sub {
+      color: #C59B27;
+    }
+    .size-tile-name {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1E1C19;
+      font-variant-numeric: lining-nums !important;
+    }
+    .size-tile-sub {
+      font-size: 10px;
+      color: #8C8479;
+      font-weight: 500;
+    }
+    .quick-size-hint {
+      font-size: 10.5px;
+      color: #8C8479;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding-top: 4px;
+    }
+    .quick-size-hint .hint-dot {
+      width: 5px;
+      height: 5px;
+      background: #C59B27;
+      border-radius: 50%;
+    }
+
+    /* Mobile Bottom-Sheet for Size Selection */
+    @media (max-width: 640px) {
+      .quick-size-backdrop {
+        align-items: flex-end !important;
+      }
+      .quick-size-modal {
+        width: 100% !important;
+        max-width: none !important;
+        border-radius: 20px 20px 0 0 !important;
+        padding: 22px 18px calc(24px + env(safe-area-inset-bottom, 12px)) !important;
+        transform: translateY(100%) !important;
+      }
+      .quick-size-backdrop.open .quick-size-modal {
+        transform: translateY(0) !important;
+      }
+      .quick-size-grid {
+        gap: 8px !important;
+      }
+      .quick-size-tile {
+        padding: 14px 6px !important;
+      }
+      .size-tile-name {
+        font-size: 15px !important;
+      }
+      .card-body {
+        padding: 10px 10px 12px !important;
+      }
+      .card-title {
+        font-size: 12.5px !important;
+      }
+      .price-main {
+        font-size: 14px !important;
+      }
+      .card-plus-btn {
+        width: 28px !important;
+        height: 28px !important;
+      }
+    }
+
+
+    /* ========================================================
+       EXACT SNITCH-STYLE PRODUCT CARD (100% FLAT & BORDERLESS)
+       ======================================================== */
+    .product-grid {
+      display: grid !important;
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 28px 20px !important;
+    }
+    .product-card {
+      background: transparent !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      transition: none !important;
+      display: flex !important;
+      flex-direction: column !important;
+      cursor: pointer !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    .product-card:hover {
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    .card-thumb {
+      position: relative !important;
+      width: 100% !important;
+      aspect-ratio: 3 / 4 !important;
+      overflow: hidden !important;
+      background: #F4F1EA !important;
+      border-radius: 0 !important;
+      border: none !important;
+    }
+    .card-thumb img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      display: block !important;
+      border-radius: 0 !important;
+    }
+    .card-quick-actions {
+      display: none !important;
+    }
+    .card-body {
+      padding: 10px 0 0 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 3px !important;
+      background: transparent !important;
+    }
+    .card-title {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+      font-size: 13.5px !important;
+      font-weight: 400 !important;
+      color: #1A1A1A !important;
+      margin: 0 !important;
+      line-height: 1.35 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      letter-spacing: -0.01em !important;
+    }
+    .product-card:hover .card-title {
+      color: #0F3820 !important;
+    }
+    .card-price-row {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      margin-top: 2px !important;
+      padding-top: 0 !important;
+    }
+    .price-main {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      color: #111111 !important;
+      font-variant-numeric: lining-nums !important;
+      letter-spacing: -0.02em !important;
+    }
+    
+    /* Authentic Naked Plus Icon (Snitch Style) */
+    .snitch-plus-trigger {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  background: transparent !important;
+  border: none !important;
+  color: #1A1A1A !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin-left: auto !important;
+  border-radius: 6px !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+    .snitch-plus-trigger:hover {
+      transform: scale(1.25) !important;
+      color: #000000 !important;
+    }
+    .snitch-plus-trigger:active {
+      transform: scale(0.9) !important;
+    }
+
+    /* Snitch Color Swatches Row */
+    .snitch-swatches {
+      display: flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+      margin-top: 5px !important;
+    }
+    .snitch-swatch {
+      width: 10px !important;
+      height: 10px !important;
+      border-radius: 1px !important;
+      border: 1px solid rgba(0, 0, 0, 0.15) !important;
+      display: inline-block !important;
+    }
+
+    /* Mobile 2-column Snitch Grid */
+    @media (max-width: 768px) {
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 22px 12px !important;
+        padding: 0 14px !important;
+      }
+      .card-title {
+        font-size: 12.5px !important;
+      }
+      .price-main {
+        font-size: 14px !important;
+      }
+      .snitch-plus-trigger {
+        font-size: 24px !important;
+      }
+      .snitch-swatches {
+        gap: 4px !important;
+        margin-top: 4px !important;
+      }
+      .snitch-swatch {
+        width: 8px !important;
+        height: 8px !important;
+      }
+    }
+
+
+    /* ========================================================
+       CLEAN LUXURY IMAGES: ZERO TEXT / BADGES ON PHOTOGRAPHS
+       ======================================================== */
+    .pdp-gallery-badges {
+      display: none !important;
+    }
+    .craft-card-badge {
+      display: none !important;
+    }
+    .card-badge {
+      display: none !important;
+    }
+    .pdp-edition-pill {
+      font-size: 10px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.1em !important;
+      text-transform: uppercase !important;
+      color: #C59B27 !important;
+      background: rgba(197, 155, 39, 0.1) !important;
+      border: 1px solid rgba(197, 155, 39, 0.3) !important;
+      padding: 3px 8px !important;
+      border-radius: 4px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+    }
+
+
+    /* ==========================================================================
+       BULLETPROOF ZERO-OVERFLOW & FULL-WIDTH MOBILE ENGINE
+       Eliminates all right-side blank whitespace across iOS Safari & Android Chrome
+       ========================================================================== */
+    html, body {
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+      position: relative !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box !important;
+    }
+
+    /* Enforce 100% full-width on all views & page wrappers */
+    #storefrontHomeView,
+    #productDetailView,
+    #cartPageView,
+    .cart-page-container,
+    header,
+    .header-bar,
+    .announcement-bar,
+    footer,
+    .footer-inner,
+    .footer-bottom,
+    .catalog-section,
+    .campaign-edit-section,
+    .craftsmanship-section,
+    .founder-section,
+    .snitch-hero-section,
+    .snitch-hero-viewport {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Modal Backdrops: Strictly display:none when closed to prevent offscreen rendering */
+    .modal-backdrop,
+    .cart-backdrop,
+    .nav-drawer-backdrop,
+    .quick-size-backdrop {
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+    .modal-backdrop.open,
+    .cart-backdrop.open,
+    .nav-drawer-backdrop.open,
+    .quick-size-backdrop.open {
+      display: flex !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+
+    /* Nav Drawer: Hide when not open */
+    .nav-drawer {
+      max-width: 85vw !important;
+    }
+    .nav-drawer:not(.open) {
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+    .nav-drawer.open {
+      visibility: visible !important;
+      pointer-events: auto !important;
+    }
+
+    /* Cart Drawer (permanently replaced by Cart Page) */
+    .cart-drawer:not(.open) {
+      visibility: hidden !important;
+      display: none !important;
+      pointer-events: none !important;
+    }
+
+    /* All Modals: Strictly constrained to viewport width */
+    .product-modal,
+    .policy-modal-card,
+    .quick-size-modal,
+    .snitch-login-dialog {
+      max-width: calc(100vw - 24px) !important;
+      box-sizing: border-box !important;
+    }
+
+    @media (max-width: 768px) {
+      /* Full edge-to-edge container layout with clean uniform padding */
+      .cart-page-container {
+        padding: 14px 14px 48px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .cart-page-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 20px !important;
+      }
+      .cart-page-left,
+      .cart-page-right,
+      .cart-summary-card,
+      .cart-page-items {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .cart-page-header-row {
+        width: 100% !important;
+        padding-bottom: 14px !important;
+      }
+      .cart-page-header-row h1 {
+        font-size: 28px !important;
+      }
+
+      /* Fix sticky category header negative margins that caused overflow */
+      .sticky-catalog-header {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 0 16px 0 !important;
+        padding: 8px 14px 10px !important;
+        left: 0 !important;
+        right: 0 !important;
+        box-sizing: border-box !important;
+      }
+      .filter-tabs {
+        margin: 0 !important;
+        padding: 4px 0 6px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Product cards & cross-sell grids */
+      .crosssell-grid {
+        width: 100% !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+      }
+      .product-grid {
+        width: 100% !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 20px 10px !important;
+        padding: 0 !important;
+      }
+
+      /* Header & Footer 100% width edge-to-edge */
+      .header-bar {
+        width: 100% !important;
+        padding: 0 12px !important;
+      }
+      .announcement-bar {
+        width: 100% !important;
+        padding: 7px 12px !important;
+      }
+      footer {
+        width: 100% !important;
+        padding: 36px 14px 24px !important;
+      }
+      .footer-inner {
+        width: 100% !important;
+        padding: 0 !important;
+      }
+      .footer-bottom {
+        width: 100% !important;
+        padding: 0 !important;
+      }
+
+      /* Floating Concierge safe positioning */
+      .floating-wa-concierge {
+        right: 14px !important;
+        bottom: 16px !important;
+        max-width: calc(100vw - 28px) !important;
+      }
+      .wa-concierge-ping {
+        display: none !important; /* Eliminate ping transform box overflow */
+      }
+    }
+
+
+    /* ========================================================
+       PERFECT CROSS-SELL 2-COLUMN GRID (ZERO CLIPPING / ZERO CUT-OFF)
+       ======================================================== */
+    .cart-page-crosssell {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+    .crosssell-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 10px !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    .crosssell-card {
+      min-width: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      padding: 8px !important;
+      background: #FFFFFF !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 6px !important;
+    }
+    .crosssell-card > div {
+      min-width: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+    .crosssell-img {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      aspect-ratio: 3 / 4 !important;
+      height: auto !important;
+      object-fit: cover !important;
+      object-position: center top !important;
+      display: block !important;
+      border-radius: 4px !important;
+      margin-bottom: 8px !important;
+      box-sizing: border-box !important;
+    }
+    .crosssell-card-title {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      box-sizing: border-box !important;
+      display: block !important;
+      font-size: 11.5px !important;
+      line-height: 1.35 !important;
+      margin-bottom: 3px !important;
+    }
+    .crosssell-card-price {
+      font-size: 12.5px !important;
+      font-weight: 700 !important;
+      font-variant-numeric: lining-nums !important;
+      margin-bottom: 6px !important;
+    }
+    .crosssell-add-btn {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      padding: 8px 4px !important;
+      font-size: 10px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.05em !important;
+      text-align: center !important;
+    }
+
+    @media (max-width: 768px) {
+      .cart-page-crosssell {
+        padding: 14px 10px !important;
+        margin-top: 20px !important;
+        border-radius: 8px !important;
+      }
+      .crosssell-header {
+        margin-bottom: 12px !important;
+        padding-bottom: 8px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      .crosssell-title {
+        font-size: 17px !important;
+      }
+      .crosssell-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        width: 100% !important;
+      }
+      .crosssell-card {
+        padding: 6px !important;
+        min-width: 0 !important;
+        width: 100% !important;
+      }
+      .crosssell-img {
+        border-radius: 4px !important;
+        margin-bottom: 6px !important;
+      }
+      .crosssell-card-title {
+        font-size: 11px !important;
+        margin-bottom: 2px !important;
+      }
+      .crosssell-card-price {
+        font-size: 12px !important;
+        margin-bottom: 6px !important;
+      }
+      .crosssell-add-btn {
+        padding: 7px 4px !important;
+        font-size: 9.5px !important;
+        letter-spacing: 0.04em !important;
+      }
+    }
+
+
+    /* Single-Color Silhouette Principle: No Multi-Color Swatches on Cards */
+    .snitch-swatches, .snitch-swatch {
+      display: none !important;
+      visibility: hidden !important;
+    }
+
+/* ========================================================
+   SNITCH-STYLE DESKTOP PRODUCT PAGE (STICKY MEDIA & SCROLLABLE INFO)
+   ======================================================== */
+@media (min-width: 993px) {
+  .product-main-grid,
+  .pdp-grid {
+    display: grid !important;
+    grid-template-columns: 1.05fr 1fr !important;
+    gap: 48px !important;
+    align-items: start !important;
+  }
+  .product-gallery-sticky,
+  .pdp-gallery-col {
+    position: sticky !important;
+    top: 85px !important;
+    align-self: start !important;
+  }
+  .product-info-scrollable {
+    max-height: calc(100vh - 105px) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding-right: 14px !important;
+    scrollbar-width: thin;
+    scrollbar-color: #D1C7BD transparent;
+  }
+  .product-info-scrollable::-webkit-scrollbar {
+    width: 4px;
+  }
+  .product-info-scrollable::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .product-info-scrollable::-webkit-scrollbar-thumb {
+    background: #D1C7BD;
+    border-radius: 4px;
+  }
+
+  /* Natural Luxury Flow: Remove nested scrollbar & fill vertical space cleanly */
+  .pdp-info-col {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+    padding-right: 0 !important;
+  }
+}
+
+
+/* ==========================================================================
+   SHOPIFY THEME HARMONIZATION & COMPATIBILITY STYLES
+   ========================================================================== */
+
+/* Announcement Bar Sub-elements */
+.announcement-bar .left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+.announcement-bar .center {
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+.announcement-bar .right {
+  display: flex;
+  align-items: center;
+}
+.announcement-bar .right a {
+  color: #E8D3B9;
+  text-decoration: none;
+  font-weight: 700;
+}
+.announcement-bar .right a:hover {
+  text-decoration: underline;
+}
+
+/* Campaign Editorial Compatibility Aliases */
+.snitch-campaign-editorial-section {
+  max-width: 1440px;
+  margin: 80px auto 70px;
+  padding: 0 36px;
+  box-sizing: border-box;
+}
+.snitch-campaign-container {
+  width: 100%;
+}
+.snitch-campaign-header {
+  text-align: center;
+  margin-bottom: 38px;
+}
+.snitch-campaign-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 8px;
+  display: inline-block;
+}
+.snitch-campaign-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 3.4vw, 42px);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  margin: 0 0 10px;
+  line-height: 1.18;
+}
+.snitch-campaign-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  max-width: 620px;
+  margin: 0 auto;
+}
+.snitch-campaign-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+.snitch-campaign-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #0D0D0D;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+.snitch-campaign-card.card-large {
+  min-height: 640px;
+}
+.snitch-campaign-card.card-half {
+  min-height: 300px;
+}
+.snitch-campaign-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.snitch-campaign-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.snitch-campaign-card:hover .snitch-campaign-img {
+  transform: scale(1.04);
+}
+.snitch-campaign-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.08) 0%,
+    rgba(0, 0, 0, 0.15) 50%,
+    rgba(0, 0, 0, 0.72) 80%,
+    rgba(0, 0, 0, 0.94) 100%
+  );
+}
+.snitch-campaign-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: 30px;
+}
+
+/* Button & Card Utilities */
+.btn-primary {
+  background: #1E1C19;
+  color: #FAF8F5 !important;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border-radius: 6px;
+  border: 1px solid #1E1C19;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  transition: all 0.25s ease;
+  text-decoration: none;
+}
+.btn-primary:hover {
+  background: #332F2A;
+  color: #FAF8F5 !important;
+}
+
+/* Cart Drawer Polish */
+.cart-drawer-backdrop {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 300;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.cart-drawer-backdrop.open {
+  opacity: 1; pointer-events: auto;
+}
+.cart-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+
+/* Search Overlay Bar Clickability & Layering Fix */
+.search-overlay-bar {
+  z-index: 250 !important;
+}
+.search-overlay-bar.open {
+  display: block !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateY(0) !important;
+  visibility: visible !important;
+}
+.search-input-box {
+  position: relative !important;
+  z-index: 260 !important;
+  padding-right: 84px !important;
+}
+.search-input-box input {
+  pointer-events: auto !important;
+}
+.search-close-action {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 280 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 12px !important;
+  min-height: 36px !important;
+  min-width: 65px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--text-muted) !important;
+  background: transparent !important;
+  border: none !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  transition: color 0.18s ease, transform 0.18s ease !important;
+}
+.search-close-action:hover {
+  color: var(--text-main) !important;
+  transform: scale(1.05) !important;
+}
+
+
+/* ==========================================================================
+   CAMPAIGN EDIT MOBILE REFINEMENT (MODEL FACE CLEARANCE & LUXURY PILL POSITION)
+   ========================================================================== */
+@media (max-width: 900px) {
+  .campaign-hero-card {
+    min-height: 580px !important;
+    position: relative !important;
+  }
+  .campaign-hero-img {
+    object-position: center 10% !important;
+  }
+  .campaign-hero-card .campaign-badge {
+    position: absolute !important;
+    top: 16px !important;
+    left: 16px !important;
+    margin: 0 !important;
+    z-index: 10 !important;
+    font-size: 9px !important;
+    letter-spacing: 0.14em !important;
+    padding: 5px 12px !important;
+    background: rgba(18, 16, 14, 0.75) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(212, 175, 55, 0.5) !important;
+  }
+  .campaign-hero-content {
+    padding: 22px 18px !important;
+    z-index: 5 !important;
+  }
+  .campaign-hero-name {
+    font-size: 26px !important;
+    line-height: 1.2 !important;
+    margin: 0 0 8px !important;
+  }
+  .campaign-hero-meta {
+    margin-bottom: 14px !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+  .campaign-hero-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  .btn-campaign-primary {
+    flex: 1.2 !important;
+    padding: 11px 14px !important;
+    font-size: 11px !important;
+    justify-content: center !important;
+  }
+  .btn-campaign-secondary {
+    flex: 1 !important;
+    padding: 11px 14px !important;
+    font-size: 11px !important;
+    justify-content: center !important;
+  }
+  .campaign-sub-card {
+    min-height: 320px !important;
+    position: relative !important;
+  }
+  .campaign-sub-card .campaign-badge {
+    position: absolute !important;
+    top: 14px !important;
+    left: 14px !important;
+    margin: 0 !important;
+    z-index: 10 !important;
+    background: rgba(18, 16, 14, 0.75) !important;
+    backdrop-filter: blur(8px) !important;
+  }
+}
+
+/* =========================================================================
+   ROCK-SOLID DUAL STICKY HEADER ARCHITECTURE (ANNOUNCEMENT + HEADER)
+   ========================================================================= */
+.site-sticky-header-container {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  z-index: 200 !important;
+  background: #FFFFFF !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.site-sticky-header-container .shopify-section,
+.site-sticky-header-container [id*="shopify-section"] {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* =========================================================================
+   FESTIVE MAROON ELEGANCE IN BLOOM - HERO BANNER 1
+   ========================================================================= */
+.snitch-slide-hero1,
+.snitch-slide-hero2,
+.snitch-slide-hero3,
+.snitch-slide-hero4,
+.snitch-slide-maroon {
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  cursor: pointer !important;
+}
+.snitch-slide.snitch-slide-hero1::after,
+.snitch-slide.snitch-slide-hero2::after,
+.snitch-slide.snitch-slide-hero3::after,
+.snitch-slide.snitch-slide-hero4::after,
+.snitch-slide.snitch-slide-maroon::after {
+  display: none !important;
+  content: none !important;
+}
+@media (max-width: 768px) {
+  .snitch-hero-viewport {
+    height: calc(100vw * 1.25) !important;
+    min-height: 440px !important;
+    max-height: 600px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
   .slider-chevron {
     display: none !important;
   }
@@ -4143,28 +6016,6 @@
   .snitch-slide.snitch-slide-hero2 {
     background-image: url('banner_grace_in_every_drape_mob.jpg') !important;
     background-position: center center !important;
-  }
-  .snitch-slide.snitch-slide-hero3 {
-    background-image: url('banner_everyday_dresses_mob.jpg') !important;
-    background-position: center center !important;
-  }
-  .snitch-slide.snitch-slide-hero4 {
-    background-image: url('banner_chic_yellow_coord_mob.jpg') !important;
-    background-position: center center !important;
-  }
-  .snitch-slide.snitch-slide-maroon {
-    background-position: center center !important;
-  }
-}
-@media (max-width: 768px) {
-  .slider-chevron {
-    display: none !important;
-  }
-  .snitch-slide.snitch-slide-hero1 {
-    background-position: 88% center !important;
-  }
-  .snitch-slide.snitch-slide-hero2 {
-    background-position: 68% center !important;
   }
   .snitch-slide.snitch-slide-hero3 {
     background-image: url('banner_everyday_dresses_mob.jpg') !important;
