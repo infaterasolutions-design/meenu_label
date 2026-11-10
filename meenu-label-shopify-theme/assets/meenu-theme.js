@@ -43,9 +43,9 @@ function showMeenuToast(msg) {
 var PREVIEW_FALLBACK_WISHLIST = {
   'drop01_1': {
     id: 'drop01_1',
-    title: 'Jaipur Chanderi Silk Festive Suit',
+    title: 'The Royal Wine Chanderi Festive Suit',
     price: '₹2,299',
-    url: '/collections/festive-suits'
+    url: '/products/the-royal-wine-chanderi-festive-suit'
   },
   'drop01_2': {
     id: 'drop01_2',

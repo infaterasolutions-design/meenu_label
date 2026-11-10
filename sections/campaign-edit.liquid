@@ -11,6 +11,8 @@
   {%- assign card1_url = section.settings.card1_url -%}
   {%- if section.settings.card1_product != blank -%}
     {%- assign card1_url = section.settings.card1_product.url -%}
+  {%- elsif card1_url == blank or card1_url contains 'jaipur-chanderi-silk-festive-suit' -%}
+    {%- assign card1_url = '/products/the-royal-wine-chanderi-festive-suit' -%}
   {%- endif -%}
 
   {%- comment -%} Safe 404 Guard for Card 1 {%- endcomment -%}
@@ -22,14 +24,14 @@
       {%- if alt_prod1 != blank and alt_prod1.title != blank -%}
         {%- assign card1_url = alt_prod1.url -%}
       {%- elsif collections['festive-suits'] != blank and collections['festive-suits'].products_count > 0 -%}
-        {%- assign card1_url = '/collections/festive-suits' -%}
+        {%- assign card1_url = '/products/the-royal-wine-chanderi-festive-suit' -%}
       {%- else -%}
         {%- assign card1_url = '/collections/all' -%}
       {%- endif -%}
     {%- endif -%}
   {%- elsif card1_url == blank or card1_url == '#' -%}
     {%- if collections['festive-suits'] != blank and collections['festive-suits'].products_count > 0 -%}
-      {%- assign card1_url = '/collections/festive-suits' -%}
+      {%- assign card1_url = '/products/the-royal-wine-chanderi-festive-suit' -%}
     {%- else -%}
       {%- assign card1_url = '/collections/all' -%}
     {%- endif -%}
@@ -90,16 +92,16 @@
   {%- endif -%}
 
   <div class="campaign-grid">
-    <!-- Left Main Feature (58%): The Jaipur Chanderi Silk Festive Suit (SKU: JAB26ST05010) -->
+    <!-- Left Main Feature (58%): The The Royal Wine Chanderi Festive Suit (SKU: JAB26ST05010) -->
     <div class="campaign-hero-card" onclick="window.location.href='{{ card1_url }}'">
       {%- if section.settings.card1_image != blank -%}
-        <img src="{{ section.settings.card1_image | img_url: '1200x' }}" alt="{{ section.settings.card1_title | default: 'Jaipur Chanderi Silk Festive Suit' | escape }}" class="campaign-hero-img" loading="lazy">
+        <img src="{{ section.settings.card1_image | img_url: '1200x' }}" alt="{{ section.settings.card1_title | default: 'The Royal Wine Chanderi Festive Suit' | escape }}" class="campaign-hero-img" loading="lazy">
       {%- else -%}
-        <img src="{{ 'campaign_cafe.jpg' | asset_url }}" alt="{{ section.settings.card1_title | default: 'Jaipur Chanderi Silk Festive Suit' | escape }}" class="campaign-hero-img" loading="lazy">
+        <img src="{{ 'campaign_cafe.jpg' | asset_url }}" alt="{{ section.settings.card1_title | default: 'The Royal Wine Chanderi Festive Suit' | escape }}" class="campaign-hero-img" loading="lazy">
       {%- endif -%}
       <div class="campaign-hero-vignette"></div>
       <div class="campaign-hero-content">
-        <h3 class="campaign-hero-name">{{ section.settings.card1_title | default: 'Jaipur Chanderi Silk Festive Suit' }}</h3>
+        <h3 class="campaign-hero-name">{{ section.settings.card1_title | default: 'The Royal Wine Chanderi Festive Suit' }}</h3>
         <div class="campaign-hero-meta">
           <span class="campaign-price">{{ section.settings.card1_price | default: '&#8377;2,299' }}</span>
           <span class="campaign-mrp">{{ section.settings.card1_mrp | default: '&#8377;3,699' }}</span>
@@ -211,13 +213,13 @@
       "type": "url",
       "id": "card1_url",
       "label": "Card 1 Link URL (Fallback)",
-      "default": "/collections/festive-suits"
+      "default": "/products/the-royal-wine-chanderi-festive-suit"
     },
     {
       "type": "text",
       "id": "card1_title",
       "label": "Card 1 Title",
-      "default": "Jaipur Chanderi Silk Festive Suit"
+      "default": "The Royal Wine Chanderi Festive Suit"
     },
     {
       "type": "text",
