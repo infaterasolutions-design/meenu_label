@@ -18,6 +18,19 @@
 
     {{ 'meenu-luxury.css' | asset_url | stylesheet_tag }}
 
+    <script>
+      // Seamless redirect from legacy product slug to official product URL
+      if (window.location.pathname.indexOf('jaipur-chanderi-silk-festive-suit') !== -1) {
+        window.location.replace('/products/the-royal-wine-chanderi-festive-suit');
+      }
+      // Instant corrector for any legacy links on page
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('a[href*="jaipur-chanderi-silk-festive-suit"]').forEach(function(el) {
+          el.href = '/products/the-royal-wine-chanderi-festive-suit';
+        });
+      });
+    </script>
+
     {{ content_for_header }}
   </head>
 
