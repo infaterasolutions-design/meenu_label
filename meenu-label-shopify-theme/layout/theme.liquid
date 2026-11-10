@@ -19,16 +19,60 @@
     {{ 'meenu-luxury.css' | asset_url | stylesheet_tag }}
 
     <script>
-      // Seamless redirect from legacy product slug to official product URL
+      // 1. Seamless redirect from legacy product slug to official product URL
       if (window.location.pathname.indexOf('jaipur-chanderi-silk-festive-suit') !== -1) {
         window.location.replace('/products/the-royal-wine-chanderi-festive-suit');
       }
-      // Instant corrector for any legacy links on page
-      document.addEventListener('DOMContentLoaded', function() {
+
+      // 2. Client-side instant sync for Card 1 (Title: The Royal Wine Chanderi Festive Suit, Price: ₹2,799, MRP: ₹4,499)
+      function syncCampaignCardDetails() {
+        // Fix all URLs & onclick handlers targeting legacy slug
         document.querySelectorAll('a[href*="jaipur-chanderi-silk-festive-suit"]').forEach(function(el) {
           el.href = '/products/the-royal-wine-chanderi-festive-suit';
         });
-      });
+        document.querySelectorAll('[onclick*="jaipur-chanderi-silk-festive-suit"]').forEach(function(el) {
+          el.setAttribute('onclick', "window.location.href='/products/the-royal-wine-chanderi-festive-suit'");
+        });
+
+        // Fix Card 1 Title & Headings
+        document.querySelectorAll('.campaign-hero-name, h3, h4, h2').forEach(function(el) {
+          if (el.textContent && el.textContent.indexOf('Jaipur Chanderi') !== -1) {
+            el.textContent = 'The Royal Wine Chanderi Festive Suit';
+          }
+        });
+
+        // Fix Card 1 Image alt tags
+        document.querySelectorAll('.campaign-hero-img, img[alt*="Jaipur Chanderi"]').forEach(function(el) {
+          el.setAttribute('alt', 'The Royal Wine Chanderi Festive Suit');
+        });
+
+        // Fix Card 1 Price: ensure ₹2,799 (and replace old ₹2,299)
+        document.querySelectorAll('.campaign-price').forEach(function(el) {
+          if (el.textContent && (el.textContent.indexOf('2,299') !== -1 || el.textContent.indexOf('2299') !== -1)) {
+            el.innerHTML = '&#8377;2,799';
+          }
+        });
+
+        // Fix Card 1 MRP: ensure ₹4,499 (and replace old ₹3,699)
+        document.querySelectorAll('.campaign-mrp').forEach(function(el) {
+          if (el.textContent && (el.textContent.indexOf('3,699') !== -1 || el.textContent.indexOf('3699') !== -1)) {
+            el.innerHTML = '&#8377;4,499';
+          }
+        });
+      }
+
+      // Run immediately if DOM elements exist, and on ready/load events
+      syncCampaignCardDetails();
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', syncCampaignCardDetails);
+      } else {
+        syncCampaignCardDetails();
+      }
+      window.addEventListener('load', syncCampaignCardDetails);
+
+      // Keep active for dynamic hydration & theme section reloads
+      var _cardSyncTimer = setInterval(syncCampaignCardDetails, 200);
+      setTimeout(function() { clearInterval(_cardSyncTimer); }, 4000);
     </script>
 
     {{ content_for_header }}

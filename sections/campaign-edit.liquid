@@ -250,8 +250,18 @@
   {%- endif -%}
 
   {%- assign card1_title = section.settings.card1_title -%}
-  {%- if card1_title == blank or card1_title == 'Jaipur Chanderi Silk Festive Suit' -%}
+  {%- if card1_title == blank or card1_title contains 'Jaipur' -%}
     {%- assign card1_title = 'The Royal Wine Chanderi Festive Suit' -%}
+  {%- endif -%}
+
+  {%- assign card1_price = section.settings.card1_price -%}
+  {%- if card1_price == blank or card1_price contains '2,299' -%}
+    {%- assign card1_price = '&#8377;2,799' -%}
+  {%- endif -%}
+
+  {%- assign card1_mrp = section.settings.card1_mrp -%}
+  {%- if card1_mrp == blank or card1_mrp contains '3,699' -%}
+    {%- assign card1_mrp = '&#8377;4,499' -%}
   {%- endif -%}
 
   {%- assign card2_url = section.settings.card2_url -%}
@@ -286,8 +296,8 @@
       <div class="campaign-hero-content">
         <h3 class="campaign-hero-name">{{ card1_title }}</h3>
         <div class="campaign-hero-meta">
-          <span class="campaign-price">{{ section.settings.card1_price | default: '&#8377;2,299' }}</span>
-          <span class="campaign-mrp">{{ section.settings.card1_mrp | default: '&#8377;3,699' }}</span>
+          <span class="campaign-price">{{ card1_price }}</span>
+          <span class="campaign-mrp">{{ card1_mrp }}</span>
           <span style="font-size:11px; background:rgba(37,211,102,0.2); color:#25D366; padding:2px 8px; border-radius:12px; font-weight:700;">{{ section.settings.card1_discount | default: '38% OFF' }}</span>
           <span style="font-size:12px; color:rgba(255,255,255,0.7);">&bull; {{ section.settings.card1_fabric | default: 'Handcrafted Chanderi &amp; Zari' }}</span>
         </div>
@@ -408,13 +418,13 @@
       "type": "text",
       "id": "card1_price",
       "label": "Card 1 Price",
-      "default": "₹2,299"
+      "default": "₹2,799"
     },
     {
       "type": "text",
       "id": "card1_mrp",
       "label": "Card 1 Compare MRP",
-      "default": "₹3,699"
+      "default": "₹4,499"
     },
     {
       "type": "text",

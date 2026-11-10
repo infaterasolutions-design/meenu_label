@@ -8,6 +8,10 @@
       "type": "campaign-edit",
       "settings": {
         "card1_title": "The Royal Wine Chanderi Festive Suit",
+        "card1_price": "₹2,799",
+        "card1_mrp": "₹4,499",
+        "card1_discount": "38% OFF",
+        "card1_fabric": "Handcrafted Chanderi & Zari",
         "card1_subtitle": "Handcrafted Chanderi & Zari Trim",
         "card1_url": "/products/the-royal-wine-chanderi-festive-suit",
         "card2_title": "Mustard Crepe Angrakha Co-ord",
