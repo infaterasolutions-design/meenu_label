@@ -1,27 +1,53 @@
 <section class="campaign-edit-section">
   <div class="campaign-header">
-    <span class="campaign-eyebrow">Atelier Capsule 01 &bull; Editorial Lookbook</span>
+    <span class="campaign-eyebrow">{{ section.settings.eyebrow | default: 'Atelier Capsule 01 &bull; Editorial Lookbook' }}</span>
     <h2 class="campaign-title">
-      THE CAMPAIGN EDIT: EFFORTLESS CHANDIGARH MORNINGS TO <span class="accent">REGAL EVENINGS</span>
+      {{ section.settings.heading | default: 'THE CAMPAIGN EDIT: EFFORTLESS CHANDIGARH MORNINGS TO <span class="accent">REGAL EVENINGS</span>' }}
     </h2>
-    <p class="campaign-sub">Curated silhouettes styled in natural daylight across Chandigarh's iconic verandahs and promenades.</p>
+    <p class="campaign-sub">{{ section.settings.subheading | default: "Curated silhouettes styled in natural daylight across Chandigarh's iconic verandahs and promenades." }}</p>
   </div>
 
+  {%- comment -%} Determine safe functional links with zero 404s {%- endcomment -%}
+  {%- assign card1_url = section.settings.card1_url -%}
+  {%- if section.settings.card1_product != blank -%}
+    {%- assign card1_url = section.settings.card1_product.url -%}
+  {%- elsif card1_url == blank -%}
+    {%- assign card1_url = '/collections/festive-suits' -%}
+  {%- endif -%}
+
+  {%- assign card2_url = section.settings.card2_url -%}
+  {%- if section.settings.card2_product != blank -%}
+    {%- assign card2_url = section.settings.card2_product.url -%}
+  {%- elsif card2_url == blank -%}
+    {%- assign card2_url = '/collections/co-ord-sets' -%}
+  {%- endif -%}
+
+  {%- assign card3_url = section.settings.card3_url -%}
+  {%- if section.settings.card3_product != blank -%}
+    {%- assign card3_url = section.settings.card3_product.url -%}
+  {%- elsif card3_url == blank -%}
+    {%- assign card3_url = '/collections/dresses' -%}
+  {%- endif -%}
+
   <div class="campaign-grid">
-    <!-- Left Main Feature (58%): Jaipur Chanderi Silk Festive Suit -->
-    <div class="campaign-hero-card" onclick="window.location.href='/products/jaipur-chanderi-silk-festive-suit'">
-      <img src="{{ 'campaign_cafe.jpg' | asset_url }}" alt="Jaipur Chanderi Silk Festive Suit" class="campaign-hero-img" loading="lazy">
+    <!-- Left Main Feature (58%): The Jaipur Chanderi Silk Festive Suit (SKU: JAB26ST05010) -->
+    <div class="campaign-hero-card" onclick="window.location.href='{{ card1_url }}'">
+      {%- if section.settings.card1_image != blank -%}
+        <img src="{{ section.settings.card1_image | img_url: '1200x' }}" alt="{{ section.settings.card1_title | default: 'Jaipur Chanderi Silk Festive Suit' | escape }}" class="campaign-hero-img" loading="lazy">
+      {%- else -%}
+        <img src="{{ 'campaign_cafe.jpg' | asset_url }}" alt="{{ section.settings.card1_title | default: 'Jaipur Chanderi Silk Festive Suit' | escape }}" class="campaign-hero-img" loading="lazy">
+      {%- endif -%}
       <div class="campaign-hero-vignette"></div>
       <div class="campaign-hero-content">
-        <h3 class="campaign-hero-name">Jaipur Chanderi Silk Festive Suit</h3>
+        <h3 class="campaign-hero-name">{{ section.settings.card1_title | default: 'Jaipur Chanderi Silk Festive Suit' }}</h3>
         <div class="campaign-hero-meta">
-          <span class="campaign-price">&#8377;2,299</span>
-          <span class="campaign-mrp">&#8377;3,699</span>
-          <span style="font-size:11px; background:rgba(37,211,102,0.2); color:#25D366; padding:2px 8px; border-radius:12px; font-weight:700;">38% OFF</span>
-          <span style="font-size:12px; color:rgba(255,255,255,0.7);">&bull; Handcrafted Chanderi &amp; Zari</span>
+          <span class="campaign-price">{{ section.settings.card1_price | default: '&#8377;2,299' }}</span>
+          <span class="campaign-mrp">{{ section.settings.card1_mrp | default: '&#8377;3,699' }}</span>
+          <span style="font-size:11px; background:rgba(37,211,102,0.2); color:#25D366; padding:2px 8px; border-radius:12px; font-weight:700;">{{ section.settings.card1_discount | default: '38% OFF' }}</span>
+          <span style="font-size:12px; color:rgba(255,255,255,0.7);">&bull; {{ section.settings.card1_fabric | default: 'Handcrafted Chanderi &amp; Zari' }}</span>
         </div>
         <div class="campaign-hero-actions" onclick="event.stopPropagation()">
-          <a href="/products/jaipur-chanderi-silk-festive-suit" class="btn-campaign-primary">
+          <a href="{{ card1_url }}" class="btn-campaign-primary">
             <span>SHOP SILHOUETTE</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
@@ -34,19 +60,23 @@
 
     <!-- Right Stack (42%): 2 Companion Silhouettes -->
     <div class="campaign-stack">
-      <!-- Top Right Card: Mustard Crepe Angrakha Co-ord Set -->
-      <div class="campaign-sub-card" onclick="window.location.href='/products/mustard-crepe-angrakha-co-ord-set'">
-        <img src="{{ 'campaign_balcony.jpg' | asset_url }}" alt="Mustard Crepe Angrakha Co-ord Set" class="campaign-sub-img" loading="lazy">
+      <!-- Top Right Card: Mustard Crepe Angrakha Co-ord Set (SKU: SET974) -->
+      <div class="campaign-sub-card" onclick="window.location.href='{{ card2_url }}'">
+        {%- if section.settings.card2_image != blank -%}
+          <img src="{{ section.settings.card2_image | img_url: '800x' }}" alt="{{ section.settings.card2_title | default: 'Mustard Crepe Angrakha Co-ord' | escape }}" class="campaign-sub-img" loading="lazy">
+        {%- else -%}
+          <img src="{{ 'campaign_sukhna.jpg' | asset_url }}" alt="{{ section.settings.card2_title | default: 'Mustard Crepe Angrakha Co-ord' | escape }}" class="campaign-sub-img" loading="lazy">
+        {%- endif -%}
         <div class="campaign-sub-vignette"></div>
         <div class="campaign-sub-content">
-          <h4 class="campaign-sub-name">Mustard Crepe Angrakha Co-ord</h4>
+          <h4 class="campaign-sub-name">{{ section.settings.card2_title | default: 'Mustard Crepe Angrakha Co-ord' }}</h4>
           <p style="font-size:12px; color:rgba(255,255,255,0.75); margin:0 0 8px;">Gold Gota Trim with Side Tie-Up Tassels</p>
           <div class="campaign-sub-meta" onclick="event.stopPropagation()">
             <div>
-              <span class="campaign-sub-price">&#8377;1,699</span>
-              <span style="font-size:11px; color:rgba(255,255,255,0.5); text-decoration:line-through; margin-left:6px;">&#8377;2,799</span>
+              <span class="campaign-sub-price">{{ section.settings.card2_price | default: '&#8377;1,699' }}</span>
+              <span style="font-size:11px; color:rgba(255,255,255,0.5); text-decoration:line-through; margin-left:6px;">{{ section.settings.card2_mrp | default: '&#8377;2,799' }}</span>
             </div>
-            <a href="/products/mustard-crepe-angrakha-co-ord-set" class="btn-campaign-sub">
+            <a href="{{ card2_url }}" class="btn-campaign-sub">
               <span>SHOP LOOK</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </a>
@@ -54,19 +84,23 @@
         </div>
       </div>
 
-      <!-- Bottom Right Card: White Porcelain Floral Wrap Dress -->
-      <div class="campaign-sub-card" onclick="window.location.href='/products/white-porcelain-floral-wrap-dress'">
-        <img src="{{ 'campaign_sukhna.jpg' | asset_url }}" alt="White Porcelain Floral Wrap Dress" class="campaign-sub-img" loading="lazy">
+      <!-- Bottom Right Card: White Porcelain Floral Wrap Dress (SKU: JNE4046) -->
+      <div class="campaign-sub-card" onclick="window.location.href='{{ card3_url }}'">
+        {%- if section.settings.card3_image != blank -%}
+          <img src="{{ section.settings.card3_image | img_url: '800x' }}" alt="{{ section.settings.card3_title | default: 'White Porcelain Floral Wrap Dress' | escape }}" class="campaign-sub-img" loading="lazy">
+        {%- else -%}
+          <img src="{{ 'campaign_balcony.jpg' | asset_url }}" alt="{{ section.settings.card3_title | default: 'White Porcelain Floral Wrap Dress' | escape }}" class="campaign-sub-img" loading="lazy">
+        {%- endif -%}
         <div class="campaign-sub-vignette"></div>
         <div class="campaign-sub-content">
-          <h4 class="campaign-sub-name">White Porcelain Floral Wrap Dress</h4>
+          <h4 class="campaign-sub-name">{{ section.settings.card3_title | default: 'White Porcelain Floral Wrap Dress' }}</h4>
           <p style="font-size:12px; color:rgba(255,255,255,0.75); margin:0 0 8px;">Featherlight Georgette with Circular Waist Belt</p>
           <div class="campaign-sub-meta" onclick="event.stopPropagation()">
             <div>
-              <span class="campaign-sub-price">&#8377;1,599</span>
-              <span style="font-size:11px; color:rgba(255,255,255,0.5); text-decoration:line-through; margin-left:6px;">&#8377;2,599</span>
+              <span class="campaign-sub-price">{{ section.settings.card3_price | default: '&#8377;1,599' }}</span>
+              <span style="font-size:11px; color:rgba(255,255,255,0.5); text-decoration:line-through; margin-left:6px;">{{ section.settings.card3_mrp | default: '&#8377;2,599' }}</span>
             </div>
-            <a href="/products/white-porcelain-floral-wrap-dress" class="btn-campaign-sub">
+            <a href="{{ card3_url }}" class="btn-campaign-sub">
               <span>SHOP LOOK</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </a>
@@ -80,7 +114,152 @@
 {% schema %}
 {
   "name": "Campaign Edit",
-  "settings": [],
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "Atelier Capsule 01 • Editorial Lookbook"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "THE CAMPAIGN EDIT: EFFORTLESS CHANDIGARH MORNINGS TO <span class="accent">REGAL EVENINGS</span>"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Curated silhouettes styled in natural daylight across Chandigarh's iconic verandahs and promenades."
+    },
+    {
+      "type": "header",
+      "content": "Hero Card 1 (Left 58% - Main Headliner)"
+    },
+    {
+      "type": "product",
+      "id": "card1_product",
+      "label": "Card 1 Linked Product (Overrides URL)"
+    },
+    {
+      "type": "image_picker",
+      "id": "card1_image",
+      "label": "Card 1 Custom Photo (Optional)"
+    },
+    {
+      "type": "url",
+      "id": "card1_url",
+      "label": "Card 1 Link URL (Fallback)",
+      "default": "/collections/festive-suits"
+    },
+    {
+      "type": "text",
+      "id": "card1_title",
+      "label": "Card 1 Title",
+      "default": "Jaipur Chanderi Silk Festive Suit"
+    },
+    {
+      "type": "text",
+      "id": "card1_price",
+      "label": "Card 1 Price",
+      "default": "₹2,299"
+    },
+    {
+      "type": "text",
+      "id": "card1_mrp",
+      "label": "Card 1 Compare MRP",
+      "default": "₹3,699"
+    },
+    {
+      "type": "text",
+      "id": "card1_discount",
+      "label": "Card 1 Discount Badge",
+      "default": "38% OFF"
+    },
+    {
+      "type": "text",
+      "id": "card1_fabric",
+      "label": "Card 1 Fabric Details",
+      "default": "Handcrafted Chanderi & Zari"
+    },
+    {
+      "type": "header",
+      "content": "Sub-Card 2 (Top Right)"
+    },
+    {
+      "type": "product",
+      "id": "card2_product",
+      "label": "Card 2 Linked Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "card2_image",
+      "label": "Card 2 Custom Photo (Optional)"
+    },
+    {
+      "type": "url",
+      "id": "card2_url",
+      "label": "Card 2 Link URL (Fallback)",
+      "default": "/collections/co-ord-sets"
+    },
+    {
+      "type": "text",
+      "id": "card2_title",
+      "label": "Card 2 Title",
+      "default": "Mustard Crepe Angrakha Co-ord"
+    },
+    {
+      "type": "text",
+      "id": "card2_price",
+      "label": "Card 2 Price",
+      "default": "₹1,699"
+    },
+    {
+      "type": "text",
+      "id": "card2_mrp",
+      "label": "Card 2 Compare MRP",
+      "default": "₹2,799"
+    },
+    {
+      "type": "header",
+      "content": "Sub-Card 3 (Bottom Right)"
+    },
+    {
+      "type": "product",
+      "id": "card3_product",
+      "label": "Card 3 Linked Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "card3_image",
+      "label": "Card 3 Custom Photo (Optional)"
+    },
+    {
+      "type": "url",
+      "id": "card3_url",
+      "label": "Card 3 Link URL (Fallback)",
+      "default": "/collections/dresses"
+    },
+    {
+      "type": "text",
+      "id": "card3_title",
+      "label": "Card 3 Title",
+      "default": "White Porcelain Floral Wrap Dress"
+    },
+    {
+      "type": "text",
+      "id": "card3_price",
+      "label": "Card 3 Price",
+      "default": "₹1,599"
+    },
+    {
+      "type": "text",
+      "id": "card3_mrp",
+      "label": "Card 3 Compare MRP",
+      "default": "₹2,599"
+    }
+  ],
   "presets": [
     {
       "name": "Campaign Edit"
