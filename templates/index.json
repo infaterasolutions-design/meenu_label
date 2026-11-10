@@ -4,6 +4,21 @@
       "type": "hero-editorial",
       "settings": {}
     },
+    "campaign_edit": {
+      "type": "campaign-edit",
+      "settings": {
+        "card1_title": "The Royal Wine Chanderi Festive Suit",
+        "card1_url": "/products/the-royal-wine-chanderi-festive-suit",
+        "card2_title": "Mustard Crepe Angrakha Co-ord",
+        "card2_url": "/collections/co-ord-sets",
+        "card3_title": "White Porcelain Floral Wrap Dress",
+        "card3_url": "/collections/dresses"
+      }
+    },
+    "craftsmanship": {
+      "type": "craftsmanship-spotlight",
+      "settings": {}
+    },
     "collection": {
       "type": "featured-collection",
       "settings": {}
@@ -14,14 +29,6 @@
     },
     "founder": {
       "type": "founder-story",
-      "settings": {}
-    },
-    "campaign_edit": {
-      "type": "campaign-edit",
-      "settings": {}
-    },
-    "craftsmanship": {
-      "type": "craftsmanship-spotlight",
       "settings": {}
     }
   },

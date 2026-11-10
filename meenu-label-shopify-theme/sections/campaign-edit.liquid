@@ -11,97 +11,47 @@
   {%- assign card1_url = section.settings.card1_url -%}
   {%- if section.settings.card1_product != blank -%}
     {%- assign card1_url = section.settings.card1_product.url -%}
-  {%- elsif card1_url == blank or card1_url contains 'jaipur-chanderi-silk-festive-suit' -%}
+  {%- endif -%}
+  {%- if card1_url == blank or card1_url == '#' or card1_url contains 'jaipur-chanderi-silk-festive-suit' or card1_url == '/collections/all' -%}
     {%- assign card1_url = '/products/the-royal-wine-chanderi-festive-suit' -%}
   {%- endif -%}
 
-  {%- comment -%} Safe 404 Guard for Card 1 {%- endcomment -%}
-  {%- if card1_url contains '/products/' -%}
-    {%- assign handle_check1 = card1_url | split: '/products/' | last | split: '?' | first | split: '/' | first -%}
-    {%- assign prod_check1 = all_products[handle_check1] -%}
-    {%- if prod_check1 == blank or prod_check1.title == blank -%}
-      {%- assign alt_prod1 = all_products['the-royal-wine-chanderi-festive-suit'] -%}
-      {%- if alt_prod1 != blank and alt_prod1.title != blank -%}
-        {%- assign card1_url = alt_prod1.url -%}
-      {%- elsif collections['festive-suits'] != blank and collections['festive-suits'].products_count > 0 -%}
-        {%- assign card1_url = '/products/the-royal-wine-chanderi-festive-suit' -%}
-      {%- else -%}
-        {%- assign card1_url = '/collections/all' -%}
-      {%- endif -%}
-    {%- endif -%}
-  {%- elsif card1_url == blank or card1_url == '#' -%}
-    {%- if collections['festive-suits'] != blank and collections['festive-suits'].products_count > 0 -%}
-      {%- assign card1_url = '/products/the-royal-wine-chanderi-festive-suit' -%}
-    {%- else -%}
-      {%- assign card1_url = '/collections/all' -%}
-    {%- endif -%}
+  {%- assign card1_title = section.settings.card1_title -%}
+  {%- if card1_title == blank or card1_title == 'Jaipur Chanderi Silk Festive Suit' -%}
+    {%- assign card1_title = 'The Royal Wine Chanderi Festive Suit' -%}
   {%- endif -%}
 
   {%- assign card2_url = section.settings.card2_url -%}
   {%- if section.settings.card2_product != blank -%}
     {%- assign card2_url = section.settings.card2_product.url -%}
   {%- endif -%}
-
-  {%- comment -%} Safe 404 Guard for Card 2 {%- endcomment -%}
-  {%- if card2_url contains '/products/' -%}
-    {%- assign handle_check2 = card2_url | split: '/products/' | last | split: '?' | first | split: '/' | first -%}
-    {%- assign prod_check2 = all_products[handle_check2] -%}
-    {%- if prod_check2 == blank or prod_check2.title == blank -%}
-      {%- assign alt_prod2 = all_products['mustard-crepe-angrakha-co-ord'] -%}
-      {%- if alt_prod2 != blank and alt_prod2.title != blank -%}
-        {%- assign card2_url = alt_prod2.url -%}
-      {%- elsif collections['co-ord-sets'] != blank and collections['co-ord-sets'].products_count > 0 -%}
-        {%- assign card2_url = '/collections/co-ord-sets' -%}
-      {%- else -%}
-        {%- assign card2_url = '/collections/all' -%}
-      {%- endif -%}
-    {%- endif -%}
-  {%- elsif card2_url == blank or card2_url == '#' -%}
-    {%- if collections['co-ord-sets'] != blank and collections['co-ord-sets'].products_count > 0 -%}
-      {%- assign card2_url = '/collections/co-ord-sets' -%}
-    {%- else -%}
-      {%- assign card2_url = '/collections/all' -%}
-    {%- endif -%}
+  {%- if card2_url == blank or card2_url == '#' -%}
+    {%- assign card2_url = '/collections/co-ord-sets' -%}
   {%- endif -%}
+
+  {%- assign card2_title = section.settings.card2_title | default: 'Mustard Crepe Angrakha Co-ord' -%}
 
   {%- assign card3_url = section.settings.card3_url -%}
   {%- if section.settings.card3_product != blank -%}
     {%- assign card3_url = section.settings.card3_product.url -%}
   {%- endif -%}
-
-  {%- comment -%} Safe 404 Guard for Card 3 {%- endcomment -%}
-  {%- if card3_url contains '/products/' -%}
-    {%- assign handle_check3 = card3_url | split: '/products/' | last | split: '?' | first | split: '/' | first -%}
-    {%- assign prod_check3 = all_products[handle_check3] -%}
-    {%- if prod_check3 == blank or prod_check3.title == blank -%}
-      {%- assign alt_prod3 = all_products['white-porcelain-floral-wrap-dress'] -%}
-      {%- if alt_prod3 != blank and alt_prod3.title != blank -%}
-        {%- assign card3_url = alt_prod3.url -%}
-      {%- elsif collections['dresses'] != blank and collections['dresses'].products_count > 0 -%}
-        {%- assign card3_url = '/collections/dresses' -%}
-      {%- else -%}
-        {%- assign card3_url = '/collections/all' -%}
-      {%- endif -%}
-    {%- endif -%}
-  {%- elsif card3_url == blank or card3_url == '#' -%}
-    {%- if collections['dresses'] != blank and collections['dresses'].products_count > 0 -%}
-      {%- assign card3_url = '/collections/dresses' -%}
-    {%- else -%}
-      {%- assign card3_url = '/collections/all' -%}
-    {%- endif -%}
+  {%- if card3_url == blank or card3_url == '#' -%}
+    {%- assign card3_url = '/collections/dresses' -%}
   {%- endif -%}
 
+  {%- assign card3_title = section.settings.card3_title | default: 'White Porcelain Floral Wrap Dress' -%}
+
   <div class="campaign-grid">
-    <!-- Left Main Feature (58%): The The Royal Wine Chanderi Festive Suit (SKU: JAB26ST05010) -->
+    <!-- Left Main Feature (58%): The Royal Wine Chanderi Festive Suit (SKU: JAB26ST05010) -->
     <div class="campaign-hero-card" onclick="window.location.href='{{ card1_url }}'">
       {%- if section.settings.card1_image != blank -%}
-        <img src="{{ section.settings.card1_image | img_url: '1200x' }}" alt="{{ section.settings.card1_title | default: 'The Royal Wine Chanderi Festive Suit' | escape }}" class="campaign-hero-img" loading="lazy">
+        <img src="{{ section.settings.card1_image | img_url: '1200x' }}" alt="{{ card1_title | escape }}" class="campaign-hero-img" loading="lazy">
       {%- else -%}
-        <img src="{{ 'campaign_cafe.jpg' | asset_url }}" alt="{{ section.settings.card1_title | default: 'The Royal Wine Chanderi Festive Suit' | escape }}" class="campaign-hero-img" loading="lazy">
+        <img src="{{ 'campaign_cafe.jpg' | asset_url }}" alt="{{ card1_title | escape }}" class="campaign-hero-img" loading="lazy">
       {%- endif -%}
       <div class="campaign-hero-vignette"></div>
       <div class="campaign-hero-content">
-        <h3 class="campaign-hero-name">{{ section.settings.card1_title | default: 'The Royal Wine Chanderi Festive Suit' }}</h3>
+        <h3 class="campaign-hero-name">{{ card1_title }}</h3>
         <div class="campaign-hero-meta">
           <span class="campaign-price">{{ section.settings.card1_price | default: '&#8377;2,299' }}</span>
           <span class="campaign-mrp">{{ section.settings.card1_mrp | default: '&#8377;3,699' }}</span>
@@ -125,13 +75,13 @@
       <!-- Top Right Card: Mustard Crepe Angrakha Co-ord Set (SKU: SET974) -->
       <div class="campaign-sub-card" onclick="window.location.href='{{ card2_url }}'">
         {%- if section.settings.card2_image != blank -%}
-          <img src="{{ section.settings.card2_image | img_url: '800x' }}" alt="{{ section.settings.card2_title | default: 'Mustard Crepe Angrakha Co-ord' | escape }}" class="campaign-sub-img" loading="lazy">
+          <img src="{{ section.settings.card2_image | img_url: '800x' }}" alt="{{ card2_title | escape }}" class="campaign-sub-img" loading="lazy">
         {%- else -%}
-          <img src="{{ 'campaign_sukhna.jpg' | asset_url }}" alt="{{ section.settings.card2_title | default: 'Mustard Crepe Angrakha Co-ord' | escape }}" class="campaign-sub-img" loading="lazy">
+          <img src="{{ 'campaign_sukhna.jpg' | asset_url }}" alt="{{ card2_title | escape }}" class="campaign-sub-img" loading="lazy">
         {%- endif -%}
         <div class="campaign-sub-vignette"></div>
         <div class="campaign-sub-content">
-          <h4 class="campaign-sub-name">{{ section.settings.card2_title | default: 'Mustard Crepe Angrakha Co-ord' }}</h4>
+          <h4 class="campaign-sub-name">{{ card2_title }}</h4>
           <p style="font-size:12px; color:rgba(255,255,255,0.75); margin:0 0 8px;">Gold Gota Trim with Side Tie-Up Tassels</p>
           <div class="campaign-sub-meta" onclick="event.stopPropagation()">
             <div>
@@ -149,13 +99,13 @@
       <!-- Bottom Right Card: White Porcelain Floral Wrap Dress (SKU: JNE4046) -->
       <div class="campaign-sub-card" onclick="window.location.href='{{ card3_url }}'">
         {%- if section.settings.card3_image != blank -%}
-          <img src="{{ section.settings.card3_image | img_url: '800x' }}" alt="{{ section.settings.card3_title | default: 'White Porcelain Floral Wrap Dress' | escape }}" class="campaign-sub-img" loading="lazy">
+          <img src="{{ section.settings.card3_image | img_url: '800x' }}" alt="{{ card3_title | escape }}" class="campaign-sub-img" loading="lazy">
         {%- else -%}
-          <img src="{{ 'campaign_balcony.jpg' | asset_url }}" alt="{{ section.settings.card3_title | default: 'White Porcelain Floral Wrap Dress' | escape }}" class="campaign-sub-img" loading="lazy">
+          <img src="{{ 'campaign_balcony.jpg' | asset_url }}" alt="{{ card3_title | escape }}" class="campaign-sub-img" loading="lazy">
         {%- endif -%}
         <div class="campaign-sub-vignette"></div>
         <div class="campaign-sub-content">
-          <h4 class="campaign-sub-name">{{ section.settings.card3_title | default: 'White Porcelain Floral Wrap Dress' }}</h4>
+          <h4 class="campaign-sub-name">{{ card3_title }}</h4>
           <p style="font-size:12px; color:rgba(255,255,255,0.75); margin:0 0 8px;">Featherlight Georgette with Circular Waist Belt</p>
           <div class="campaign-sub-meta" onclick="event.stopPropagation()">
             <div>
