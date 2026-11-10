@@ -8,10 +8,13 @@
       "type": "campaign-edit",
       "settings": {
         "card1_title": "The Royal Wine Chanderi Festive Suit",
+        "card1_subtitle": "Handcrafted Chanderi & Zari Trim",
         "card1_url": "/products/the-royal-wine-chanderi-festive-suit",
         "card2_title": "Mustard Crepe Angrakha Co-ord",
+        "card2_subtitle": "Gold Gota Trim with Side Tie-Up Tassels",
         "card2_url": "/collections/co-ord-sets",
         "card3_title": "White Porcelain Floral Wrap Dress",
+        "card3_subtitle": "Featherlight Georgette with Circular Waist Belt",
         "card3_url": "/collections/dresses"
       }
     },

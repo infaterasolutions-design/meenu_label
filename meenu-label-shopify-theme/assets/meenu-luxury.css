@@ -3480,10 +3480,10 @@
       margin: 0 auto;
     }
 
-    /* Asymmetrical Grid: Left (58%) & Right (42%) */
+    /* Clean 3-Column Luxury Grid */
     .campaign-grid {
       display: grid;
-      grid-template-columns: 1.35fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       align-items: stretch;
     }
@@ -3629,7 +3629,7 @@
       border-radius: 18px;
       overflow: hidden;
       flex: 1;
-      min-height: 308px;
+      min-height: 480px;
       background: #0D0D0D;
       display: flex;
       flex-direction: column;
