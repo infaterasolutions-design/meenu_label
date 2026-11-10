@@ -11,22 +11,82 @@
   {%- assign card1_url = section.settings.card1_url -%}
   {%- if section.settings.card1_product != blank -%}
     {%- assign card1_url = section.settings.card1_product.url -%}
-  {%- elsif card1_url == blank -%}
-    {%- assign card1_url = '/collections/festive-suits' -%}
+  {%- endif -%}
+
+  {%- comment -%} Safe 404 Guard for Card 1 {%- endcomment -%}
+  {%- if card1_url contains '/products/' -%}
+    {%- assign handle_check1 = card1_url | split: '/products/' | last | split: '?' | first | split: '/' | first -%}
+    {%- assign prod_check1 = all_products[handle_check1] -%}
+    {%- if prod_check1 == blank or prod_check1.title == blank -%}
+      {%- assign alt_prod1 = all_products['the-royal-wine-chanderi-festive-suit'] -%}
+      {%- if alt_prod1 != blank and alt_prod1.title != blank -%}
+        {%- assign card1_url = alt_prod1.url -%}
+      {%- elsif collections['festive-suits'] != blank and collections['festive-suits'].products_count > 0 -%}
+        {%- assign card1_url = '/collections/festive-suits' -%}
+      {%- else -%}
+        {%- assign card1_url = '/collections/all' -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- elsif card1_url == blank or card1_url == '#' -%}
+    {%- if collections['festive-suits'] != blank and collections['festive-suits'].products_count > 0 -%}
+      {%- assign card1_url = '/collections/festive-suits' -%}
+    {%- else -%}
+      {%- assign card1_url = '/collections/all' -%}
+    {%- endif -%}
   {%- endif -%}
 
   {%- assign card2_url = section.settings.card2_url -%}
   {%- if section.settings.card2_product != blank -%}
     {%- assign card2_url = section.settings.card2_product.url -%}
-  {%- elsif card2_url == blank -%}
-    {%- assign card2_url = '/collections/co-ord-sets' -%}
+  {%- endif -%}
+
+  {%- comment -%} Safe 404 Guard for Card 2 {%- endcomment -%}
+  {%- if card2_url contains '/products/' -%}
+    {%- assign handle_check2 = card2_url | split: '/products/' | last | split: '?' | first | split: '/' | first -%}
+    {%- assign prod_check2 = all_products[handle_check2] -%}
+    {%- if prod_check2 == blank or prod_check2.title == blank -%}
+      {%- assign alt_prod2 = all_products['mustard-crepe-angrakha-co-ord'] -%}
+      {%- if alt_prod2 != blank and alt_prod2.title != blank -%}
+        {%- assign card2_url = alt_prod2.url -%}
+      {%- elsif collections['co-ord-sets'] != blank and collections['co-ord-sets'].products_count > 0 -%}
+        {%- assign card2_url = '/collections/co-ord-sets' -%}
+      {%- else -%}
+        {%- assign card2_url = '/collections/all' -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- elsif card2_url == blank or card2_url == '#' -%}
+    {%- if collections['co-ord-sets'] != blank and collections['co-ord-sets'].products_count > 0 -%}
+      {%- assign card2_url = '/collections/co-ord-sets' -%}
+    {%- else -%}
+      {%- assign card2_url = '/collections/all' -%}
+    {%- endif -%}
   {%- endif -%}
 
   {%- assign card3_url = section.settings.card3_url -%}
   {%- if section.settings.card3_product != blank -%}
     {%- assign card3_url = section.settings.card3_product.url -%}
-  {%- elsif card3_url == blank -%}
-    {%- assign card3_url = '/collections/dresses' -%}
+  {%- endif -%}
+
+  {%- comment -%} Safe 404 Guard for Card 3 {%- endcomment -%}
+  {%- if card3_url contains '/products/' -%}
+    {%- assign handle_check3 = card3_url | split: '/products/' | last | split: '?' | first | split: '/' | first -%}
+    {%- assign prod_check3 = all_products[handle_check3] -%}
+    {%- if prod_check3 == blank or prod_check3.title == blank -%}
+      {%- assign alt_prod3 = all_products['white-porcelain-floral-wrap-dress'] -%}
+      {%- if alt_prod3 != blank and alt_prod3.title != blank -%}
+        {%- assign card3_url = alt_prod3.url -%}
+      {%- elsif collections['dresses'] != blank and collections['dresses'].products_count > 0 -%}
+        {%- assign card3_url = '/collections/dresses' -%}
+      {%- else -%}
+        {%- assign card3_url = '/collections/all' -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- elsif card3_url == blank or card3_url == '#' -%}
+    {%- if collections['dresses'] != blank and collections['dresses'].products_count > 0 -%}
+      {%- assign card3_url = '/collections/dresses' -%}
+    {%- else -%}
+      {%- assign card3_url = '/collections/all' -%}
+    {%- endif -%}
   {%- endif -%}
 
   <div class="campaign-grid">
@@ -51,7 +111,7 @@
             <span>SHOP SILHOUETTE</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
-          <a href="/collections/festive-suits" class="btn-campaign-secondary">
+          <a href="{{ card1_url }}" class="btn-campaign-secondary">
             EXPLORE SUITS &rarr;
           </a>
         </div>
