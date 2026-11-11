@@ -43,7 +43,12 @@
     <div style="font-size: 11px; color: var(--accent-green, #2B6E44); background: #EBF7EE; padding: 6px 10px; border-radius: 4px; margin-bottom: 14px; text-align: center; font-weight: 600;">
       ⚡ Instant ₹100 Prepaid UPI Discount auto-applied at checkout
     </div>
-    <a href="/checkout" class="modal-btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box; text-decoration: none;">PROCEED TO CHECKOUT &rarr;</a>
+    <form action="/cart" method="post" id="cartDrawerCheckoutForm" style="margin: 0; padding: 0;">
+      <input type="hidden" name="discount" value="UPI100">
+      <button type="submit" name="checkout" class="modal-btn-primary cart__checkout-button" style="width: 100%; text-align: center; display: block; box-sizing: border-box; text-decoration: none; border: none; cursor: pointer;">
+        PROCEED TO CHECKOUT &rarr;
+      </button>
+    </form>
     <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 10px;">
       🔒 256-Bit SSL Encrypted Checkout &bull; Free Pan-India Delivery
     </div>

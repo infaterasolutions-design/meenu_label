@@ -374,10 +374,13 @@
               </div>
             </div>
 
-            <!-- Checkout CTA Button -->
-            <a href="/checkout?discount=UPI100" id="pageCheckoutBtn" onclick="proceedToCheckout(event)" class="summary-checkout-btn" style="text-decoration:none;">
-              PROCEED TO SECURE CHECKOUT &rarr;
-            </a>
+            <!-- Checkout CTA Form & Button (Fully integrated with Razorpay Magic Checkout & Shopify) -->
+            <form action="/cart" method="post" id="cartPageCheckoutForm" style="margin: 0; padding: 0;">
+              <input type="hidden" name="discount" id="cartFormDiscount" value="UPI100">
+              <button type="submit" name="checkout" id="pageCheckoutBtn" class="summary-checkout-btn cart__checkout-button" style="width: 100%; border: none; cursor: pointer;">
+                PROCEED TO SECURE CHECKOUT &rarr;
+              </button>
+            </form>
 
             <!-- Trust Grid -->
             <div class="summary-trust-grid">
@@ -439,9 +442,11 @@
 
       var discounted = Math.max(0, cartTotalCents - 10000);
       if (totalEl) totalEl.textContent = '₹' + Math.round(discounted / 100).toLocaleString('en-IN');
+      var formDiscount = document.getElementById('cartFormDiscount');
+      var code = couponInput ? couponInput.value.trim().toUpperCase() : 'UPI100';
+      if (formDiscount) formDiscount.value = code || 'UPI100';
       if (checkoutBtn) {
-        var code = couponInput ? couponInput.value.trim().toUpperCase() : 'UPI100';
-        checkoutBtn.href = '/checkout?discount=' + encodeURIComponent(code || 'UPI100');
+        checkoutBtn.setAttribute('data-discount', code || 'UPI100');
       }
     } else {
       if (codOpt) codOpt.classList.add('selected');
@@ -457,8 +462,10 @@
       }
 
       if (totalEl) totalEl.textContent = '₹' + Math.round(cartTotalCents / 100).toLocaleString('en-IN');
+      var formDiscount = document.getElementById('cartFormDiscount');
+      if (formDiscount) formDiscount.value = '';
       if (checkoutBtn) {
-        checkoutBtn.href = '/checkout';
+        checkoutBtn.removeAttribute('data-discount');
       }
     }
   }
@@ -476,10 +483,8 @@
         feedback.style.color = '#2E6B38';
         feedback.innerHTML = '✓ Coupon "' + code + '" will be applied at checkout';
       }
-      var checkoutBtn = document.getElementById('pageCheckoutBtn');
-      if (checkoutBtn) {
-        checkoutBtn.href = '/checkout?discount=' + encodeURIComponent(code);
-      }
+      var formDiscount = document.getElementById('cartFormDiscount');
+      if (formDiscount) formDiscount.value = code;
     } else {
       if (feedback) {
         feedback.style.display = 'block';
