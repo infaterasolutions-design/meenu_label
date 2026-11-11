@@ -330,7 +330,10 @@
             <!-- Coupon Code Field -->
             <div class="summary-coupon-row">
               <input type="text" id="pageCouponCode" placeholder="Promo code (e.g. UPI100)" class="summary-coupon-input" value="UPI100">
-              <button type="button" onclick="applyPageCoupon()" class="summary-coupon-btn">APPLIED</button>
+              <button type="button" id="pageCouponBtn" onclick="applyPageCoupon()" class="summary-coupon-btn">APPLIED</button>
+            </div>
+            <div id="pageCouponFeedback" style="font-size: 11px; color: #2E6B38; font-weight: 600; margin-top: 6px; display: block;">
+              ✓ Code "UPI100" active &bull; ₹100 auto-discount
             </div>
 
             <!-- Breakdown Lines -->
@@ -372,7 +375,7 @@
             </div>
 
             <!-- Checkout CTA Button -->
-            <a href="/checkout" class="summary-checkout-btn" style="text-decoration:none;">
+            <a href="/checkout?discount=UPI100" id="pageCheckoutBtn" onclick="proceedToCheckout(event)" class="summary-checkout-btn" style="text-decoration:none;">
               PROCEED TO SECURE CHECKOUT &rarr;
             </a>
 
@@ -410,6 +413,9 @@
     var upiRow = document.getElementById('pageUpiDiscountRow');
     var totalEl = document.getElementById('pageTotal');
     var savingsPill = document.getElementById('pageSavingsNote');
+    var couponInput = document.getElementById('pageCouponCode');
+    var couponFeedback = document.getElementById('pageCouponFeedback');
+    var checkoutBtn = document.getElementById('pageCheckoutBtn');
 
     var cartTotalCents = {{ cart.total_price }};
 
@@ -418,29 +424,86 @@
       if (codOpt) codOpt.classList.remove('selected');
       if (upiRadio) upiRadio.checked = true;
       if (upiRow) upiRow.style.display = 'flex';
-      if (savingsPill) savingsPill.style.display = 'block';
+      if (savingsPill) {
+        savingsPill.style.display = 'block';
+        savingsPill.innerHTML = '✨ Instant ₹100 Prepaid UPI Discount auto-applied at checkout';
+      }
+      if (couponInput && !couponInput.value) {
+        couponInput.value = 'UPI100';
+      }
+      if (couponFeedback) {
+        couponFeedback.style.display = 'block';
+        couponFeedback.style.color = '#2E6B38';
+        couponFeedback.innerHTML = '✓ Code "UPI100" active &bull; ₹100 auto-discount';
+      }
 
       var discounted = Math.max(0, cartTotalCents - 10000);
       if (totalEl) totalEl.textContent = '₹' + Math.round(discounted / 100).toLocaleString('en-IN');
+      if (checkoutBtn) {
+        var code = couponInput ? couponInput.value.trim().toUpperCase() : 'UPI100';
+        checkoutBtn.href = '/checkout?discount=' + encodeURIComponent(code || 'UPI100');
+      }
     } else {
       if (codOpt) codOpt.classList.add('selected');
       if (upiOpt) upiOpt.classList.remove('selected');
       if (codRadio) codRadio.checked = true;
       if (upiRow) upiRow.style.display = 'none';
-      if (savingsPill) savingsPill.style.display = 'none';
+      if (savingsPill) {
+        savingsPill.style.display = 'block';
+        savingsPill.innerHTML = '💡 Switch to UPI / Cards to save ₹100 instantly';
+      }
+      if (couponFeedback) {
+        couponFeedback.style.display = 'none';
+      }
 
       if (totalEl) totalEl.textContent = '₹' + Math.round(cartTotalCents / 100).toLocaleString('en-IN');
+      if (checkoutBtn) {
+        checkoutBtn.href = '/checkout';
+      }
     }
   }
 
   function applyPageCoupon() {
     var inp = document.getElementById('pageCouponCode');
+    var feedback = document.getElementById('pageCouponFeedback');
+    var btn = document.getElementById('pageCouponBtn');
     var code = inp ? inp.value.trim().toUpperCase() : '';
-    if (code === 'UPI100' || code === 'DEBUT10') {
-      alert('Coupon "' + code + '" is active and will be auto-applied at checkout!');
-    } else if (code) {
-      alert('Coupon "' + code + '" will be validated at checkout.');
+
+    if (code) {
+      if (btn) btn.textContent = 'APPLIED';
+      if (feedback) {
+        feedback.style.display = 'block';
+        feedback.style.color = '#2E6B38';
+        feedback.innerHTML = '✓ Coupon "' + code + '" will be applied at checkout';
+      }
+      var checkoutBtn = document.getElementById('pageCheckoutBtn');
+      if (checkoutBtn) {
+        checkoutBtn.href = '/checkout?discount=' + encodeURIComponent(code);
+      }
+    } else {
+      if (feedback) {
+        feedback.style.display = 'block';
+        feedback.style.color = '#B45309';
+        feedback.innerHTML = 'Please enter a coupon code';
+      }
     }
+  }
+
+  function proceedToCheckout(event) {
+    if (event) event.preventDefault();
+    var payMode = document.querySelector('input[name="pagePayMode"]:checked');
+    var mode = payMode ? payMode.value : 'upi';
+    var couponInput = document.getElementById('pageCouponCode');
+    var couponCode = couponInput ? couponInput.value.trim().toUpperCase() : '';
+
+    var targetUrl = '/checkout';
+    if (mode === 'upi') {
+      var activeCode = couponCode || 'UPI100';
+      targetUrl = '/checkout?discount=' + encodeURIComponent(activeCode);
+    } else if (couponCode && couponCode !== 'UPI100') {
+      targetUrl = '/checkout?discount=' + encodeURIComponent(couponCode);
+    }
+    window.location.href = targetUrl;
   }
 
   function updateCartPageQuantity(lineKey, newQty) {
