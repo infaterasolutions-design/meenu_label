@@ -1375,7 +1375,7 @@ function executeOrderTracking() {
   if (is1003) {
     orderNum = '#1003';
     productName = 'White Porcelain Floral Tiered Maxi Dress';
-    productImage = 'https://cdn.shopify.com/s/files/1/0722/3325/4983/files/DSC09689.jpg?v=1793648783';
+    productImage = 'https://cdn.shopify.com/s/files/1/0722/3325/4983/files/ElegantBlue-GreenFloralWrapDress.png?v=1793908108';
     statusBadge = 'Order Processed & Handcrafted';
     badgeColor = '#25D366';
     awbInfo = 'Delhivery Express • AWB #DEL-1003-MNU';
@@ -1384,7 +1384,7 @@ function executeOrderTracking() {
   } else if (is1002) {
     orderNum = '#1002';
     productName = 'Crepe Silk Angrakha Co-Ord Ensemble';
-    productImage = 'https://cdn.shopify.com/s/files/1/0722/3325/4983/files/DSC09641.jpg?v=1793648783';
+    productImage = 'https://cdn.shopify.com/s/files/1/0722/3325/4983/files/High-Neck_Printed_Kurta_Fashion_Portrait.png?v=1793905387';
     statusBadge = 'Atelier Quality Inspected';
     badgeColor = '#C8A364';
     awbInfo = 'BlueDart Air • AWB #BD-1002-CHD';
