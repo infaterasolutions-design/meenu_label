@@ -301,30 +301,16 @@
             
             <h2 class="summary-card-title">Order Summary</h2>
 
-            <!-- Payment Selector -->
-            <div class="summary-payment-selector">
-              <div class="summary-payment-header">
-                <span>Payment Mode</span>
-                <span class="summary-upi-save-badge">SAVE &#8377;100</span>
+            <!-- Luxury Prepaid Privilege & Perks Banner -->
+            <div class="summary-perk-banner">
+              <div class="summary-perk-top">
+                <span class="summary-perk-tag">&#9889; PREPAID PRIVILEGE</span>
+                <span class="summary-perk-savings">SAVE &#8377;100</span>
               </div>
-              
-              <div class="summary-pay-option selected" id="pageOptUpi" onclick="selectPagePaymentMode('upi')">
-                <input type="radio" name="pagePayMode" id="pageRadioUpi" value="upi" checked style="accent-color:#2E6B38; cursor:pointer;">
-                <div style="flex:1;">
-                  <div style="font-weight:700; font-size:12px; color:#1E1C19;">Pay via UPI / Cards (Save &#8377;100)</div>
-                  <div style="font-size:10.5px; color:#6E6459;">Instant &#8377;100 auto-discount</div>
-                </div>
-                <span style="color:#2E6B38; font-weight:800; font-size:12px;">-&#8377;100</span>
-              </div>
-
-              <div class="summary-pay-option" id="pageOptCod" onclick="selectPagePaymentMode('cod')">
-                <input type="radio" name="pagePayMode" id="pageRadioCod" value="cod" style="accent-color:#1E1C19; cursor:pointer;">
-                <div style="flex:1;">
-                  <div style="font-weight:600; font-size:12px; color:#1E1C19;">Cash on Delivery</div>
-                  <div style="font-size:10.5px; color:#8C8275;">Standard price &bull; OTP verification</div>
-                </div>
-                <span style="color:#8C8275; font-size:11px;">+&#8377;0</span>
-              </div>
+              <div class="summary-perk-title">Instant &#8377;100 Off via UPI &amp; Cards</div>
+              <p class="summary-perk-note">
+                Auto-applied with promo code <strong>UPI100</strong> below. Cash on Delivery (COD) is also available at standard price at checkout.
+              </p>
             </div>
 
             <!-- Coupon Code Field -->
@@ -332,8 +318,8 @@
               <input type="text" id="pageCouponCode" placeholder="Promo code (e.g. UPI100)" class="summary-coupon-input" value="UPI100">
               <button type="button" id="pageCouponBtn" onclick="applyPageCoupon()" class="summary-coupon-btn">APPLIED</button>
             </div>
-            <div id="pageCouponFeedback" style="font-size: 11px; color: #2E6B38; font-weight: 600; margin-top: 6px; display: block;">
-              ✓ Code "UPI100" active &bull; ₹100 auto-discount
+            <div id="pageCouponFeedback" style="font-size: 11px; color: #2E6B38; font-weight: 600; margin-top: 6px; margin-bottom: 14px; display: block;">
+              &#10003; Code "UPI100" applied &bull; &#8377;100 Prepaid discount
             </div>
 
             <!-- Breakdown Lines -->
@@ -343,9 +329,9 @@
                 <span id="pageSubtotal">{{ cart.total_price | money }}</span>
               </div>
               
-              <div class="summary-line highlight-green" id="pageUpiDiscountRow">
-                <span>⚡ Instant UPI / Prepaid Perk</span>
-                <span id="pageUpiDiscount">-&#8377;100</span>
+              <div class="summary-line highlight-green" id="pageDiscountRow">
+                <span>&#9889; Prepaid UPI Discount (UPI100)</span>
+                <span id="pageDiscountVal">-&#8377;100</span>
               </div>
 
               <div class="summary-line">
@@ -369,12 +355,15 @@
                 </span>
               </div>
               
-              <div class="summary-savings-pill" id="pageSavingsNote">
-                ✨ Instant ₹100 Prepaid UPI Discount auto-applied at checkout
+              <div class="summary-methods-badge">
+                <span class="method-tag">UPI / QR</span>
+                <span class="method-tag">Credit / Debit Cards</span>
+                <span class="method-tag">Netbanking</span>
+                <span class="method-tag">Cash on Delivery</span>
               </div>
             </div>
 
-            <!-- Checkout CTA Form & Button (Fully integrated with Razorpay Magic Checkout & Shopify) -->
+            <!-- Checkout CTA Form & Button (Fully integrated with Shopify Checkout & Razorpay) -->
             <form action="/cart" method="post" id="cartPageCheckoutForm" style="margin: 0; padding: 0;">
               <input type="hidden" name="discount" id="cartFormDiscount" value="UPI100">
               <button type="submit" name="checkout" id="pageCheckoutBtn" class="summary-checkout-btn cart__checkout-button" style="width: 100%; border: none; cursor: pointer;">
@@ -408,107 +397,46 @@
 </div>
 
 <script>
-  function selectPagePaymentMode(mode) {
-    var upiOpt = document.getElementById('pageOptUpi');
-    var codOpt = document.getElementById('pageOptCod');
-    var upiRadio = document.getElementById('pageRadioUpi');
-    var codRadio = document.getElementById('pageRadioCod');
-    var upiRow = document.getElementById('pageUpiDiscountRow');
-    var totalEl = document.getElementById('pageTotal');
-    var savingsPill = document.getElementById('pageSavingsNote');
-    var couponInput = document.getElementById('pageCouponCode');
-    var couponFeedback = document.getElementById('pageCouponFeedback');
-    var checkoutBtn = document.getElementById('pageCheckoutBtn');
-
-    var cartTotalCents = {{ cart.total_price }};
-
-    if (mode === 'upi') {
-      if (upiOpt) upiOpt.classList.add('selected');
-      if (codOpt) codOpt.classList.remove('selected');
-      if (upiRadio) upiRadio.checked = true;
-      if (upiRow) upiRow.style.display = 'flex';
-      if (savingsPill) {
-        savingsPill.style.display = 'block';
-        savingsPill.innerHTML = '✨ Instant ₹100 Prepaid UPI Discount auto-applied at checkout';
-      }
-      if (couponInput && !couponInput.value) {
-        couponInput.value = 'UPI100';
-      }
-      if (couponFeedback) {
-        couponFeedback.style.display = 'block';
-        couponFeedback.style.color = '#2E6B38';
-        couponFeedback.innerHTML = '✓ Code "UPI100" active &bull; ₹100 auto-discount';
-      }
-
-      var discounted = Math.max(0, cartTotalCents - 10000);
-      if (totalEl) totalEl.textContent = '₹' + Math.round(discounted / 100).toLocaleString('en-IN');
-      var formDiscount = document.getElementById('cartFormDiscount');
-      var code = couponInput ? couponInput.value.trim().toUpperCase() : 'UPI100';
-      if (formDiscount) formDiscount.value = code || 'UPI100';
-      if (checkoutBtn) {
-        checkoutBtn.setAttribute('data-discount', code || 'UPI100');
-      }
-    } else {
-      if (codOpt) codOpt.classList.add('selected');
-      if (upiOpt) upiOpt.classList.remove('selected');
-      if (codRadio) codRadio.checked = true;
-      if (upiRow) upiRow.style.display = 'none';
-      if (savingsPill) {
-        savingsPill.style.display = 'block';
-        savingsPill.innerHTML = '💡 Switch to UPI / Cards to save ₹100 instantly';
-      }
-      if (couponFeedback) {
-        couponFeedback.style.display = 'none';
-      }
-
-      if (totalEl) totalEl.textContent = '₹' + Math.round(cartTotalCents / 100).toLocaleString('en-IN');
-      var formDiscount = document.getElementById('cartFormDiscount');
-      if (formDiscount) formDiscount.value = '';
-      if (checkoutBtn) {
-        checkoutBtn.removeAttribute('data-discount');
-      }
-    }
-  }
+  var cartTotalCents = {{ cart.total_price }};
 
   function applyPageCoupon() {
     var inp = document.getElementById('pageCouponCode');
     var feedback = document.getElementById('pageCouponFeedback');
     var btn = document.getElementById('pageCouponBtn');
+    var discountRow = document.getElementById('pageDiscountRow');
+    var totalEl = document.getElementById('pageTotal');
+    var formDiscount = document.getElementById('cartFormDiscount');
     var code = inp ? inp.value.trim().toUpperCase() : '';
 
-    if (code) {
+    if (code === 'UPI100' || code === 'SAVE100' || code === 'PREPAID100') {
       if (btn) btn.textContent = 'APPLIED';
+      if (discountRow) discountRow.style.display = 'flex';
+      var discounted = Math.max(0, cartTotalCents - 10000);
+      if (totalEl) totalEl.textContent = '₹' + Math.round(discounted / 100).toLocaleString('en-IN');
       if (feedback) {
         feedback.style.display = 'block';
         feedback.style.color = '#2E6B38';
-        feedback.innerHTML = '✓ Coupon "' + code + '" will be applied at checkout';
+        feedback.innerHTML = '✓ Code "' + code + '" applied &bull; ₹100 Prepaid discount';
       }
-      var formDiscount = document.getElementById('cartFormDiscount');
       if (formDiscount) formDiscount.value = code;
-    } else {
+    } else if (code.length > 0) {
+      if (btn) btn.textContent = 'APPLY';
       if (feedback) {
         feedback.style.display = 'block';
-        feedback.style.color = '#B45309';
-        feedback.innerHTML = 'Please enter a coupon code';
+        feedback.style.color = '#2E6B38';
+        feedback.innerHTML = '✓ Code "' + code + '" will be verified and applied at checkout';
       }
+      if (formDiscount) formDiscount.value = code;
+    } else {
+      // Cleared code
+      if (btn) btn.textContent = 'APPLY';
+      if (discountRow) discountRow.style.display = 'none';
+      if (totalEl) totalEl.textContent = '₹' + Math.round(cartTotalCents / 100).toLocaleString('en-IN');
+      if (feedback) {
+        feedback.style.display = 'none';
+      }
+      if (formDiscount) formDiscount.value = '';
     }
-  }
-
-  function proceedToCheckout(event) {
-    if (event) event.preventDefault();
-    var payMode = document.querySelector('input[name="pagePayMode"]:checked');
-    var mode = payMode ? payMode.value : 'upi';
-    var couponInput = document.getElementById('pageCouponCode');
-    var couponCode = couponInput ? couponInput.value.trim().toUpperCase() : '';
-
-    var targetUrl = '/checkout';
-    if (mode === 'upi') {
-      var activeCode = couponCode || 'UPI100';
-      targetUrl = '/checkout?discount=' + encodeURIComponent(activeCode);
-    } else if (couponCode && couponCode !== 'UPI100') {
-      targetUrl = '/checkout?discount=' + encodeURIComponent(couponCode);
-    }
-    window.location.href = targetUrl;
   }
 
   function updateCartPageQuantity(lineKey, newQty) {

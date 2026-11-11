@@ -695,24 +695,28 @@
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border-color);
     }
-    .summary-payment-selector {
-      background: #FAF8F5;
+    /* Luxury Prepaid Privilege Banner */
+    .summary-perk-banner {
+      background: #FAF7F2;
       border: 1px solid #EAE3D9;
       border-radius: 6px;
       padding: 12px 14px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
-    .summary-payment-header {
+    .summary-perk-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--text-main);
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
-    .summary-upi-save-badge {
+    .summary-perk-tag {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #9B7846;
+    }
+    .summary-perk-savings {
       background: #2E6B38;
       color: #FFFFFF;
       font-size: 9.5px;
@@ -721,20 +725,34 @@
       border-radius: 3px;
       letter-spacing: 0.06em;
     }
-    .summary-pay-option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      border: 1px solid transparent;
+    .summary-perk-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #1E1C19;
       margin-bottom: 4px;
-      transition: all 0.2s ease;
     }
-    .summary-pay-option.selected {
-      background: #FFFFFF;
-      border-color: #2E6B38;
+    .summary-perk-note {
+      font-size: 11px;
+      color: #6E6459;
+      margin: 0;
+      line-height: 1.45;
+    }
+    .summary-methods-badge {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed #EAE3D9;
+    }
+    .method-tag {
+      background: #FAF8F5;
+      border: 1px solid #EAE3D9;
+      color: #6E6459;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 3px;
     }
     .summary-coupon-row {
       display: flex;
