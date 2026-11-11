@@ -59,6 +59,93 @@
             el.innerHTML = '&#8377;4,499';
           }
         });
+
+        // 3. Cart Page Suggestion Products: replace legacy category cards with particular suits & co-ord sets
+        var legacyCard = document.querySelector('.crosssell-card a[href*="/collections/festive-suits"], a.crosssell-add-btn[href*="/collections/"], .crosssell-card img[src*="campaign_cafe"]');
+        if (legacyCard) {
+          var grid = document.querySelector('.crosssell-grid');
+          if (grid && !grid.getAttribute('data-particular-synced')) {
+            grid.setAttribute('data-particular-synced', 'true');
+            grid.innerHTML = `
+              <a href="/products/noor-chanderi-silk-straight-kurta-suit" class="crosssell-card">
+                <div class="crosssell-thumb-wrap">
+                  <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/DSC09628.jpg?v=1793648783" alt="The Noor Petrol Teal Chanderi Suit" class="crosssell-thumb" loading="lazy">
+                  <span class="crosssell-badge">Festive Suit</span>
+                </div>
+                <div class="crosssell-body">
+                  <div>
+                    <div class="crosssell-cat">Pure Chanderi Silk</div>
+                    <h4 class="crosssell-card-title">The Noor Petrol Teal Chanderi Suit</h4>
+                  </div>
+                  <div>
+                    <div class="crosssell-price-row">
+                      <span class="crosssell-price">&#8377;2,999</span>
+                      <span class="crosssell-mrp">&#8377;4,799</span>
+                    </div>
+                    <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
+                  </div>
+                </div>
+              </a>
+              <a href="/products/mustard-crepe-angrakha-co-ord-set" class="crosssell-card">
+                <div class="crosssell-thumb-wrap">
+                  <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/MustardElegancewithPampasAccent.png?v=1793999431" alt="The Gulzar Angrakha Crepe Silk Set" class="crosssell-thumb" loading="lazy">
+                  <span class="crosssell-badge">Co-ord Set</span>
+                </div>
+                <div class="crosssell-body">
+                  <div>
+                    <div class="crosssell-cat">Crepe Silk Angrakha</div>
+                    <h4 class="crosssell-card-title">The Gulzar Angrakha Crepe Silk Set</h4>
+                  </div>
+                  <div>
+                    <div class="crosssell-price-row">
+                      <span class="crosssell-price">&#8377;2,399</span>
+                      <span class="crosssell-mrp">&#8377;3,799</span>
+                    </div>
+                    <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
+                  </div>
+                </div>
+              </a>
+              <a href="/products/roohani-chanderi-sharara-festive-set" class="crosssell-card">
+                <div class="crosssell-thumb-wrap">
+                  <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/DSC09411.jpg?v=1793916535" alt="The Roohani Champagne Sharara Set" class="crosssell-thumb" loading="lazy">
+                  <span class="crosssell-badge">Sharara Set</span>
+                </div>
+                <div class="crosssell-body">
+                  <div>
+                    <div class="crosssell-cat">Zari Chanderi Silk</div>
+                    <h4 class="crosssell-card-title">The Roohani Champagne Sharara Set</h4>
+                  </div>
+                  <div>
+                    <div class="crosssell-price-row">
+                      <span class="crosssell-price">&#8377;3,199</span>
+                      <span class="crosssell-mrp">&#8377;4,999</span>
+                    </div>
+                    <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
+                  </div>
+                </div>
+              </a>
+              <a href="/products/lime-silk-v-neck-tunic-co-ord" class="crosssell-card">
+                <div class="crosssell-thumb-wrap">
+                  <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/ElegantYellowEmbroideredPortrait.png?v=1793918415" alt="The Mehr Lime Silk Blend Tunic Set" class="crosssell-thumb" loading="lazy">
+                  <span class="crosssell-badge">Co-ord Set</span>
+                </div>
+                <div class="crosssell-body">
+                  <div>
+                    <div class="crosssell-cat">Silk Blend Tunic</div>
+                    <h4 class="crosssell-card-title">The Mehr Lime Silk Blend Tunic Set</h4>
+                  </div>
+                  <div>
+                    <div class="crosssell-price-row">
+                      <span class="crosssell-price">&#8377;2,499</span>
+                      <span class="crosssell-mrp">&#8377;3,999</span>
+                    </div>
+                    <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
+                  </div>
+                </div>
+              </a>
+            `;
+          }
+        }
       }
 
       // Run immediately if DOM elements exist, and on ready/load events

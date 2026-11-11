@@ -118,40 +118,178 @@
             {% endfor %}
           </div>
 
-          <!-- Cross-sell Curated Pairings -->
+          <!-- Cross-sell Curated Pairings (Particular Suits & Co-ord Sets) -->
           <div class="cart-page-crosssell">
             <div class="crosssell-header">
               <div>
                 <span class="crosssell-eyebrow">CURATED PAIRINGS</span>
                 <h3 class="crosssell-title">Complete Your Drop 01 Ensemble</h3>
               </div>
-              <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Strict Scarcity: 3 Per Size</span>
+              <span class="crosssell-scarcity">Strict Scarcity &bull; Handcrafted in Chandigarh</span>
             </div>
+
+            {% assign cart_product_ids = cart.items | map: 'product_id' %}
+            {% assign rendered_count = 0 %}
+
             <div class="crosssell-grid">
-              <div class="crosssell-card">
-                <img src="{{ 'campaign_cafe.jpg' | asset_url }}" alt="Chanderi Silk Suit" class="crosssell-img">
-                <div class="crosssell-card-title">Chanderi Silk Festive Suit</div>
-                <div class="crosssell-card-price">&#8377;2,299</div>
-                <a href="/collections/festive-suits" class="crosssell-add-btn" style="text-align:center; text-decoration:none;">VIEW PIECE</a>
-              </div>
-              <div class="crosssell-card">
-                <img src="{{ 'campaign_balcony.jpg' | asset_url }}" alt="Mustard Crepe Angrakha" class="crosssell-img">
-                <div class="crosssell-card-title">Mustard Crepe Angrakha</div>
-                <div class="crosssell-card-price">&#8377;1,699</div>
-                <a href="/collections/co-ord-sets" class="crosssell-add-btn" style="text-align:center; text-decoration:none;">VIEW PIECE</a>
-              </div>
-              <div class="crosssell-card">
-                <img src="{{ 'campaign_sukhna.jpg' | asset_url }}" alt="Porcelain Wrap Dress" class="crosssell-img">
-                <div class="crosssell-card-title">Porcelain Wrap Dress</div>
-                <div class="crosssell-card-price">&#8377;1,599</div>
-                <a href="/collections/dresses" class="crosssell-add-btn" style="text-align:center; text-decoration:none;">VIEW PIECE</a>
-              </div>
-              <div class="crosssell-card">
-                <img src="{{ 'craft_crepe.jpg' | asset_url }}" alt="Silk Crepe Co-ord" class="crosssell-img">
-                <div class="crosssell-card-title">Silk Crepe Co-ord</div>
-                <div class="crosssell-card-price">&#8377;1,899</div>
-                <a href="/collections/co-ord-sets" class="crosssell-add-btn" style="text-align:center; text-decoration:none;">VIEW PIECE</a>
-              </div>
+              {% comment %}
+                1. Prioritize particular suits, co-ords, and sharara sets from Drop 01
+              {% endcomment %}
+              {% assign curated_handles = "noor-chanderi-silk-straight-kurta-suit,mustard-crepe-angrakha-co-ord-set,roohani-chanderi-sharara-festive-set,lime-silk-v-neck-tunic-co-ord,the-royal-wine-chanderi-festive-suit,the-gulabi-organza-festive-suit,lime-halter-dobby-palazzo-set,white-porcelain-floral-wrap-dress" | split: "," %}
+
+              {% for handle in curated_handles %}
+                {% assign cur_product = all_products[handle] %}
+                {% if cur_product != blank and cur_product.id != blank %}
+                  {% unless cart_product_ids contains cur_product.id %}
+                    {% if rendered_count < 4 %}
+                      <a href="{{ cur_product.url }}" class="crosssell-card">
+                        <div class="crosssell-thumb-wrap">
+                          {% if cur_product.featured_image != blank %}
+                            <img src="{{ cur_product.featured_image | image_url: width: 360 }}" alt="{{ cur_product.title | escape }}" class="crosssell-thumb" loading="lazy">
+                          {% else %}
+                            <img src="{{ 'DSC09628.jpg' | file_url }}" alt="{{ cur_product.title | escape }}" class="crosssell-thumb" loading="lazy">
+                          {% endif %}
+                          <span class="crosssell-badge">
+                            {% if cur_product.title contains 'Suit' or cur_product.type contains 'Suit' %}
+                              Festive Suit
+                            {% elsif cur_product.title contains 'Co-ord' or cur_product.title contains 'Set' or cur_product.type contains 'Co-ord' %}
+                              Co-ord Set
+                            {% elsif cur_product.title contains 'Sharara' %}
+                              Sharara Set
+                            {% elsif cur_product.title contains 'Dress' or cur_product.type contains 'Dress' %}
+                              Dress
+                            {% else %}
+                              Atelier Pret
+                            {% endif %}
+                          </span>
+                        </div>
+                        <div class="crosssell-body">
+                          <div>
+                            <div class="crosssell-cat">
+                              {% if cur_product.title contains 'Chanderi' %}
+                                Pure Chanderi Silk
+                              {% elsif cur_product.title contains 'Crepe' %}
+                                Crepe Silk Angrakha
+                              {% elsif cur_product.title contains 'Sharara' %}
+                                Zari Chanderi Silk
+                              {% elsif cur_product.title contains 'Tunic' %}
+                                Silk Blend Tunic
+                              {% else %}
+                                Handcrafted Pret
+                              {% endif %}
+                            </div>
+                            <h4 class="crosssell-card-title">{{ cur_product.title }}</h4>
+                          </div>
+                          <div>
+                            <div class="crosssell-price-row">
+                              <span class="crosssell-price">{{ cur_product.price | money }}</span>
+                              {% if cur_product.compare_at_price > cur_product.price %}
+                                <span class="crosssell-mrp">{{ cur_product.compare_at_price | money }}</span>
+                              {% endif %}
+                            </div>
+                            <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
+                          </div>
+                        </div>
+                      </a>
+                      {% assign rendered_count = rendered_count | plus: 1 %}
+                    {% endif %}
+                  {% endunless %}
+                {% endif %}
+              {% endfor %}
+
+              {% comment %}
+                2. Fallback: If for any reason all_products wasn't accessible in this store context,
+                render verified Drop 01 suits and co-ords with high-res studio assets.
+              {% endcomment %}
+              {% if rendered_count < 4 %}
+                {% if rendered_count < 1 %}
+                  <a href="/products/noor-chanderi-silk-straight-kurta-suit" class="crosssell-card">
+                    <div class="crosssell-thumb-wrap">
+                      <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/DSC09628.jpg?v=1793648783" alt="The Noor Petrol Teal Chanderi Suit" class="crosssell-thumb" loading="lazy">
+                      <span class="crosssell-badge">Festive Suit</span>
+                    </div>
+                    <div class="crosssell-body">
+                      <div>
+                        <div class="crosssell-cat">Pure Chanderi Silk</div>
+                        <h4 class="crosssell-card-title">The Noor Petrol Teal Chanderi Suit</h4>
+                      </div>
+                      <div>
+                        <div class="crosssell-price-row">
+                          <span class="crosssell-price">&#8377;2,999</span>
+                          <span class="crosssell-mrp">&#8377;4,799</span>
+                        </div>
+                        <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
+                      </div>
+                    </div>
+                  </a>
+                {% endif %}
+
+                {% if rendered_count < 2 %}
+                  <a href="/products/mustard-crepe-angrakha-co-ord-set" class="crosssell-card">
+                    <div class="crosssell-thumb-wrap">
+                      <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/MustardElegancewithPampasAccent.png?v=1793999431" alt="The Gulzar Angrakha Crepe Silk Set" class="crosssell-thumb" loading="lazy">
+                      <span class="crosssell-badge">Co-ord Set</span>
+                    </div>
+                    <div class="crosssell-body">
+                      <div>
+                        <div class="crosssell-cat">Crepe Silk Angrakha</div>
+                        <h4 class="crosssell-card-title">The Gulzar Angrakha Crepe Silk Set</h4>
+                      </div>
+                      <div>
+                        <div class="crosssell-price-row">
+                          <span class="crosssell-price">&#8377;2,399</span>
+                          <span class="crosssell-mrp">&#8377;3,799</span>
+                        </div>
+                        <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
+                      </div>
+                    </div>
+                  </a>
+                {% endif %}
+
+                {% if rendered_count < 3 %}
+                  <a href="/products/roohani-chanderi-sharara-festive-set" class="crosssell-card">
+                    <div class="crosssell-thumb-wrap">
+                      <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/DSC09411.jpg?v=1793916535" alt="The Roohani Champagne Sharara Set" class="crosssell-thumb" loading="lazy">
+                      <span class="crosssell-badge">Sharara Set</span>
+                    </div>
+                    <div class="crosssell-body">
+                      <div>
+                        <div class="crosssell-cat">Zari Chanderi Silk</div>
+                        <h4 class="crosssell-card-title">The Roohani Champagne Sharara Set</h4>
+                      </div>
+                      <div>
+                        <div class="crosssell-price-row">
+                          <span class="crosssell-price">&#8377;3,199</span>
+                          <span class="crosssell-mrp">&#8377;4,999</span>
+                        </div>
+                        <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
+                      </div>
+                    </div>
+                  </a>
+                {% endif %}
+
+                {% if rendered_count < 4 %}
+                  <a href="/products/lime-silk-v-neck-tunic-co-ord" class="crosssell-card">
+                    <div class="crosssell-thumb-wrap">
+                      <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/ElegantYellowEmbroideredPortrait.png?v=1793918415" alt="The Mehr Lime Silk Blend Tunic Set" class="crosssell-thumb" loading="lazy">
+                      <span class="crosssell-badge">Co-ord Set</span>
+                    </div>
+                    <div class="crosssell-body">
+                      <div>
+                        <div class="crosssell-cat">Silk Blend Tunic</div>
+                        <h4 class="crosssell-card-title">The Mehr Lime Silk Blend Tunic Set</h4>
+                      </div>
+                      <div>
+                        <div class="crosssell-price-row">
+                          <span class="crosssell-price">&#8377;2,499</span>
+                          <span class="crosssell-mrp">&#8377;3,999</span>
+                        </div>
+                        <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
+                      </div>
+                    </div>
+                  </a>
+                {% endif %}
+              {% endif %}
             </div>
           </div>
 
