@@ -1,12 +1,8 @@
-<script>
-  if (window.location.pathname.indexOf('jaipur-chanderi-silk-festive-suit') !== -1) {
-    window.location.replace('/products/the-royal-wine-chanderi-festive-suit');
-  } else if (window.location.pathname.indexOf('track') !== -1 || window.location.pathname.indexOf('order') !== -1) {
-    window.location.replace('/#track-order');
-  }
-</script>
+<div id="custom404MyOrdersContainer" style="display:none; width:100%;">
+  {% render 'my-orders-view' %}
+</div>
 
-<div class="page-404-container" style="max-width: 720px; margin: 80px auto; padding: 40px 20px; text-align: center; min-height: 50vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+<div id="standard404Content" class="page-404-container" style="max-width: 720px; margin: 80px auto; padding: 40px 20px; text-align: center; min-height: 50vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
   <span style="display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #9E7D47; background: rgba(158,125,71,0.12); border: 1px solid rgba(158,125,71,0.3); padding: 5px 14px; border-radius: 20px; margin-bottom: 18px;">
     Atelier Directory &bull; Error 404
   </span>
@@ -25,6 +21,20 @@
     </a>
   </div>
 </div>
+
+<script>
+  if (window.location.pathname.indexOf('jaipur-chanderi-silk-festive-suit') !== -1) {
+    window.location.replace('/products/the-royal-wine-chanderi-festive-suit');
+  } else if (window.location.pathname.indexOf('my-orders') !== -1 || window.location.pathname.indexOf('orders') !== -1) {
+    var ordersCont = document.getElementById('custom404MyOrdersContainer');
+    var std404 = document.getElementById('standard404Content');
+    if (ordersCont && std404) {
+      ordersCont.style.display = 'block';
+      std404.style.display = 'none';
+      document.title = 'My Orders & Purchases — Meenu Label';
+    }
+  }
+</script>
 
 {% schema %}
 {

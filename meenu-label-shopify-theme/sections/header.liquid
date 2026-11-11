@@ -43,8 +43,8 @@
         <span class="header-badge-pill header-cart-pill" id="headerCartCount" {% if cart.item_count > 0 %}style="display:inline-flex;"{% else %}style="display:none;"{% endif %}>{{ cart.item_count | default: 0 }}</span>
       </a>
 
-      <!-- 3. User Account & All Orders Link (Direct Portal) -->
-      <a href="/account" class="header-icon-action header-account-btn" title="My Account &amp; Orders" aria-label="Account" style="position:relative; text-decoration:none; color:inherit; display:flex; align-items:center;">
+      <!-- 3. User Account & All Orders Link (Direct In-Theme Portal) -->
+      <a href="/pages/my-orders" class="header-icon-action header-account-btn" title="My Orders &amp; Purchases" aria-label="Account" style="position:relative; text-decoration:none; color:inherit; display:flex; align-items:center;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
           <circle cx="12" cy="7.5" r="4"></circle>
           <path d="M5 20.5a7 7 0 0 1 14 0"></path>
