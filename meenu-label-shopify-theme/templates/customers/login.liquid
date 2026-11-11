@@ -1,0 +1,139 @@
+<div class="customer-login-section" style="background: #FAF8F5; min-height: 85vh; padding: 60px 20px 100px; display: flex; align-items: center; justify-content: center;">
+  <div style="max-width: 480px; width: 100%; margin: 0 auto;">
+
+    <!-- Brand Emblem -->
+    <div style="text-align: center; margin-bottom: 28px;">
+      <a href="/" style="text-decoration: none; display: inline-block;">
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 700; letter-spacing: 0.18em; color: #1E1C19;">MEENU</span>
+        <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 9px; letter-spacing: 0.35em; color: #8C8275; display: block; margin-top: -2px;">LABEL</span>
+      </a>
+    </div>
+
+    <!-- Card -->
+    <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; padding: 36px 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
+
+      <!-- LOGIN FORM -->
+      <div id="CustomerLoginForm">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #C5A059;">ATELIER PORTAL</span>
+          <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 600; color: #1E1C19; margin: 4px 0 6px 0;">
+            Sign In to Your Account
+          </h1>
+          <p style="font-size: 12.5px; color: #6E6459; margin: 0;">
+            Access order history, live tracking, and saved measurements.
+          </p>
+        </div>
+
+        {% form 'customer_login' %}
+          {% if form.errors %}
+            <div style="background: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 12px 14px; border-radius: 6px; font-size: 12px; margin-bottom: 20px;">
+              {{ form.errors | default_errors }}
+            </div>
+          {% endif %}
+
+          <div style="margin-bottom: 18px;">
+            <label for="CustomerEmail" style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1E1C19; margin-bottom: 6px;">
+              Email Address
+            </label>
+            <input type="email" name="customer[email]" id="CustomerEmail" autocomplete="email" required style="width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; font-family: inherit; background: #FAF8F5; outline: none; transition: border-color 0.2s;">
+          </div>
+
+          {% if form.password_needed %}
+            <div style="margin-bottom: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                <label for="CustomerPassword" style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1E1C19;">
+                  Password
+                </label>
+                <a href="#recover" onclick="showRecoverPasswordForm(); return false;" style="font-size: 11px; color: #9B7846; text-decoration: none; font-weight: 600;">
+                  Forgot password?
+                </a>
+              </div>
+              <input type="password" name="customer[password]" id="CustomerPassword" autocomplete="current-password" required style="width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; font-family: inherit; background: #FAF8F5; outline: none; transition: border-color 0.2s;">
+            </div>
+          {% endif %}
+
+          <button type="submit" style="width: 100%; padding: 13px 20px; background: #1E1C19; color: #FFFFFF; font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s;">
+            SIGN IN TO ATELIER &rarr;
+          </button>
+        {% endform %}
+
+        <div style="text-align: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid #F0EAE1; font-size: 12.5px; color: #6E6459;">
+          Don't have an Atelier account? 
+          <a href="{{ routes.account_register_url }}" style="color: #1E1C19; font-weight: 700; text-decoration: underline;">
+            Create VIP Account
+          </a>
+        </div>
+      </div>
+
+      <!-- RECOVER PASSWORD FORM (HIDDEN BY DEFAULT) -->
+      <div id="RecoverPasswordForm" style="display: none;">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #C5A059;">ACCOUNT RECOVERY</span>
+          <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 600; color: #1E1C19; margin: 4px 0 6px 0;">
+            Reset Your Password
+          </h2>
+          <p style="font-size: 12.5px; color: #6E6459; margin: 0;">
+            We will send you an email to reset your password.
+          </p>
+        </div>
+
+        {% form 'recover_customer_password' %}
+          {% if form.errors %}
+            <div style="background: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 12px 14px; border-radius: 6px; font-size: 12px; margin-bottom: 20px;">
+              {{ form.errors | default_errors }}
+            </div>
+          {% endif %}
+
+          {% if form.posted_successfully? %}
+            <div style="background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; padding: 12px 14px; border-radius: 6px; font-size: 12px; margin-bottom: 20px;">
+              We have sent you an email with a link to update your password.
+            </div>
+          {% endif %}
+
+          <div style="margin-bottom: 20px;">
+            <label for="RecoverEmail" style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1E1C19; margin-bottom: 6px;">
+              Email Address
+            </label>
+            <input type="email" name="email" id="RecoverEmail" autocomplete="email" required style="width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; font-family: inherit; background: #FAF8F5; outline: none;">
+          </div>
+
+          <button type="submit" style="width: 100%; padding: 13px 20px; background: #1E1C19; color: #FFFFFF; font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: none; border-radius: 6px; cursor: pointer;">
+            SUBMIT PASSWORD RESET &rarr;
+          </button>
+
+          <div style="text-align: center; margin-top: 18px;">
+            <a href="#login" onclick="hideRecoverPasswordForm(); return false;" style="font-size: 11.5px; color: #8C8275; text-decoration: underline; font-weight: 600;">
+              Cancel &amp; Return to Sign In
+            </a>
+          </div>
+        {% endform %}
+      </div>
+
+    </div>
+
+    <!-- Quick Concierge Help -->
+    <div style="text-align: center; margin-top: 24px; font-size: 12px; color: #8C8275;">
+      Need assistance? Contact our Chandigarh Atelier Concierge on 
+      <a href="https://wa.me/918511616133" target="_blank" style="color: #25D366; font-weight: 700; text-decoration: none;">
+        WhatsApp (+91 85116 16133)
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function showRecoverPasswordForm() {
+    document.getElementById('RecoverPasswordForm').style.display = 'block';
+    document.getElementById('CustomerLoginForm').style.display = 'none';
+  }
+
+  function hideRecoverPasswordForm() {
+    document.getElementById('RecoverPasswordForm').style.display = 'none';
+    document.getElementById('CustomerLoginForm').style.display = 'block';
+  }
+
+  if (window.location.hash === '#recover') {
+    showRecoverPasswordForm();
+  }
+</script>

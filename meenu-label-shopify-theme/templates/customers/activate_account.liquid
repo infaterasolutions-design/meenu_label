@@ -1,0 +1,59 @@
+<div class="customer-activate-section" style="background: #FAF8F5; min-height: 85vh; padding: 60px 20px 100px; display: flex; align-items: center; justify-content: center;">
+  <div style="max-width: 460px; width: 100%; margin: 0 auto;">
+
+    <!-- Brand Emblem -->
+    <div style="text-align: center; margin-bottom: 28px;">
+      <a href="/" style="text-decoration: none; display: inline-block;">
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 700; letter-spacing: 0.18em; color: #1E1C19;">MEENU</span>
+        <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 9px; letter-spacing: 0.35em; color: #8C8275; display: block; margin-top: -2px;">LABEL</span>
+      </a>
+    </div>
+
+    <!-- Card -->
+    <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; padding: 36px 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
+      
+      <div style="text-align: center; margin-bottom: 24px;">
+        <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #C5A059;">WELCOME TO THE ATELIER</span>
+        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 600; color: #1E1C19; margin: 4px 0 6px 0;">
+          Activate Your Account
+        </h1>
+        <p style="font-size: 12.5px; color: #6E6459; margin: 0;">
+          Create your password to activate your Meenu Label account.
+        </p>
+      </div>
+
+      {% form 'activate_customer_password' %}
+        {% if form.errors %}
+          <div style="background: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 12px 14px; border-radius: 6px; font-size: 12px; margin-bottom: 20px;">
+            {{ form.errors | default_errors }}
+          </div>
+        {% endif %}
+
+        <div style="margin-bottom: 16px;">
+          <label for="ActivatePassword" style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1E1C19; margin-bottom: 6px;">
+            Password
+          </label>
+          <input type="password" name="customer[password]" id="ActivatePassword" autocomplete="new-password" required minlength="6" style="width: 100%; box-sizing: border-box; padding: 11px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; font-family: inherit; background: #FAF8F5; outline: none;">
+        </div>
+
+        <div style="margin-bottom: 22px;">
+          <label for="ActivatePasswordConfirm" style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1E1C19; margin-bottom: 6px;">
+            Confirm Password
+          </label>
+          <input type="password" name="customer[password_confirmation]" id="ActivatePasswordConfirm" autocomplete="new-password" required minlength="6" style="width: 100%; box-sizing: border-box; padding: 11px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; font-family: inherit; background: #FAF8F5; outline: none;">
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="submit" style="flex: 1; padding: 13px 20px; background: #1E1C19; color: #FFFFFF; font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: none; border-radius: 6px; cursor: pointer;">
+            ACTIVATE ACCOUNT
+          </button>
+          <button type="submit" name="decline" style="padding: 13px 18px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #6E6459; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 6px; cursor: pointer;">
+            DECLINE
+          </button>
+        </div>
+      {% endform %}
+
+    </div>
+
+  </div>
+</div>

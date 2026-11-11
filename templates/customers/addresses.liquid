@@ -1,0 +1,213 @@
+<div class="customer-addresses-section" style="background: #FAF8F5; min-height: 85vh; padding: 40px 20px 80px;">
+  <div class="customer-addresses-container" style="max-width: 1000px; margin: 0 auto;">
+    
+    <!-- Breadcrumb -->
+    <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #8C8275; margin-bottom: 24px;">
+      <a href="/" style="color: inherit; text-decoration: none;">HOME</a> &nbsp;/&nbsp; 
+      <a href="{{ routes.account_url }}" style="color: inherit; text-decoration: none;">MY ACCOUNT</a> &nbsp;/&nbsp; 
+      <span style="color: #1E1C19;">SAVED ADDRESSES</span>
+    </div>
+
+    <!-- Header Banner -->
+    <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; padding: 28px 32px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+      <div>
+        <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #C5A059;">DELIVERY BOOK</span>
+        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 600; color: #1E1C19; margin: 2px 0 4px 0;">
+          Saved Addresses ({{ customer.addresses_count }})
+        </h1>
+        <div style="font-size: 12.5px; color: #6E6459;">
+          Manage delivery destinations for seamless one-click order placement.
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="button" onclick="toggleNewAddressForm()" style="padding: 10px 20px; background: #1E1C19; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer;">
+          + ADD NEW ADDRESS
+        </button>
+        <a href="{{ routes.account_url }}" style="display: inline-block; padding: 10px 18px; border: 1px solid #D6CEC3; background: #FAF8F5; color: #1E1C19; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+          &larr; BACK
+        </a>
+      </div>
+    </div>
+
+    <!-- ADD NEW ADDRESS FORM (COLLAPSIBLE) -->
+    <div id="AddAddressCard" style="display: none; background: #FFFFFF; border: 1px solid #C5A059; border-radius: 12px; padding: 32px; margin-bottom: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+      <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #C5A059; margin-bottom: 4px;">NEW DESTINATION</div>
+      <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 600; color: #1E1C19; margin: 0 0 20px 0;">
+        Add a New Delivery Address
+      </h2>
+
+      {% form 'customer_address', customer.new_address %}
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 5px;">First Name</label>
+            <input type="text" name="address[first_name]" value="{{ form.first_name }}" required style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; background: #FAF8F5;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 5px;">Last Name</label>
+            <input type="text" name="address[last_name]" value="{{ form.last_name }}" required style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; background: #FAF8F5;">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 5px;">Street Address / Flat No.</label>
+          <input type="text" name="address[address1]" value="{{ form.address1 }}" required style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; background: #FAF8F5;">
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 5px;">Apartment, suite, landmark (optional)</label>
+          <input type="text" name="address[address2]" value="{{ form.address2 }}" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; background: #FAF8F5;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 5px;">City</label>
+            <input type="text" name="address[city]" value="{{ form.city }}" required style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; background: #FAF8F5;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 5px;">Country</label>
+            <select name="address[country]" id="AddressCountryNew" data-default="India" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; background: #FAF8F5;">
+              {{ all_country_option_tags }}
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 5px;">Postal / ZIP Code</label>
+            <input type="text" name="address[zip]" value="{{ form.zip }}" required style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; background: #FAF8F5;">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 18px;">
+          <label style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 5px;">Phone Number (for Courier Delivery)</label>
+          <input type="tel" name="address[phone]" value="{{ form.phone }}" required placeholder="+91 98765 43210" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; background: #FAF8F5;">
+        </div>
+
+        <div style="margin-bottom: 22px; display: flex; align-items: center; gap: 8px;">
+          {{ form.set_as_default_checkbox }}
+          <label for="address_default_address_{{ form.id }}" style="font-size: 12px; color: #4A4238; cursor: pointer;">
+            Set as default shipping address
+          </label>
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+          <button type="submit" style="padding: 12px 24px; background: #1E1C19; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer;">
+            SAVE ADDRESS
+          </button>
+          <button type="button" onclick="toggleNewAddressForm()" style="padding: 12px 20px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px; cursor: pointer;">
+            CANCEL
+          </button>
+        </div>
+      {% endform %}
+    </div>
+
+    <!-- ADDRESSES GRID -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+      {% for address in customer.addresses %}
+        <div style="background: #FFFFFF; border: 1px solid {% if address == customer.default_address %}#C5A059{% else %}#EAE5DE{% endif %}; border-radius: 12px; padding: 24px; position: relative; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
+          
+          {% if address == customer.default_address %}
+            <div style="position: absolute; top: 18px; right: 20px; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9B7846; font-size: 9px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px;">
+              &#10003; DEFAULT ADDRESS
+            </div>
+          {% endif %}
+
+          <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 600; color: #1E1C19; margin: 0 0 12px 0;">
+            {{ address.first_name }} {{ address.last_name }}
+          </h3>
+
+          <div style="font-size: 13px; color: #4A4238; line-height: 1.6; margin-bottom: 18px;">
+            {{ address.address1 }}<br>
+            {% if address.address2 != blank %}{{ address.address2 }}<br>{% endif %}
+            {{ address.city }}, {{ address.province_code }} {{ address.zip }}<br>
+            {{ address.country }}<br>
+            {% if address.phone != blank %}
+              <span style="color: #8C8275;">Phone:</span> {{ address.phone }}
+            {% endif %}
+          </div>
+
+          <div style="display: flex; gap: 10px; border-top: 1px solid #F0EAE1; padding-top: 14px;">
+            <button type="button" onclick="toggleEditAddressForm('{{ address.id }}')" style="padding: 7px 14px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px; cursor: pointer;">
+              EDIT
+            </button>
+            
+            <form method="post" action="/account/addresses/{{ address.id }}" onsubmit="return confirm('Are you sure you wish to delete this address?');" style="display: inline-block; margin: 0;">
+              <input type="hidden" name="_method" value="delete">
+              <button type="submit" style="padding: 7px 14px; background: transparent; border: 1px solid #FCA5A5; color: #991B1B; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px; cursor: pointer;">
+                DELETE
+              </button>
+            </form>
+          </div>
+
+          <!-- EDIT FORM ACCORDION -->
+          <div id="EditAddress_{{ address.id }}" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid #F0EAE1;">
+            {% form 'customer_address', address %}
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                <div>
+                  <label style="display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">First Name</label>
+                  <input type="text" name="address[first_name]" value="{{ form.first_name }}" required style="width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">Last Name</label>
+                  <input type="text" name="address[last_name]" value="{{ form.last_name }}" required style="width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px;">
+                </div>
+              </div>
+
+              <div style="margin-bottom: 10px;">
+                <label style="display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">Address</label>
+                <input type="text" name="address[address1]" value="{{ form.address1 }}" required style="width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px;">
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                <div>
+                  <label style="display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">City</label>
+                  <input type="text" name="address[city]" value="{{ form.city }}" required style="width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">PIN Code</label>
+                  <input type="text" name="address[zip]" value="{{ form.zip }}" required style="width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px;">
+                </div>
+              </div>
+
+              <div style="margin-bottom: 12px;">
+                <label style="display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">Phone</label>
+                <input type="tel" name="address[phone]" value="{{ form.phone }}" required style="width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px;">
+              </div>
+
+              <div style="margin-bottom: 14px; display: flex; align-items: center; gap: 6px;">
+                {{ form.set_as_default_checkbox }}
+                <label for="address_default_address_{{ form.id }}" style="font-size: 11px; color: #4A4238; cursor: pointer;">
+                  Set as default
+                </label>
+              </div>
+
+              <div style="display: flex; gap: 8px;">
+                <button type="submit" style="padding: 9px 16px; background: #1E1C19; color: #FFFFFF; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer;">
+                  UPDATE
+                </button>
+                <button type="button" onclick="toggleEditAddressForm('{{ address.id }}')" style="padding: 9px 14px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px; cursor: pointer;">
+                  CANCEL
+                </button>
+              </div>
+            {% endform %}
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function toggleNewAddressForm() {
+    var card = document.getElementById('AddAddressCard');
+    card.style.display = card.style.display === 'none' ? 'block' : 'none';
+    if (card.style.display === 'block') {
+      card.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  function toggleEditAddressForm(id) {
+    var form = document.getElementById('EditAddress_' + id);
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  }
+</script>

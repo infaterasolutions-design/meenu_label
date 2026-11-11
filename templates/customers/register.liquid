@@ -1,0 +1,77 @@
+<div class="customer-register-section" style="background: #FAF8F5; min-height: 85vh; padding: 60px 20px 100px; display: flex; align-items: center; justify-content: center;">
+  <div style="max-width: 480px; width: 100%; margin: 0 auto;">
+
+    <!-- Brand Emblem -->
+    <div style="text-align: center; margin-bottom: 28px;">
+      <a href="/" style="text-decoration: none; display: inline-block;">
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 700; letter-spacing: 0.18em; color: #1E1C19;">MEENU</span>
+        <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 9px; letter-spacing: 0.35em; color: #8C8275; display: block; margin-top: -2px;">LABEL</span>
+      </a>
+    </div>
+
+    <!-- Card -->
+    <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; padding: 36px 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.03);">
+      
+      <div style="text-align: center; margin-bottom: 24px;">
+        <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #C5A059;">JOIN THE ATELIER</span>
+        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 600; color: #1E1C19; margin: 4px 0 6px 0;">
+          Create VIP Client Account
+        </h1>
+        <p style="font-size: 12.5px; color: #6E6459; margin: 0;">
+          Enjoy early drop access, prepaid savings, and order tracking.
+        </p>
+      </div>
+
+      {% form 'create_customer' %}
+        {% if form.errors %}
+          <div style="background: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 12px 14px; border-radius: 6px; font-size: 12px; margin-bottom: 20px;">
+            {{ form.errors | default_errors }}
+          </div>
+        {% endif %}
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+          <div>
+            <label for="FirstName" style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1E1C19; margin-bottom: 6px;">
+              First Name
+            </label>
+            <input type="text" name="customer[first_name]" id="FirstName" {% if form.first_name %}value="{{ form.first_name }}"{% endif %} autocomplete="given-name" required style="width: 100%; box-sizing: border-box; padding: 11px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; font-family: inherit; background: #FAF8F5; outline: none;">
+          </div>
+          <div>
+            <label for="LastName" style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1E1C19; margin-bottom: 6px;">
+              Last Name
+            </label>
+            <input type="text" name="customer[last_name]" id="LastName" {% if form.last_name %}value="{{ form.last_name }}"{% endif %} autocomplete="family-name" required style="width: 100%; box-sizing: border-box; padding: 11px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; font-family: inherit; background: #FAF8F5; outline: none;">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <label for="Email" style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1E1C19; margin-bottom: 6px;">
+            Email Address
+          </label>
+          <input type="email" name="customer[email]" id="Email" {% if form.email %}value="{{ form.email }}"{% endif %} autocomplete="email" required style="width: 100%; box-sizing: border-box; padding: 11px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; font-family: inherit; background: #FAF8F5; outline: none;">
+        </div>
+
+        <div style="margin-bottom: 22px;">
+          <label for="CreatePassword" style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1E1C19; margin-bottom: 6px;">
+            Password
+          </label>
+          <input type="password" name="customer[password]" id="CreatePassword" autocomplete="new-password" required minlength="6" style="width: 100%; box-sizing: border-box; padding: 11px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 13px; font-family: inherit; background: #FAF8F5; outline: none;">
+          <div style="font-size: 11px; color: #8C8275; margin-top: 4px;">Must be at least 6 characters.</div>
+        </div>
+
+        <button type="submit" style="width: 100%; padding: 13px 20px; background: #1E1C19; color: #FFFFFF; font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s;">
+          CREATE VIP ACCOUNT &rarr;
+        </button>
+      {% endform %}
+
+      <div style="text-align: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid #F0EAE1; font-size: 12.5px; color: #6E6459;">
+        Already an Atelier member? 
+        <a href="{{ routes.account_login_url }}" style="color: #1E1C19; font-weight: 700; text-decoration: underline;">
+          Sign In Here
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</div>
