@@ -24,11 +24,11 @@
     <!-- Right Column: Matte Charcoal Card -->
     <div class="snitch-login-content">
       <div class="snitch-login-card">
-        <!-- Dual Luxury Tabs: Track My Order | VIP Concierge -->
+        <!-- Dual Luxury Tabs: My Account & Orders | VIP Concierge -->
         <div class="account-modal-tabs">
           <button type="button" class="account-modal-tab active" id="tabBtnTrack" onclick="switchAccountTab('track')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-            Track My Order
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7.5" r="4"></circle></svg>
+            My Account &amp; Orders
           </button>
           <button type="button" class="account-modal-tab" id="tabBtnConcierge" onclick="switchAccountTab('concierge')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
@@ -36,11 +36,28 @@
           </button>
         </div>
 
-        <!-- TAB 1: INSTANT ORDER TRACKING (ZERO FRICTION) -->
+        <!-- TAB 1: ORDER HISTORY & EXPRESS TRACKING -->
         <div id="accountViewTrack" class="account-view active">
-          <div class="snitch-brand-block" style="margin-bottom: 16px;">
-            <h2 class="snitch-brand-title">{{ shop.name | default: 'MEENU LABEL' }}</h2>
-            <div class="snitch-brand-tag">EXPRESS ORDER TRACKING &bull; TRICITY &amp; ALL INDIA</div>
+          
+          <!-- PROMINENT CLIENT ORDER HISTORY CARD -->
+          <div class="account-portal-vip-card" style="background: linear-gradient(135deg, rgba(200, 160, 90, 0.18) 0%, rgba(200, 160, 90, 0.06) 100%); border: 1px solid rgba(200, 160, 90, 0.4); border-radius: 8px; padding: 16px; margin-bottom: 18px; text-align: left;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 6px;">
+              <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #D4AF37;">&#128717;&#65039; CLIENT ORDER HISTORY</span>
+              <span style="font-size: 9.5px; background: rgba(212, 175, 55, 0.25); color: #F5E6BE; padding: 2px 7px; border-radius: 3px; font-weight: 700;">OFFICIAL PORTAL</span>
+            </div>
+            <div style="font-size: 14px; font-weight: 700; color: #FAF8F5; margin-bottom: 4px;">View All Past Orders &amp; Invoices</div>
+            <p style="font-size: 11.5px; color: rgba(255,255,255,0.75); margin: 0 0 14px 0; line-height: 1.45;">
+              Log in with your registered email to see all past orders, dispatch statuses, tax invoices, and size exchanges.
+            </p>
+            <a href="/account" class="snitch-submit-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; background: #D4AF37; color: #1E1C19; font-weight: 800; font-size: 12px; letter-spacing: 0.08em; border-radius: 4px; box-shadow: 0 4px 14px rgba(212, 175, 55, 0.25);">
+              <span>LOG IN TO VIEW ORDER HISTORY &rarr;</span>
+            </a>
+          </div>
+
+          <div style="display: flex; align-items: center; text-align: center; color: rgba(255,255,255,0.3); font-size: 10px; margin: 18px 0 14px;">
+            <span style="flex: 1; border-bottom: 1px solid rgba(255,255,255,0.12);"></span>
+            <span style="padding: 0 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.5);">OR TRACK WITHOUT LOGIN</span>
+            <span style="flex: 1; border-bottom: 1px solid rgba(255,255,255,0.12);"></span>
           </div>
 
           <label class="snitch-input-heading" for="orderTrackingInput">ENTER ORDER NUMBER OR MOBILE</label>
@@ -49,19 +66,14 @@
               type="text" 
               id="orderTrackingInput" 
               class="tracking-input-field" 
-              placeholder="e.g. #ML-1042 or 9876543210" 
+              placeholder="e.g. #1001 or 9876543210" 
               autocomplete="off"
               onkeydown="if(event.key==='Enter') executeOrderTracking()"
             >
-            <div class="tracking-demo-chips">
-              <span>Quick Demo:</span>
-              <button type="button" class="tracking-demo-chip" onclick="fillAndTrackDemo('#ML-1042')">#ML-1042 (In Transit)</button>
-              <button type="button" class="tracking-demo-chip" onclick="fillAndTrackDemo('#ML-1035')">#ML-1035 (Delivered)</button>
-            </div>
           </div>
-          <div id="orderTrackingError" class="snitch-validation-error" style="display:none; margin-bottom:12px;">Please enter an Order ID (e.g. #ML-1042) or a 10-digit mobile number</div>
+          <div id="orderTrackingError" class="snitch-validation-error" style="display:none; margin-bottom:12px;">Please enter an Order ID (e.g. #1001) or a 10-digit mobile number</div>
 
-          <button class="snitch-submit-btn" id="trackOrderSubmitBtn" onclick="executeOrderTracking()">
+          <button class="snitch-submit-btn" id="trackOrderSubmitBtn" onclick="executeOrderTracking()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #FAF8F5;">
             <span>TRACK SHIPMENT</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="9 18 15 12 9 6"></polyline>
