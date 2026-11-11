@@ -35,11 +35,6 @@
         "disabled": false,
         "settings": {}
       },
-      "3557650678667880288": {
-        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/magicx-script/c13c688d-5c45-4054-b95f-1edd63faa705",
-        "disabled": false,
-        "settings": {}
-      },
       "14578213307157327268": {
         "type": "shopify://apps/velocity-insights/blocks/velocity-app-embed/eb76ac2e-4f36-413e-b08f-4ccc7da0a12f",
         "disabled": true,
@@ -56,6 +51,11 @@
           "delivery_button_color": "#008060",
           "delivery_button_text_color": "#FFFFFF"
         }
+      },
+      "3557650678667880288": {
+        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/magicx-script/c13c688d-5c45-4054-b95f-1edd63faa705",
+        "disabled": true,
+        "settings": {}
       }
     }
   }
