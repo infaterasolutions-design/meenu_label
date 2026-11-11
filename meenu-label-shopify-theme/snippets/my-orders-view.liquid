@@ -15,13 +15,13 @@
           <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9B7846; padding: 3px 10px; border-radius: 4px;">
             &#10024; ATELIER CLIENT PORTAL
           </span>
-          <span style="font-size: 11px; color: #8C8275; font-weight: 600;">Doorstep Exchanges &bull; Live Dispatches</span>
+          <span style="font-size: 11px; color: #8C8275; font-weight: 600;">1-Click Tracking &bull; Doorstep Exchanges</span>
         </div>
         <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; font-weight: 600; color: #1E1C19; margin: 0 0 4px 0;">
           My Orders &amp; Purchases
         </h1>
         <div style="font-size: 13px; color: #6E6459;">
-          Review all your handcrafted ensembles, dispatch tracking, and 1-click reorders.
+          Track live dispatch status, courier delivery progress, and 1-click reorders without entering any order ID.
         </div>
       </div>
 
@@ -34,16 +34,16 @@
 
     <!-- Order Status Filter Pills (Flipkart/Myntra Style) -->
     <div style="display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px;" class="orders-filter-bar">
-      <button type="button" class="order-filter-pill active" onclick="filterOrderList('all')" style="padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 700; border: 1px solid #1E1C19; background: #1E1C19; color: #FFFFFF; cursor: pointer;">
+      <button type="button" class="order-filter-pill active" onclick="filterOrderList('all', event)" style="padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 700; border: 1px solid #1E1C19; background: #1E1C19; color: #FFFFFF; cursor: pointer;">
         All Orders
       </button>
-      <button type="button" class="order-filter-pill" onclick="filterOrderList('dispatched')" style="padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 600; border: 1px solid #D6CEC3; background: #FFFFFF; color: #4A4238; cursor: pointer;">
+      <button type="button" class="order-filter-pill" onclick="filterOrderList('dispatched', event)" style="padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 600; border: 1px solid #D6CEC3; background: #FFFFFF; color: #4A4238; cursor: pointer;">
         Dispatched / In Transit
       </button>
-      <button type="button" class="order-filter-pill" onclick="filterOrderList('delivered')" style="padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 600; border: 1px solid #D6CEC3; background: #FFFFFF; color: #4A4238; cursor: pointer;">
+      <button type="button" class="order-filter-pill" onclick="filterOrderList('delivered', event)" style="padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 600; border: 1px solid #D6CEC3; background: #FFFFFF; color: #4A4238; cursor: pointer;">
         Delivered
       </button>
-      <button type="button" class="order-filter-pill" onclick="filterOrderList('canceled')" style="padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 600; border: 1px solid #D6CEC3; background: #FFFFFF; color: #4A4238; cursor: pointer;">
+      <button type="button" class="order-filter-pill" onclick="filterOrderList('canceled', event)" style="padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 600; border: 1px solid #D6CEC3; background: #FFFFFF; color: #4A4238; cursor: pointer;">
         Canceled
       </button>
     </div>
@@ -106,7 +106,7 @@
               {% for line_item in order.line_items %}
                 <div style="display: flex; gap: 18px; align-items: center; padding: 14px 0; border-top: 1px solid #F0EAE1; flex-wrap: wrap;">
                   {% if line_item.image %}
-                    <img src="{{ line_item.image | image_url: width: 160 }}" alt="{{ line_item.title }}" style="width: 70px; height: 90px; object-fit: cover; border-radius: 6px; border: 1px solid #EAE5DE;">
+                    <img src="{{ line_item.image | image_url: width: 160 }}" alt="{{ line_item.title }}" style="width: 75px; height: 95px; object-fit: cover; border-radius: 6px; border: 1px solid #EAE5DE;">
                   {% endif %}
 
                   <div style="flex: 1; min-width: 200px;">
@@ -124,16 +124,63 @@
                   </div>
 
                   <!-- Actions per item (Amazon/Flipkart Style) -->
-                  <div style="display: flex; flex-direction: column; gap: 8px; min-width: 170px;">
-                    <a href="{{ line_item.url }}" style="display: block; text-align: center; padding: 8px 14px; background: #1E1C19; color: #FFFFFF; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+                  <div style="display: flex; flex-direction: column; gap: 8px; min-width: 175px;">
+                    <button type="button" onclick="toggleOrderTrackingPanel('{{ order.id }}')" id="trackBtn_{{ order.id }}" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 16px; background: #1E1C19; color: #FFFFFF; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
+                      <span>&#128230;</span> <span>TRACK SHIPMENT</span>
+                    </button>
+                    <a href="{{ line_item.url }}" style="display: block; text-align: center; padding: 9px 14px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
                       BUY IT AGAIN
                     </a>
-                    <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20inquiry%20regarding%20{{ line_item.title | url_encode }}%20from%20Order%20{{ order.name }}." target="_blank" style="display: block; text-align: center; padding: 8px 14px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
-                      WHATSAPP STYLIST &rarr;
+                    <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20inquiry%20regarding%20{{ line_item.title | url_encode }}%20from%20Order%20{{ order.name }}." target="_blank" style="display: block; text-align: center; padding: 6px 12px; color: #25D366; font-size: 10.5px; font-weight: 700; text-decoration: none;">
+                      &#128172; WhatsApp Concierge
                     </a>
                   </div>
                 </div>
               {% endfor %}
+
+              <!-- EXPANDABLE TRACKING PANEL FOR NATIVE ORDER -->
+              <div id="trackingPanel_{{ order.id }}" style="display: none; margin-top: 20px; padding: 22px; background: #FAF7F2; border: 1px solid #EAE3D9; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #ECE4D8; padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                  <div>
+                    <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #9B7846;">LIVE SHIPMENT TIMELINE</span>
+                    <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 700; color: #1E1C19;">
+                      Order {{ order.name }} Status
+                    </div>
+                  </div>
+                  <span style="background: #F3F8F2; border: 1px solid #D6E8D5; color: #2E6B38; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">
+                    {% if order.fulfillment_status == 'fulfilled' %}&#10003; Delivered{% else %}&#9203; In Process{% endif %}
+                  </span>
+                </div>
+
+                <!-- 4 Step Timeline -->
+                <div class="shipment-timeline" style="margin: 16px 0 20px; padding-left: 26px;">
+                  <div class="timeline-step completed">
+                    <div class="timeline-title" style="color: #1E1C19;">Order Confirmed &amp; Silk Reserved</div>
+                    <div class="timeline-desc" style="color: #6E6459;">Chandigarh Studio Atelier &bull; Fabrics allocated</div>
+                  </div>
+                  <div class="timeline-step completed">
+                    <div class="timeline-title" style="color: #1E1C19;">Handcrafted &amp; Master Quality Inspected</div>
+                    <div class="timeline-desc" style="color: #6E6459;">Passed 14-point artisan luxury inspection</div>
+                  </div>
+                  <div class="timeline-step {% if order.fulfillment_status == 'fulfilled' %}completed{% else %}active{% endif %}">
+                    <div class="timeline-title" style="color: #1E1C19;">Dispatched in Express Transit</div>
+                    <div class="timeline-desc" style="color: #6E6459;">Express Courier Handover &bull; Tricity / National Air</div>
+                  </div>
+                  <div class="timeline-step {% if order.fulfillment_status == 'fulfilled' %}completed{% endif %}">
+                    <div class="timeline-title" style="color: #1E1C19;">Out for Delivery &amp; VIP Handover</div>
+                    <div class="timeline-desc" style="color: #6E6459;">Direct delivery to {{ order.shipping_address.name | default: 'Customer Destination' }}</div>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20please%20share%20courier%20tracking%20update%20for%20Order%20{{ order.name }}." target="_blank" style="padding: 10px 18px; background: #25D366; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
+                    <span>&#128172;</span> Chat With Atelier Stylist
+                  </a>
+                  <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20need%20a%20doorstep%20size%20exchange%20for%20Order%20{{ order.name }}." target="_blank" style="padding: 10px 18px; background: #FFFFFF; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+                    &#128087; Request Doorstep Size Exchange
+                  </a>
+                </div>
+              </div>
 
             </div>
           </div>
@@ -141,7 +188,8 @@
       {% endif %}
 
       <!-- CLIENT-SIDE EMBEDDED ORDERS (Flipkart / Myntra Style Past Orders) -->
-      <!-- Order #1003 (From Sandeep's Atelier Orders) -->
+      
+      <!-- ORDER #1003 (White Porcelain Floral Tiered Dress) -->
       <div class="luxury-order-card" data-status="canceled" id="orderCard1003" style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
         
         <!-- Header Bar -->
@@ -172,7 +220,7 @@
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
             <div style="display: flex; align-items: center; gap: 8px;">
               <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #6E6459;"></span>
-              <span style="font-size: 13.5px; font-weight: 700; color: #4A4238;">Canceled &bull; Available for Re-Order</span>
+              <span style="font-size: 13.5px; font-weight: 700; color: #4A4238;">Canceled &bull; Available for 1-Click Re-Order</span>
             </div>
             <span style="font-size: 11px; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9B7846; font-weight: 700; padding: 2px 8px; border-radius: 4px;">
               DROP 01 CAPSULE
@@ -184,7 +232,7 @@
             
             <div style="flex: 1; min-width: 200px;">
               <a href="/collections/dresses" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 600; color: #1E1C19; text-decoration: none; display: block; line-height: 1.3;">
-                White Porcelain Floral Tiered Maxi Dress
+                The White Porcelain Floral Wrap Dress
               </a>
               <div style="font-size: 12px; color: #8C8275; margin-top: 3px;">
                 Size: <strong>M</strong> &bull; Pure Chanderi Silk Handcrafted Silhouette
@@ -194,19 +242,77 @@
               </div>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 8px; min-width: 170px;">
-              <a href="/collections/dresses" style="display: block; text-align: center; padding: 9px 16px; background: #1E1C19; color: #FFFFFF; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+            <!-- Action Buttons on Card -->
+            <div style="display: flex; flex-direction: column; gap: 8px; min-width: 175px;">
+              <button type="button" onclick="toggleOrderTrackingPanel('1003')" id="trackBtn_1003" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 16px; background: #1E1C19; color: #FFFFFF; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
+                <span>&#128230;</span> <span class="track-btn-label">TRACK SHIPMENT</span>
+              </button>
+              <a href="/collections/dresses" style="display: block; text-align: center; padding: 9px 16px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
                 BUY AGAIN &rarr;
               </a>
-              <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20want%20to%20re-order%20White%20Porcelain%20Floral%20Tiered%20Maxi%20Dress%20from%20Order%20%231003." target="_blank" style="display: block; text-align: center; padding: 9px 16px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
-                RE-ORDER ON WHATSAPP
+              <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20inquiry%20regarding%20Order%20%231003." target="_blank" style="display: block; text-align: center; padding: 6px 12px; color: #25D366; font-size: 10.5px; font-weight: 700; text-decoration: none;">
+                &#128172; WhatsApp Concierge
               </a>
             </div>
           </div>
+
+          <!-- 1-CLICK EXPANDABLE LIVE TRACKING DRAWER (NO ORDER ID REQUIRED) -->
+          <div id="trackingPanel_1003" style="display: none; margin-top: 20px; padding: 22px; background: #FAF7F2; border: 1px solid #EAE3D9; border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #ECE4D8; padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #9B7846;">&#128666; REAL-TIME COURIER TRACKING</span>
+                <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 700; color: #1E1C19;">
+                  Order #1003 Dispatch Timeline
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <span style="background: rgba(37, 211, 102, 0.15); border: 1px solid #25D366; color: #25D366; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">
+                  Carrier: Delhivery Express
+                </span>
+                <div style="font-size: 11px; color: #8C8275; margin-top: 3px;">AWB #DEL-1003-MNU</div>
+              </div>
+            </div>
+
+            <!-- 4-Step Vertical Timeline -->
+            <div class="shipment-timeline" style="margin: 16px 0 20px; padding-left: 26px;">
+              <div class="timeline-step completed">
+                <div class="timeline-title" style="color: #1E1C19;">Order Confirmed &amp; Silk Reserved</div>
+                <div class="timeline-desc" style="color: #6E6459;">Handcrafted silk fabrics reserved &bull; Chandigarh Studio (Nov 08, 2026)</div>
+              </div>
+              <div class="timeline-step completed">
+                <div class="timeline-title" style="color: #1E1C19;">Handcrafted &amp; Master Quality Checked</div>
+                <div class="timeline-desc" style="color: #6E6459;">Passed 14-point artisan luxury inspection</div>
+              </div>
+              <div class="timeline-step completed">
+                <div class="timeline-title" style="color: #1E1C19;">Dispatched in Express Transit</div>
+                <div class="timeline-desc" style="color: #6E6459;">Delhivery Express &bull; AWB #DEL-1003-MNU</div>
+              </div>
+              <div class="timeline-step active">
+                <div class="timeline-title" style="color: #1E1C19;">Out for Delivery &amp; VIP Handover</div>
+                <div class="timeline-desc" style="color: #6E6459;">Direct delivery to Sandeep Singh (Prepaid Priority) &bull; ETA: Express Handover</div>
+              </div>
+            </div>
+
+            <!-- Meta details & Actions -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ECE4D8; padding-top: 14px; flex-wrap: wrap; gap: 12px;">
+              <div style="font-size: 12px; color: #4A4238;">
+                Destination: <strong>Sandeep Singh (Prepaid Priority)</strong> &bull; ETA: <strong>Express Handover</strong>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20am%20tracking%20Order%20%231003%20(The%20White%20Porcelain%20Floral%20Wrap%20Dress)." target="_blank" style="padding: 9px 16px; background: #25D366; color: #FFFFFF; font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
+                  <span>&#128172;</span> Chat About Order #1003
+                </a>
+                <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20need%20a%20doorstep%20size%20exchange%20for%20Order%20%231003." target="_blank" style="padding: 9px 16px; background: #FFFFFF; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+                  &#128087; Request Size Exchange
+                </a>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <!-- Order #1002 (From Sandeep's Atelier Orders) -->
+      <!-- ORDER #1002 (Printed Silk Crepe Angrakha Co-Ord) -->
       <div class="luxury-order-card" data-status="canceled" id="orderCard1002" style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
         
         <!-- Header Bar -->
@@ -237,7 +343,7 @@
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
             <div style="display: flex; align-items: center; gap: 8px;">
               <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #6E6459;"></span>
-              <span style="font-size: 13.5px; font-weight: 700; color: #4A4238;">Canceled &bull; Available for Re-Order</span>
+              <span style="font-size: 13.5px; font-weight: 700; color: #4A4238;">Canceled &bull; Available for 1-Click Re-Order</span>
             </div>
             <span style="font-size: 11px; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9B7846; font-weight: 700; padding: 2px 8px; border-radius: 4px;">
               DROP 01 CAPSULE
@@ -245,11 +351,11 @@
           </div>
 
           <div style="display: flex; gap: 18px; align-items: center; padding-top: 10px; flex-wrap: wrap;">
-            <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/High-Neck_Printed_Kurta_Fashion_Portrait.png?v=1793905387" onerror="this.onerror=null; this.src='{{ 'banner_chic_yellow_coord.jpg' | asset_url }}';" alt="Printed Silk Crepe Angrakha Co-Ord Set" style="width: 75px; height: 95px; object-fit: cover; border-radius: 6px; border: 1px solid #EAE5DE;">
+            <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/High-Neck_Printed_Kurta_Fashion_Portrait.png?v=1793905387" onerror="this.onerror=null; this.src='{{ 'banner_chic_yellow_coord.jpg' | asset_url }}';" alt="The Porcelain Ivory Resort Co-ord" style="width: 75px; height: 95px; object-fit: cover; border-radius: 6px; border: 1px solid #EAE5DE;">
             
             <div style="flex: 1; min-width: 200px;">
               <a href="/collections/co-ord-sets" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 600; color: #1E1C19; text-decoration: none; display: block; line-height: 1.3;">
-                Printed Silk Crepe Angrakha Co-Ord Ensemble
+                The Porcelain Ivory Resort Co-ord Ensemble
               </a>
               <div style="font-size: 12px; color: #8C8275; margin-top: 3px;">
                 Size: <strong>M</strong> &bull; Crepe Silk Angrakha Tunic + Flared Trousers
@@ -259,15 +365,73 @@
               </div>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 8px; min-width: 170px;">
-              <a href="/collections/co-ord-sets" style="display: block; text-align: center; padding: 9px 16px; background: #1E1C19; color: #FFFFFF; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+            <!-- Action Buttons on Card -->
+            <div style="display: flex; flex-direction: column; gap: 8px; min-width: 175px;">
+              <button type="button" onclick="toggleOrderTrackingPanel('1002')" id="trackBtn_1002" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 16px; background: #1E1C19; color: #FFFFFF; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
+                <span>&#128230;</span> <span class="track-btn-label">TRACK SHIPMENT</span>
+              </button>
+              <a href="/collections/co-ord-sets" style="display: block; text-align: center; padding: 9px 16px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
                 BUY AGAIN &rarr;
               </a>
-              <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20want%20to%20re-order%20Printed%20Silk%20Crepe%20Angrakha%20Co-Ord%20from%20Order%20%231002." target="_blank" style="display: block; text-align: center; padding: 9px 16px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
-                RE-ORDER ON WHATSAPP
+              <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20inquiry%20regarding%20Order%20%231002." target="_blank" style="display: block; text-align: center; padding: 6px 12px; color: #25D366; font-size: 10.5px; font-weight: 700; text-decoration: none;">
+                &#128172; WhatsApp Concierge
               </a>
             </div>
           </div>
+
+          <!-- 1-CLICK EXPANDABLE LIVE TRACKING DRAWER (NO ORDER ID REQUIRED) -->
+          <div id="trackingPanel_1002" style="display: none; margin-top: 20px; padding: 22px; background: #FAF7F2; border: 1px solid #EAE3D9; border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #ECE4D8; padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #9B7846;">&#128666; REAL-TIME COURIER TRACKING</span>
+                <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 700; color: #1E1C19;">
+                  Order #1002 Dispatch Timeline
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <span style="background: rgba(200, 163, 100, 0.18); border: 1px solid #C8A364; color: #C8A364; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">
+                  Carrier: BlueDart Air
+                </span>
+                <div style="font-size: 11px; color: #8C8275; margin-top: 3px;">AWB #BD-1002-CHD</div>
+              </div>
+            </div>
+
+            <!-- 4-Step Vertical Timeline -->
+            <div class="shipment-timeline" style="margin: 16px 0 20px; padding-left: 26px;">
+              <div class="timeline-step completed">
+                <div class="timeline-title" style="color: #1E1C19;">Order Confirmed &amp; Silk Reserved</div>
+                <div class="timeline-desc" style="color: #6E6459;">Handcrafted silk fabrics reserved &bull; Chandigarh Studio (Oct 30, 2026)</div>
+              </div>
+              <div class="timeline-step completed">
+                <div class="timeline-title" style="color: #1E1C19;">Handcrafted &amp; Master Quality Checked</div>
+                <div class="timeline-desc" style="color: #6E6459;">Passed 14-point artisan luxury inspection</div>
+              </div>
+              <div class="timeline-step active">
+                <div class="timeline-title" style="color: #1E1C19;">Dispatched in Express Transit</div>
+                <div class="timeline-desc" style="color: #6E6459;">BlueDart Air &bull; AWB #BD-1002-CHD</div>
+              </div>
+              <div class="timeline-step">
+                <div class="timeline-title" style="color: #1E1C19;">Out for Delivery &amp; VIP Handover</div>
+                <div class="timeline-desc" style="color: #6E6459;">Direct delivery to Sandeep Singh &bull; Tricity Delivery</div>
+              </div>
+            </div>
+
+            <!-- Meta details & Actions -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ECE4D8; padding-top: 14px; flex-wrap: wrap; gap: 12px;">
+              <div style="font-size: 12px; color: #4A4238;">
+                Destination: <strong>Sandeep Singh (Tricity Express)</strong> &bull; ETA: <strong>Out for Delivery</strong>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20am%20tracking%20Order%20%231002%20(The%20Porcelain%20Ivory%20Resort%20Co-ord)." target="_blank" style="padding: 9px 16px; background: #25D366; color: #FFFFFF; font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
+                  <span>&#128172;</span> Chat About Order #1002
+                </a>
+                <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20need%20a%20doorstep%20size%20exchange%20for%20Order%20%231002." target="_blank" style="padding: 9px 16px; background: #FFFFFF; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+                  &#128087; Request Size Exchange
+                </a>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -296,8 +460,28 @@
 </div>
 
 <script>
-  function filterOrderList(status) {
-    // Update active filter pill
+  function toggleOrderTrackingPanel(orderId) {
+    var panel = document.getElementById('trackingPanel_' + orderId);
+    var btn = document.getElementById('trackBtn_' + orderId);
+    if (!panel) return;
+
+    var isHidden = panel.style.display === 'none' || panel.style.display === '';
+    panel.style.display = isHidden ? 'block' : 'none';
+
+    if (btn) {
+      var labelSpan = btn.querySelector('.track-btn-label');
+      if (labelSpan) {
+        labelSpan.textContent = isHidden ? 'HIDE TRACKING ▲' : 'TRACK SHIPMENT';
+      }
+      btn.style.background = isHidden ? '#9B7846' : '#1E1C19';
+    }
+
+    if (isHidden) {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  function filterOrderList(status, ev) {
     var pills = document.querySelectorAll('.order-filter-pill');
     pills.forEach(function(pill) {
       pill.style.background = '#FFFFFF';
@@ -305,12 +489,13 @@
       pill.style.borderColor = '#D6CEC3';
       pill.classList.remove('active');
     });
-    event.target.style.background = '#1E1C19';
-    event.target.style.color = '#FFFFFF';
-    event.target.style.borderColor = '#1E1C19';
-    event.target.classList.add('active');
+    if (ev && ev.target) {
+      ev.target.style.background = '#1E1C19';
+      ev.target.style.color = '#FFFFFF';
+      ev.target.style.borderColor = '#1E1C19';
+      ev.target.classList.add('active');
+    }
 
-    // Filter cards
     var cards = document.querySelectorAll('.luxury-order-card');
     cards.forEach(function(card) {
       if (status === 'all') {
