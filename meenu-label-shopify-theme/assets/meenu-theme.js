@@ -1302,6 +1302,16 @@ function openAccountModal(initialTab) {
   if (!backdrop) return;
   backdrop.classList.add('open');
   switchAccountTab(initialTab || 'track');
+  
+  // Pre-fill last searched order if available
+  try {
+    var lastOrder = localStorage.getItem('meenu_last_order');
+    var inp = document.getElementById('orderTrackingInput');
+    if (lastOrder && inp && !inp.value) {
+      inp.value = lastOrder;
+      executeOrderTracking();
+    }
+  } catch(e) {}
 }
 
 function closeAccountModalDirect() {
@@ -1318,8 +1328,10 @@ function closeAccountModal(e) {
 function fillAndTrackDemo(orderId) {
   switchAccountTab('track');
   var inp = document.getElementById('orderTrackingInput');
-  if (inp) inp.value = orderId;
-  executeOrderTracking();
+  if (inp) {
+    inp.value = orderId;
+    executeOrderTracking();
+  }
 }
 
 function executeOrderTracking() {
@@ -1330,7 +1342,7 @@ function executeOrderTracking() {
 
   if (!rawVal) {
     if (err) {
-      err.textContent = 'Please enter an Order ID (e.g. #ML-1042) or your 10-digit mobile number.';
+      err.textContent = 'Please enter an Order ID (e.g. #1003) or your 10-digit mobile number.';
       err.style.display = 'block';
     }
     if (inp) inp.focus();
@@ -1338,31 +1350,92 @@ function executeOrderTracking() {
   }
   if (err) err.style.display = 'none';
 
+  // Save last searched order
+  try {
+    localStorage.setItem('meenu_last_order', rawVal);
+  } catch(e) {}
+
   var cleanVal = rawVal.toUpperCase();
   var isDelivered = cleanVal.indexOf('1035') !== -1;
   var isTransit = cleanVal.indexOf('1042') !== -1 || cleanVal.indexOf('8511616133') !== -1;
+  var is1003 = cleanVal.indexOf('1003') !== -1;
+  var is1002 = cleanVal.indexOf('1002') !== -1;
+  var is1001 = cleanVal.indexOf('1001') !== -1;
 
-  var orderNum = isDelivered ? '#ML-1035' : (isTransit ? '#ML-1042' : (cleanVal.startsWith('#') ? cleanVal : '#' + cleanVal));
-  var productName = isDelivered ? 'Noor Zari Silk Anarkali Set (Size: S)' : (isTransit ? 'Gulab Organza Embroidered Kurta Set (Size: M)' : 'Atelier Drop 01 Handcrafted Silhouette');
-  var awbInfo = isDelivered ? 'BlueDart Air • AWB #BD-9918231' : (isTransit ? 'Delhivery Express • AWB #DEL-85116133-TRC' : 'Assigned Upon Dispatch • Express Courier');
-  var dest = isDelivered ? 'Gurugram, Haryana' : (isTransit ? 'Sector 17, Chandigarh (Tricity Express)' : 'Tricity / All India Delivery');
-  var statusBadge = isDelivered ? 'Delivered' : (isTransit ? 'In Express Transit' : 'Confirmed & In Production');
-  var badgeColor = isDelivered ? '#25D366' : '#C8A364';
+  var orderNum = cleanVal.startsWith('#') ? cleanVal : '#' + cleanVal;
+  
+  var productName = 'Atelier Drop 01 Handcrafted Ensemble';
+  var productImage = 'https://cdn.shopify.com/s/files/1/0722/3325/4983/files/DSC09628.jpg?v=1793648783';
+  var statusBadge = 'Atelier Processing';
+  var badgeColor = '#C8A364';
+  var awbInfo = 'Assigned Upon Dispatch • Delhivery Express';
+  var dest = 'Chandigarh Atelier / All-India Express';
+  var eta = '24-48 Hours';
 
+  if (is1003) {
+    orderNum = '#1003';
+    productName = 'White Porcelain Floral Tiered Maxi Dress';
+    productImage = 'https://cdn.shopify.com/s/files/1/0722/3325/4983/files/DSC09689.jpg?v=1793648783';
+    statusBadge = 'Order Processed & Handcrafted';
+    badgeColor = '#25D366';
+    awbInfo = 'Delhivery Express • AWB #DEL-1003-MNU';
+    dest = 'Customer Destination (Prepaid Priority)';
+    eta = 'Express Dispatched';
+  } else if (is1002) {
+    orderNum = '#1002';
+    productName = 'Crepe Silk Angrakha Co-Ord Ensemble';
+    productImage = 'https://cdn.shopify.com/s/files/1/0722/3325/4983/files/DSC09641.jpg?v=1793648783';
+    statusBadge = 'Atelier Quality Inspected';
+    badgeColor = '#C8A364';
+    awbInfo = 'BlueDart Air • AWB #BD-1002-CHD';
+    dest = 'Tricity Delivery';
+    eta = 'Out for Delivery';
+  } else if (is1001) {
+    orderNum = '#1001';
+    productName = 'The Royal Wine Chanderi Festive Suit';
+    productImage = 'https://cdn.shopify.com/s/files/1/0722/3325/4983/files/DSC09628.jpg?v=1793648783';
+    statusBadge = 'Dispatched & In Transit';
+    badgeColor = '#25D366';
+    awbInfo = 'Delhivery Air • AWB #DEL-9812401';
+    dest = 'Sector 17 Atelier Direct';
+    eta = 'Delivered';
+  } else if (isDelivered) {
+    orderNum = '#1035';
+    productName = 'Noor Zari Silk Anarkali Set (Size: S)';
+    statusBadge = 'Delivered';
+    badgeColor = '#25D366';
+    awbInfo = 'BlueDart Air • AWB #BD-9918231';
+    dest = 'Gurugram, Haryana';
+    eta = 'Delivered with Signature';
+  } else if (isTransit) {
+    orderNum = '#1042';
+    productName = 'Gulab Organza Embroidered Kurta Set (Size: M)';
+    statusBadge = 'In Express Transit';
+    badgeColor = '#C8A364';
+    awbInfo = 'Delhivery Express • AWB #DEL-85116133-TRC';
+    dest = 'Sector 17, Chandigarh (Tricity Express)';
+    eta = 'Today by 7:00 PM';
+  }
+
+  var isCompletedState = isDelivered || eta === 'Delivered';
   var step1Class = 'timeline-step completed';
-  var step2Class = (isDelivered || isTransit) ? 'timeline-step completed' : 'timeline-step active';
-  var step3Class = isDelivered ? 'timeline-step completed' : (isTransit ? 'timeline-step active' : 'timeline-step');
-  var step4Class = isDelivered ? 'timeline-step completed' : 'timeline-step';
+  var step2Class = 'timeline-step completed';
+  var step3Class = (isTransit || is1003 || is1001 || isCompletedState) ? 'timeline-step completed' : 'timeline-step active';
+  var step4Class = isCompletedState ? 'timeline-step completed' : (isTransit || is1002 ? 'timeline-step active' : 'timeline-step');
 
   var waMessage = encodeURIComponent('Hi Meenu Label! I am inquiring about my Order ' + orderNum + ' (' + productName + '). Please share latest delivery updates.');
+  var waExchangeMsg = encodeURIComponent('Hi Meenu Label! I need a doorstep size exchange or tailoring alteration for Order ' + orderNum + ' (' + productName + ').');
 
   var html = '<div class="shipment-card">' +
     '<div class="shipment-header">' +
-      '<div>' +
-        '<div class="shipment-order-id">' + orderNum + '</div>' +
-        '<div style="font-size: 11.5px; color: rgba(255,255,255,0.7); margin-top:2px;">' + productName + '</div>' +
+      '<div style="display:flex; align-items:center; gap:12px;">' +
+        '<img src="' + productImage + '" alt="' + productName + '" style="width:44px; height:56px; object-fit:cover; border-radius:4px; border:1px solid rgba(255,255,255,0.2);">' +
+        '<div>' +
+          '<div class="shipment-order-id">' + orderNum + '</div>' +
+          '<div style="font-size: 11.5px; color: rgba(255,255,255,0.85); margin-top:2px; font-weight:600;">' + productName + '</div>' +
+        '</div>' +
       '</div>' +
-      '<span class="shipment-badge" style="background: rgba(' + (isDelivered ? '37, 211, 102' : '200, 163, 100') + ', 0.15); color: ' + badgeColor + '; border-color: ' + badgeColor + ';">' + statusBadge + '</span>' +
+      '<span class="shipment-badge" style="background: rgba(200, 163, 100, 0.18); color: ' + badgeColor + '; border: 1px solid ' + badgeColor + ';">' + statusBadge + '</span>' +
     '</div>' +
     '<div class="shipment-timeline">' +
       '<div class="' + step1Class + '">' +
@@ -1371,7 +1444,7 @@ function executeOrderTracking() {
       '</div>' +
       '<div class="' + step2Class + '">' +
         '<div class="timeline-title">Handcrafted &amp; Master Quality Checked</div>' +
-        '<div class="timeline-desc">' + (isDelivered || isTransit ? 'Passed 14-point artisan luxury inspection' : 'In progress at Sector 17 Atelier') + '</div>' +
+        '<div class="timeline-desc">Passed 14-point artisan luxury inspection</div>' +
       '</div>' +
       '<div class="' + step3Class + '">' +
         '<div class="timeline-title">Dispatched in Express Transit</div>' +
@@ -1379,17 +1452,22 @@ function executeOrderTracking() {
       '</div>' +
       '<div class="' + step4Class + '">' +
         '<div class="timeline-title">Out for Delivery &amp; VIP Handover</div>' +
-        '<div class="timeline-desc">' + (isDelivered ? 'Delivered with Signature Handover' : 'Expected delivery to ' + dest) + '</div>' +
+        '<div class="timeline-desc">' + (isCompletedState ? 'Delivered with Signature Handover' : 'Direct delivery to ' + dest) + '</div>' +
       '</div>' +
     '</div>' +
     '<div class="shipment-meta-row">' +
       '<span>Destination: <strong>' + dest + '</strong></span>' +
-      '<span>ETA: <strong>' + (isDelivered ? 'Delivered' : (isTransit ? 'Today by 7:00 PM' : '24-48 Hours')) + '</strong></span>' +
+      '<span>ETA: <strong>' + eta + '</strong></span>' +
     '</div>' +
-    '<a href="https://wa.me/918511616133?text=' + waMessage + '" target="_blank" class="shipment-wa-btn">' +
-      '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>' +
-      'Instant WhatsApp Inquiry with Atelier' +
-    '</a>' +
+    '<div style="display:flex; flex-direction:column; gap:8px; margin-top:14px;">' +
+      '<a href="https://wa.me/918511616133?text=' + waMessage + '" target="_blank" class="shipment-wa-btn">' +
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>' +
+        'Chat on WhatsApp About Order ' + orderNum +
+      '</a>' +
+      '<a href="https://wa.me/918511616133?text=' + waExchangeMsg + '" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:6px; padding:9px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:#FAF8F5; font-size:10.5px; font-weight:700; text-decoration:none; text-transform:uppercase; letter-spacing:0.04em;">' +
+        '&#128087; Request Doorstep Size Exchange or Custom Sleeve Fit' +
+      '</a>' +
+    '</div>' +
   '</div>';
 
   if (container) {
@@ -1397,7 +1475,6 @@ function executeOrderTracking() {
     container.style.display = 'block';
   }
 }
-
 
 /* =========================================================================
    SCROLL POSITION PRESERVATION ON NAVIGATION
@@ -1423,3 +1500,17 @@ window.addEventListener('pageshow', function(e) {
     }
   } catch(err) {}
 });
+
+/* =========================================================================
+   AUTO-TRIGGER ORDER TRACKING MODAL VIA HASH
+   ========================================================================= */
+function checkOrderHashTrigger() {
+  var h = window.location.hash;
+  if (h === '#track-order' || h === '#track' || h === '#orders' || h === '#my-orders') {
+    setTimeout(function() {
+      openAccountModal('track');
+    }, 200);
+  }
+}
+window.addEventListener('DOMContentLoaded', checkOrderHashTrigger);
+window.addEventListener('hashchange', checkOrderHashTrigger);
