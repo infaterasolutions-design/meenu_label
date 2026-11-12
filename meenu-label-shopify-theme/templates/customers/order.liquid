@@ -55,7 +55,12 @@
         </div>
       </div>
 
-      <div>
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        {% unless order.cancelled or order.fulfillment_status == 'fulfilled' %}
+          <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20would%20like%20to%20cancel%20Order%20{{ order.name }}%20({{ order.total_price | money }}).%20Please%20halt%20dispatch%20and%20process%20my%20refund." target="_blank" style="display: inline-block; padding: 10px 18px; border: 1px solid #FECACA; background: #FEF2F2; color: #991B1B; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+            &#10005; CANCEL ORDER
+          </a>
+        {% endunless %}
         <a href="/pages/account" style="display: inline-block; padding: 10px 20px; border: 1px solid #D6CEC3; background: #FAF8F5; color: #1E1C19; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
           &larr; BACK TO ACCOUNT
         </a>

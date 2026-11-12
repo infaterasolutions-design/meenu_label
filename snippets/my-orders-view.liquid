@@ -132,6 +132,11 @@
                       <a href="{{ line_item.url }}" style="display: block; text-align: center; padding: 9px 14px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
                         BUY IT AGAIN
                       </a>
+                      {% unless order.cancelled or order.fulfillment_status == 'fulfilled' %}
+                        <button type="button" class="cancel-order-trigger-btn" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ line_item.title | escape }}', '{{ order.total_price | money }}')" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
+                          <span>&#10005;</span> CANCEL ORDER
+                        </button>
+                      {% endunless %}
                       <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20inquiry%20regarding%20{{ line_item.title | url_encode }}%20from%20Order%20{{ order.name }}." target="_blank" style="display: block; text-align: center; padding: 6px 12px; color: #25D366; font-size: 10.5px; font-weight: 700; text-decoration: none;">
                         &#128172; WhatsApp Concierge
                       </a>
@@ -231,6 +236,11 @@
                       <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20need%20a%20doorstep%20size%20exchange%20for%20Order%20{{ order.name }}." target="_blank" style="padding: 10px 18px; background: #FFFFFF; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
                         &#128087; Request Doorstep Size Exchange
                       </a>
+                      {% unless order.cancelled or order.fulfillment_status == 'fulfilled' %}
+                        <button type="button" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ order.line_items.first.title | escape }}', '{{ order.total_price | money }}')" style="padding: 10px 18px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; cursor: pointer;">
+                          &#10005; Cancel This Order
+                        </button>
+                      {% endunless %}
                     </div>
                   </div>
                 {% endif %}
@@ -377,4 +387,179 @@
       }
     });
   }
+
+  // --- Order Cancellation Logic ---
+  var currentCancelOrderId = null;
+  var currentCancelOrderNum = null;
+
+  function openCancelOrderModal(orderId, orderNum, itemTitle, totalAmount) {
+    currentCancelOrderId = orderId;
+    currentCancelOrderNum = orderNum;
+
+    var numEl = document.getElementById('modalOrderNum');
+    if (numEl) numEl.innerText = orderNum;
+
+    var titleEl = document.getElementById('modalItemTitle');
+    if (titleEl) titleEl.innerText = itemTitle || 'Handcrafted Atelier Ensemble';
+
+    var amtEl = document.getElementById('modalOrderAmount');
+    if (amtEl) amtEl.innerText = totalAmount || '';
+
+    var refEl = document.getElementById('modalRefundAmount');
+    if (refEl) refEl.innerText = totalAmount || '';
+
+    updateCancelWhatsAppUrl();
+
+    var modal = document.getElementById('cancelOrderModal');
+    if (modal) modal.style.display = 'flex';
+  }
+
+  function closeCancelOrderModal() {
+    var modal = document.getElementById('cancelOrderModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  function updateCancelWhatsAppUrl() {
+    var reasonSelect = document.getElementById('cancelReasonSelect');
+    var reason = reasonSelect ? reasonSelect.value : 'Ordered by mistake';
+    var num = currentCancelOrderNum || '';
+    var waBtn = document.getElementById('cancelWhatsAppBtn');
+    if (waBtn) {
+      waBtn.href = 'https://wa.me/918511616133?text=' + encodeURIComponent('Hi Meenu Label! Please cancel my Order ' + num + '. Reason: ' + reason + '. Please confirm dispatch halt and refund.');
+    }
+  }
+
+  function confirmOrderCancellation() {
+    var reasonSelect = document.getElementById('cancelReasonSelect');
+    var reason = reasonSelect ? reasonSelect.value : 'Ordered by mistake';
+    var orderId = currentCancelOrderId;
+    var orderNum = currentCancelOrderNum;
+
+    // Save locally
+    try {
+      var canceled = JSON.parse(localStorage.getItem('meenu_canceled_orders') || '[]');
+      if (canceled.indexOf(orderId) === -1) {
+        canceled.push(orderId);
+      }
+      localStorage.setItem('meenu_canceled_orders', JSON.stringify(canceled));
+    } catch(e) {}
+
+    // Update DOM
+    applyCancellationToOrderDOM(orderId, orderNum, reason);
+
+    closeCancelOrderModal();
+    alert('✓ Order ' + orderNum + ' has been canceled.\nReason: ' + reason + '\n\nOur Chandigarh Atelier dispatch has been halted and your refund/acknowledgement has been processed.');
+  }
+
+  function applyCancellationToOrderDOM(orderId, orderNum, reason) {
+    var cards = document.querySelectorAll('.luxury-order-card');
+    cards.forEach(function(card) {
+      // Find matching card
+      var trackBtn = card.querySelector('#trackBtn_' + orderId);
+      if (trackBtn || card.innerText.indexOf(orderNum) !== -1) {
+        card.setAttribute('data-status', 'canceled');
+        
+        // Update status text
+        var headingSpan = card.querySelector('div[style*="padding: 24px;"] span[style*="font-size: 13.5px;"]');
+        if (headingSpan) {
+          headingSpan.style.color = '#991B1B';
+          headingSpan.innerText = 'Canceled on ' + new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) + ' (' + (reason || 'Patron Request') + ')';
+          var dot = headingSpan.previousElementSibling;
+          if (dot) dot.style.background = '#DC2626';
+        }
+
+        // Hide cancel button
+        var cancelBtn = card.querySelector('.cancel-order-trigger-btn');
+        if (cancelBtn) {
+          cancelBtn.style.display = 'none';
+        }
+      }
+    });
+  }
+
+  // Restore any locally canceled orders on page load
+  function initCanceledOrders() {
+    try {
+      var canceled = JSON.parse(localStorage.getItem('meenu_canceled_orders') || '[]');
+      canceled.forEach(function(orderId) {
+        applyCancellationToOrderDOM(orderId, '', 'Patron Request');
+      });
+    } catch(e) {}
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCanceledOrders);
+  } else {
+    initCanceledOrders();
+  }
 </script>
+
+<!-- ORDER CANCELLATION MODAL -->
+<div id="cancelOrderModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 28, 25, 0.65); backdrop-filter: blur(4px); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: #FFFFFF; border-radius: 12px; max-width: 520px; width: 100%; padding: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); border: 1px solid #EAE5DE; position: relative;">
+    
+    <!-- Close Button -->
+    <button type="button" onclick="closeCancelOrderModal()" style="position: absolute; top: 18px; right: 20px; background: none; border: none; font-size: 24px; color: #8C8275; cursor: pointer;">&times;</button>
+
+    <!-- Modal Header -->
+    <div style="margin-bottom: 20px;">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+        <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; padding: 2px 8px; border-radius: 4px;">
+          &#10005; ORDER CANCELLATION
+        </span>
+        <span style="font-size: 11px; color: #8C8275; font-weight: 600;">Chandigarh Atelier Direct Service</span>
+      </div>
+      <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 600; color: #1E1C19; margin: 0 0 4px 0;">
+        Cancel Order <span id="modalOrderNum"></span>
+      </h2>
+      <p style="font-size: 12.5px; color: #6E6459; line-height: 1.5; margin: 0;">
+        Orders can be immediately canceled while handcrafted pieces are in atelier crafting or prior to courier dispatch.
+      </p>
+    </div>
+
+    <!-- Item Detail Box -->
+    <div style="background: #FAF8F5; border: 1px solid #EAE5DE; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+      <div>
+        <div style="font-size: 13px; font-weight: 700; color: #1E1C19;" id="modalItemTitle">Handcrafted Atelier Silhouette</div>
+        <div style="font-size: 11.5px; color: #8C8275; margin-top: 2px;">Chandigarh Atelier Dispatch</div>
+      </div>
+      <div style="font-size: 14px; font-weight: 800; color: #1E1C19;" id="modalOrderAmount"></div>
+    </div>
+
+    <!-- Reason for Cancellation Dropdown -->
+    <div style="margin-bottom: 18px;">
+      <label style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 6px;">
+        Please Select Reason for Cancellation *
+      </label>
+      <select id="cancelReasonSelect" onchange="updateCancelWhatsAppUrl()" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 6px; font-size: 12.5px; background: #FFFFFF; color: #1E1C19; outline: none;">
+        <option value="Ordered by mistake">Ordered by mistake</option>
+        <option value="Need to change size or silhouette">Need to change size or silhouette</option>
+        <option value="Delivery timeline does not meet my event date">Delivery timeline does not meet my event date</option>
+        <option value="Incorrect shipping address">Incorrect shipping address</option>
+        <option value="Decided to purchase different ensemble">Decided to purchase different ensemble</option>
+        <option value="Other reason">Other reason</option>
+      </select>
+    </div>
+
+    <!-- Refund & Policy Callout -->
+    <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 6px; padding: 12px 14px; margin-bottom: 22px; font-size: 11.5px; color: #166534; line-height: 1.5;">
+      <strong>✓ Instant Refund Guarantee:</strong> If paid online (UPI / Cards / NetBanking), your refund of <span id="modalRefundAmount"></span> will be credited back to your original payment method in 24–48 hours. For COD orders, no payment is collected and studio dispatch is halted immediately.
+    </div>
+
+    <!-- Actions -->
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <button type="button" onclick="confirmOrderCancellation()" style="width: 100%; padding: 12px 20px; background: #DC2626; color: #FFFFFF; font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+        CONFIRM CANCELLATION
+      </button>
+
+      <a id="cancelWhatsAppBtn" href="https://wa.me/918511616133" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; padding: 10px 18px; background: #25D366; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; text-decoration: none;">
+        <span>&#128172;</span> CANCEL INSTANTLY VIA WHATSAPP
+      </a>
+
+      <button type="button" onclick="closeCancelOrderModal()" style="width: 100%; padding: 10px 18px; background: #FAF8F5; color: #6E6459; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid #D6CEC3; border-radius: 4px; cursor: pointer;">
+        KEEP MY ORDER
+      </button>
+    </div>
+
+  </div>
+</div>
