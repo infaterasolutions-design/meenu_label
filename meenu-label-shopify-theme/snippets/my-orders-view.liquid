@@ -1,8 +1,4 @@
-{% if routes.account_login_url contains '?' %}
-  {% assign my_orders_login_url_with_return = routes.account_login_url | append: '&return_to=%2Fpages%2Fmy-orders' %}
-{% else %}
-  {% assign my_orders_login_url_with_return = routes.account_login_url | append: '?return_to=%2Fpages%2Fmy-orders' %}
-{% endif %}
+{% assign my_orders_login_url_with_return = '/customer_authentication/login?return_to=/pages/my-orders' %}
 <div class="my-orders-page-section" style="background: #FAF8F5; min-height: 85vh; padding: 40px 20px 80px;">
   <div style="max-width: 980px; margin: 0 auto;">
     

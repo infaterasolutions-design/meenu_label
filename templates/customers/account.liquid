@@ -1,9 +1,5 @@
 <!-- MEENU LABEL SNITCH-STYLE LUXURY ATELIER ACCOUNT HUB -->
-{% if routes.account_login_url contains '?' %}
-  {% assign account_login_url_with_return = routes.account_login_url | append: '&return_to=%2Fpages%2Faccount' %}
-{% else %}
-  {% assign account_login_url_with_return = routes.account_login_url | append: '?return_to=%2Fpages%2Faccount' %}
-{% endif %}
+{% assign account_login_url_with_return = '/customer_authentication/login?return_to=/pages/account' %}
 <div class="snitch-account-hub-page" style="background: #FFFFFF; min-height: 80vh; padding: 40px 20px 80px;">
   <div style="max-width: 860px; margin: 0 auto;">
 
