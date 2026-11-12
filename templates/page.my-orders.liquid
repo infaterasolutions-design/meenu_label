@@ -350,11 +350,20 @@
 
     var btn = document.getElementById('trackBtn_' + orderId);
     if (btn) {
+      var isCanceled = btn.classList.contains('btn-canceled-state') || (panel.closest('.luxury-order-card') && panel.closest('.luxury-order-card').getAttribute('data-status') === 'canceled');
       var labelSpan = btn.querySelector('.track-btn-label');
       if (labelSpan) {
-        labelSpan.textContent = isHidden ? 'HIDE TRACKING ▲' : 'TRACK SHIPMENT';
+        if (isCanceled) {
+          labelSpan.textContent = isHidden ? '✕ CANCELLATION DETAILS ▲' : '✕ CANCELLATION DETAILS';
+        } else {
+          labelSpan.textContent = isHidden ? 'HIDE TRACKING ▲' : 'TRACK SHIPMENT';
+        }
       }
-      btn.style.background = isHidden ? '#1E1C19' : '#9E7D47';
+      if (isCanceled) {
+        btn.style.background = isHidden ? '#7F1D1D' : '#991B1B';
+      } else {
+        btn.style.background = isHidden ? '#1E1C19' : '#9E7D47';
+      }
     }
 
     if (isHidden) {
@@ -434,44 +443,116 @@
     var reason = reasonSelect ? reasonSelect.value : 'Ordered by mistake';
     var orderId = currentCancelOrderId;
     var orderNum = currentCancelOrderNum;
+    var dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
     // Save locally
     try {
-      var canceled = JSON.parse(localStorage.getItem('meenu_canceled_orders') || '[]');
-      if (canceled.indexOf(orderId) === -1) {
-        canceled.push(orderId);
-      }
-      localStorage.setItem('meenu_canceled_orders', JSON.stringify(canceled));
+      var canceledData = JSON.parse(localStorage.getItem('meenu_canceled_orders_data') || '{}');
+      canceledData[orderId] = {
+        num: orderNum,
+        reason: reason,
+        date: dateStr
+      };
+      localStorage.setItem('meenu_canceled_orders_data', JSON.stringify(canceledData));
+
+      // Also keep array for safety
+      var canceledList = JSON.parse(localStorage.getItem('meenu_canceled_orders') || '[]');
+      if (canceledList.indexOf(orderId) === -1) canceledList.push(orderId);
+      localStorage.setItem('meenu_canceled_orders', JSON.stringify(canceledList));
     } catch(e) {}
 
-    // Update DOM
-    applyCancellationToOrderDOM(orderId, orderNum, reason);
+    // Update DOM thoroughly
+    applyCancellationToOrderDOM(orderId, orderNum, reason, dateStr);
 
     closeCancelOrderModal();
     alert('✓ Order ' + orderNum + ' has been canceled.\nReason: ' + reason + '\n\nOur Chandigarh Atelier dispatch has been halted and your refund/acknowledgement has been processed.');
   }
 
-  function applyCancellationToOrderDOM(orderId, orderNum, reason) {
+  function applyCancellationToOrderDOM(orderId, orderNum, reason, cancelDate) {
+    var dateFormatted = cancelDate || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    var reasonText = reason || 'Ordered by mistake';
+
     var cards = document.querySelectorAll('.luxury-order-card');
     cards.forEach(function(card) {
-      // Find matching card
       var trackBtn = card.querySelector('#trackBtn_' + orderId);
-      if (trackBtn || card.innerText.indexOf(orderNum) !== -1) {
+      if (trackBtn || (orderNum && card.innerText.indexOf(orderNum) !== -1)) {
         card.setAttribute('data-status', 'canceled');
         
-        // Update status text
+        // 1. Update top status headline
         var headingSpan = card.querySelector('div[style*="padding: 24px;"] span[style*="font-size: 13.5px;"]');
         if (headingSpan) {
           headingSpan.style.color = '#991B1B';
-          headingSpan.innerText = 'Canceled on ' + new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) + ' (' + (reason || 'Patron Request') + ')';
+          headingSpan.innerText = 'Canceled on ' + dateFormatted + ' (' + reasonText + ')';
           var dot = headingSpan.previousElementSibling;
           if (dot) dot.style.background = '#DC2626';
         }
 
-        // Hide cancel button
+        // 2. Hide cancel button
         var cancelBtn = card.querySelector('.cancel-order-trigger-btn');
         if (cancelBtn) {
           cancelBtn.style.display = 'none';
+        }
+
+        // 3. Update trackBtn styling to CANCELLATION DETAILS
+        if (trackBtn) {
+          trackBtn.classList.add('btn-canceled-state');
+          trackBtn.style.background = '#991B1B';
+          trackBtn.style.boxShadow = '0 4px 12px rgba(153, 27, 27, 0.25)';
+          var labelSpan = trackBtn.querySelector('.track-btn-label');
+          if (labelSpan) {
+            labelSpan.textContent = '✕ CANCELLATION DETAILS ▲';
+          }
+        }
+
+        // 4. Transform tracking panel into authentic CANCELLATION DETAILS PANEL
+        var panel = card.querySelector('#trackingPanel_' + orderId);
+        if (panel) {
+          panel.style.background = '#FFF5F5';
+          panel.style.border = '1px solid #FED7D7';
+          panel.style.display = 'block';
+
+          var placedDate = card.querySelector('div[style*="ORDER PLACED"] + div');
+          var placedDateText = placedDate ? placedDate.innerText.trim() : 'November 12, 2026';
+          var numText = orderNum || (card.querySelector('div[style*="ORDER NUMBER"] + div') ? card.querySelector('div[style*="ORDER NUMBER"] + div').innerText.trim() : '');
+
+          panel.innerHTML = '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid #FEB2B2; padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">' +
+            '<div>' +
+              '<span style="font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #991B1B;">✕ CANCELLATION &amp; REFUND STATUS</span>' +
+              '<div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 700; color: #1E1C19; margin-top: 2px;">' +
+                'Order ' + numText + ' Details' +
+              '</div>' +
+            '</div>' +
+            '<span style="background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">' +
+              '✕ Order Canceled' +
+            '</span>' +
+          '</div>' +
+          '<div style="background: #FFFFFF; border: 1px solid #FCA5A5; border-radius: 6px; padding: 12px 16px; margin-bottom: 16px; font-size: 12.5px; color: #7F1D1D; line-height: 1.5;">' +
+            '<strong>Order Notice:</strong> This order was canceled on ' + dateFormatted + ' (' + reasonText + '). Studio crafting and courier dispatch have been halted. No courier shipment was dispatched.' +
+          '</div>' +
+          '<div class="shipment-timeline" style="margin: 16px 0 20px; padding-left: 26px;">' +
+            '<div class="timeline-step completed">' +
+              '<div class="timeline-title" style="color: #1E1C19;">Order Placed &amp; Confirmed</div>' +
+              '<div class="timeline-desc" style="color: #6E6459;">' + placedDateText + '</div>' +
+            '</div>' +
+            '<div class="timeline-step canceled-step">' +
+              '<div class="timeline-title" style="color: #991B1B; font-weight: 700;">Order Canceled &amp; Dispatch Halted</div>' +
+              '<div class="timeline-desc" style="color: #7F1D1D;">Canceled on ' + dateFormatted + ' &bull; Reason: ' + reasonText + '</div>' +
+            '</div>' +
+            '<div class="timeline-step completed">' +
+              '<div class="timeline-title" style="color: #1E1C19;">Payment &amp; Refund Status</div>' +
+              '<div class="timeline-desc" style="color: #2E6B38; font-weight: 600;">' +
+                '&#10003; 100% Refund Initiated to Original Payment Method / COD Halted' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div style="display: flex; gap: 10px; flex-wrap: wrap;">' +
+            '<a href="/collections/all" style="padding: 10px 18px; background: #1E1C19; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">' +
+              'RE-ORDER SILHOUETTE &rarr;' +
+            '</a>' +
+            '<a href="https://wa.me/918511616133?text=' + encodeURIComponent('Hi Meenu Label! I have canceled Order ' + numText + ' on the website. Please confirm dispatch halt and refund.') + '" target="_blank" style="padding: 10px 18px; background: #25D366; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">' +
+              '<span>&#128172;</span> Chat on WhatsApp Regarding Refund' +
+            '</a>' +
+          '</div>';
         }
       }
     });
@@ -480,9 +561,18 @@
   // Restore any locally canceled orders on page load
   function initCanceledOrders() {
     try {
-      var canceled = JSON.parse(localStorage.getItem('meenu_canceled_orders') || '[]');
-      canceled.forEach(function(orderId) {
-        applyCancellationToOrderDOM(orderId, '', 'Patron Request');
+      var canceledData = JSON.parse(localStorage.getItem('meenu_canceled_orders_data') || '{}');
+      for (var orderId in canceledData) {
+        if (canceledData.hasOwnProperty(orderId)) {
+          var item = canceledData[orderId];
+          applyCancellationToOrderDOM(orderId, item.num, item.reason, item.date);
+        }
+      }
+      var oldArray = JSON.parse(localStorage.getItem('meenu_canceled_orders') || '[]');
+      oldArray.forEach(function(oId) {
+        if (!canceledData[oId]) {
+          applyCancellationToOrderDOM(oId, '', 'Ordered by mistake', '');
+        }
       });
     } catch(e) {}
   }
