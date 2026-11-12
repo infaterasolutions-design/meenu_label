@@ -104,13 +104,69 @@
 
         <!-- Saved Addresses -->
         {% if customer %}
-          <a href="{{ routes.account_addresses_url }}" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; transition: background 0.15s;">
+          <a href="#saved-addresses" onclick="toggleAccountSubpanel('savedAddressesPanel'); return false;" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; transition: background 0.15s;">
             <div style="display: flex; align-items: center; gap: 14px;">
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
               <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">SAVED ADDRESSES</span>
             </div>
             <span class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
           </a>
+          <div id="savedAddressesPanel" style="display: none; padding: 20px 24px; background: #FAF8F5; border-top: 1px solid #F0EAE1; font-size: 12.5px; color: #4A4238;">
+            {% if customer.addresses.size > 0 %}
+              <div style="display: flex; flex-direction: column; gap: 14px;">
+                {% for address in customer.addresses %}
+                  <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 8px; padding: 16px 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                      <span style="font-weight: 700; color: #1E1C19; font-size: 13px;">{{ address.name }}</span>
+                      {% if address == customer.default_address %}
+                        <span style="font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9B7846; padding: 2px 8px; border-radius: 4px;">DEFAULT ADDRESS</span>
+                      {% endif %}
+                    </div>
+                    <div style="color: #6E6459; line-height: 1.5; font-size: 12px;">
+                      <div>{{ address.address1 }}</div>
+                      {% if address.address2 != blank %}
+                        <div>{{ address.address2 }}</div>
+                      {% endif %}
+                      <div>{{ address.city }}{% if address.province_code != blank %}, {{ address.province_code }}{% endif %} {{ address.zip }}</div>
+                      <div>{{ address.country }}</div>
+                      {% if address.phone != blank %}
+                        <div style="margin-top: 4px; color: #1E1C19; font-weight: 600;">Phone: {{ address.phone }}</div>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% elsif customer.default_address %}
+              <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 8px; padding: 16px 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <span style="font-weight: 700; color: #1E1C19; font-size: 13px;">{{ customer.default_address.name | default: customer.name }}</span>
+                  <span style="font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9B7846; padding: 2px 8px; border-radius: 4px;">DEFAULT ADDRESS</span>
+                </div>
+                <div style="color: #6E6459; line-height: 1.5; font-size: 12px;">
+                  <div>{{ customer.default_address.address1 }}</div>
+                  {% if customer.default_address.address2 != blank %}
+                    <div>{{ customer.default_address.address2 }}</div>
+                  {% endif %}
+                  <div>{{ customer.default_address.city }}{% if customer.default_address.province_code != blank %}, {{ customer.default_address.province_code }}{% endif %} {{ customer.default_address.zip }}</div>
+                  <div>{{ customer.default_address.country }}</div>
+                  {% if customer.default_address.phone != blank %}
+                    <div style="margin-top: 4px; color: #1E1C19; font-weight: 600;">Phone: {{ customer.default_address.phone }}</div>
+                  {% endif %}
+                </div>
+              </div>
+            {% else %}
+              <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 8px; padding: 16px 18px; text-align: center; color: #8C8275;">
+                No saved shipping addresses found yet. Delivery addresses are automatically saved here upon checkout.
+              </div>
+            {% endif %}
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px solid #F0EAE1; flex-wrap: wrap; gap: 8px;">
+              <span style="font-size: 11px; color: #8C8275;">Need to update your delivery address or measurements?</span>
+              <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20would%20like%20to%20update%20my%20saved%20shipping%20address." target="_blank" style="color: #25D366; font-size: 11.5px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                <span>💬</span> WhatsApp Concierge
+              </a>
+            </div>
+          </div>
         {% else %}
           <a href="{{ account_login_url_with_return }}" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; transition: background 0.15s;">
             <div style="display: flex; align-items: center; gap: 14px;">
