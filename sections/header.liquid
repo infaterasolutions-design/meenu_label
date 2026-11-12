@@ -43,16 +43,23 @@
         <span class="header-badge-pill header-cart-pill" id="headerCartCount" {% if cart.item_count > 0 %}style="display:inline-flex;"{% else %}style="display:none;"{% endif %}>{{ cart.item_count | default: 0 }}</span>
       </a>
 
-      <!-- 3. User Account & Login Link (Luxury In-Theme Atelier Modal) -->
-      <a href="javascript:void(0)" onclick="openAccountModal('login')" class="header-icon-action header-account-btn" title="{% if customer %}Atelier Account ({{ customer.first_name | default: 'VIP' }}){% else %}Sign In to Atelier{% endif %}" aria-label="Account" style="position:relative; text-decoration:none; color:inherit; display:flex; align-items:center; cursor:pointer;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
-          <circle cx="12" cy="7.5" r="4"></circle>
-          <path d="M5 20.5a7 7 0 0 1 14 0"></path>
-        </svg>
-        {% if customer %}
+      <!-- 3. User Account Link (Snitch-Style Hub after Login) -->
+      {% if customer %}
+        <a href="{{ routes.account_url }}" class="header-icon-action header-account-btn" title="Atelier Account ({{ customer.first_name | default: 'VIP Patron' }})" aria-label="Account" style="position:relative; text-decoration:none; color:inherit; display:flex; align-items:center;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
+            <circle cx="12" cy="7.5" r="4"></circle>
+            <path d="M5 20.5a7 7 0 0 1 14 0"></path>
+          </svg>
           <span class="account-active-badge" id="accountActiveBadge" style="display:block; position:absolute; top:2px; right:2px; width:7px; height:7px; background:#22C55E; border-radius:50%; border:1.5px solid #FFFFFF;"></span>
-        {% endif %}
-      </a>
+        </a>
+      {% else %}
+        <a href="{{ routes.account_login_url }}" class="header-icon-action header-account-btn" title="Sign In / Login" aria-label="Sign In" style="position:relative; text-decoration:none; color:inherit; display:flex; align-items:center;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
+            <circle cx="12" cy="7.5" r="4"></circle>
+            <path d="M5 20.5a7 7 0 0 1 14 0"></path>
+          </svg>
+        </a>
+      {% endif %}
     </div>
   </div>
 

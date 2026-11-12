@@ -1,226 +1,168 @@
-<div class="customer-account-section" style="background: #FAF8F5; min-height: 85vh; padding: 40px 20px 80px;">
-  <div class="customer-account-container" style="max-width: 1200px; margin: 0 auto;">
-    
-    <!-- Breadcrumb -->
-    <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #8C8275; margin-bottom: 24px;">
-      <a href="/" style="color: inherit; text-decoration: none;">HOME</a> &nbsp;/&nbsp; 
-      <span style="color: #1E1C19;">ATELIER ACCOUNT &amp; ORDERS</span>
-    </div>
+<!-- MEENU LABEL SNITCH-STYLE LUXURY ATELIER ACCOUNT HUB -->
+<div class="snitch-account-hub-page" style="background: #FFFFFF; min-height: 80vh; padding: 40px 20px 80px;">
+  <div style="max-width: 860px; margin: 0 auto;">
 
-    <!-- Header Banner -->
-    <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; padding: 28px 32px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
-      <div>
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-          <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9B7846; padding: 3px 10px; border-radius: 4px;">
-            &#10024; ATELIER VIP CLIENT
-          </span>
-          <span style="font-size: 11px; color: #8C8275; font-weight: 600;">Member Since {{ customer.created_at | date: "%Y" }}</span>
+    <!-- User Welcome Header Bar -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 24px; margin-bottom: 32px; border-bottom: 1px solid #EAE5DE; flex-wrap: wrap; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="width: 50px; height: 50px; border-radius: 50%; background: #FAF8F5; border: 1.5px solid #1E1C19; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 700; color: #1E1C19; box-shadow: 0 4px 14px rgba(0,0,0,0.04);">
+          {{ customer.first_name | slice: 0 | default: 'S' }}
         </div>
-        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; font-weight: 600; color: #1E1C19; margin: 0 0 4px 0;">
-          Welcome back, {{ customer.first_name | default: 'Patron' }}
-        </h1>
-        <div style="font-size: 12.5px; color: #6E6459;">
-          {{ customer.email }} &bull; Chandigarh Atelier Direct Care
+        <div>
+          <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #9E7D47;">
+            &#10024; MEENU LABEL ATELIER PATRON
+          </div>
+          <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 600; color: #1E1C19; margin: 2px 0 0 0;">
+            {{ customer.name | default: 'Sandeep Singh' }}
+          </h1>
+          <div style="font-size: 12.5px; color: #8C8275;">
+            {{ customer.email | default: 'sandeepsinghjatav@gmail.com' }} &bull; Chandigarh Atelier Direct Access
+          </div>
         </div>
       </div>
       <div>
-        <a href="{{ routes.account_logout_url }}" style="display: inline-block; padding: 10px 20px; border: 1px solid #D6CEC3; background: #FAF8F5; color: #1E1C19; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: all 0.2s;">
+        <a href="{{ routes.account_logout_url }}" style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #991B1B; text-decoration: none; padding: 8px 18px; border: 1px solid #FECACA; background: #FEF2F2; border-radius: 4px; transition: all 0.2s;">
           SIGN OUT
         </a>
       </div>
     </div>
 
-    <!-- Main Grid: Orders & Profile -->
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px; align-items: start;" class="account-grid-responsive">
-      
-      <!-- Left Column: Orders List -->
-      <div>
-        <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
-          
-          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #F0EAE1;">
-            <div>
-              <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #C5A059;">PURCHASE HISTORY</span>
-              <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 600; color: #1E1C19; margin: 2px 0 0 0;">
-                Your Orders ({{ customer.orders.size }})
-              </h2>
-            </div>
-            <span style="font-size: 11.5px; color: #8C8275; font-weight: 600;">
-              Live Dispatches &bull; Doorstep Exchanges
-            </span>
-          </div>
-
-          {% paginate customer.orders by 10 %}
-            {% if customer.orders.size > 0 %}
-              <div style="display: flex; flex-direction: column; gap: 16px;">
-                {% for order in customer.orders %}
-                  <div style="border: 1px solid #EAE5DE; border-radius: 8px; padding: 20px; background: #FAF8F5; transition: all 0.2s ease;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
-                      <div>
-                        <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #8C8275;">ORDER NUMBER</div>
-                        <a href="{{ order.customer_url }}" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 700; color: #1E1C19; text-decoration: none;">
-                          {{ order.name }}
-                        </a>
-                        <div style="font-size: 11.5px; color: #6E6459; margin-top: 2px;">
-                          Placed on {{ order.created_at | date: "%B %d, %Y" }}
-                        </div>
-                      </div>
-
-                      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                        <!-- Payment Status -->
-                        {% if order.financial_status == 'paid' %}
-                          <span style="background: #F3F8F2; border: 1px solid #D6E8D5; color: #2E6B38; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.04em; text-transform: uppercase;">
-                            &#10003; Paid
-                          </span>
-                        {% elsif order.financial_status == 'pending' %}
-                          <span style="background: #FFFBEB; border: 1px solid #FDE68A; color: #B45309; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.04em; text-transform: uppercase;">
-                            Pending (COD)
-                          </span>
-                        {% else %}
-                          <span style="background: #F5F3EF; border: 1px solid #E0DAD0; color: #6E6459; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.04em; text-transform: uppercase;">
-                            {{ order.financial_status_label }}
-                          </span>
-                        {% endif %}
-
-                        <!-- Fulfillment Status -->
-                        {% if order.fulfillment_status == 'fulfilled' %}
-                          <span style="background: #F3F8F2; border: 1px solid #D6E8D5; color: #2E6B38; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.04em; text-transform: uppercase;">
-                            &#128666; Dispatched / Delivered
-                          </span>
-                        {% else %}
-                          <span style="background: #FFF8EB; border: 1px solid #F7E4BE; color: #9B7846; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.04em; text-transform: uppercase;">
-                            &#9203; Atelier Processing
-                          </span>
-                        {% endif %}
-                      </div>
-                    </div>
-
-                    <!-- Items Summary -->
-                    <div style="border-top: 1px solid #ECE7E0; border-bottom: 1px solid #ECE7E0; padding: 12px 0; margin-bottom: 14px;">
-                      {% for line_item in order.line_items limit: 3 %}
-                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: #1E1C19; margin-bottom: 4px;">
-                          <span>
-                            <strong>{{ line_item.quantity }}x</strong> {{ line_item.title }}
-                            {% if line_item.variant.title != 'Default Title' %}
-                              <span style="color: #8C8275; font-size: 11px;">({{ line_item.variant.title }})</span>
-                            {% endif %}
-                          </span>
-                          <span style="font-weight: 700;">{{ line_item.final_line_price | money }}</span>
-                        </div>
-                      {% endfor %}
-                      {% if order.line_items.size > 3 %}
-                        <div style="font-size: 11px; color: #8C8275; font-style: italic;">
-                          + {{ order.line_items.size | minus: 3 }} more item(s)
-                        </div>
-                      {% endif %}
-                    </div>
-
-                    <!-- Bottom Action Bar -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                      <div>
-                        <span style="font-size: 11px; color: #8C8275; text-transform: uppercase; letter-spacing: 0.06em;">TOTAL PAYABLE:</span>
-                        <span style="font-size: 15px; font-weight: 800; color: #1E1C19; margin-left: 4px;">{{ order.total_price | money }}</span>
-                      </div>
-                      <div style="display: flex; gap: 8px;">
-                        <a href="{{ order.customer_url }}" style="display: inline-block; padding: 8px 16px; background: #1E1C19; color: #FFFFFF; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
-                          VIEW DETAILS &amp; INVOICE &rarr;
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-
-              {% if paginate.pages > 1 %}
-                <div style="display: flex; justify-content: center; gap: 8px; margin-top: 24px;">
-                  {{ paginate | default_pagination }}
-                </div>
-              {% endif %}
-
-            {% else %}
-              <!-- Empty State -->
-              <div style="text-align: center; padding: 48px 20px;">
-                <div style="font-size: 36px; margin-bottom: 12px;">&#128717;&#65039;</div>
-                <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 600; color: #1E1C19; margin: 0 0 6px 0;">
-                  No Atelier Orders Placed Yet
-                </h3>
-                <p style="font-size: 13px; color: #6E6459; max-width: 420px; margin: 0 auto 20px auto; line-height: 1.5;">
-                  Explore our debut Drop 01 handcrafted pure Chanderi silk straight suits, crepe silk angrakha co-ords, and festive ensembles.
-                </p>
-                <a href="/collections/all" style="display: inline-block; padding: 12px 28px; background: #1E1C19; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
-                  EXPLORE DROP 01 SILHOUETTES &rarr;
-                </a>
-              </div>
-            {% endif %}
-          {% endpaginate %}
-
-        </div>
+    <!-- Group 1: ACCOUNT -->
+    <div class="snitch-menu-group" style="margin-bottom: 32px;">
+      <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #8C8275; margin-bottom: 8px; padding-left: 4px;">
+        ACCOUNT
       </div>
-
-      <!-- Right Column: Profile & Addresses & Support -->
-      <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div style="border: 1px solid #EAE5DE; border-radius: 8px; overflow: hidden; background: #FFFFFF; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
         
-        <!-- Address Card -->
-        <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
-          <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #C5A059; margin-bottom: 4px;">
-            PRIMARY SHIPPING ADDRESS
+        <!-- Personal Information -->
+        <a href="#personal-info" onclick="toggleAccountSubpanel('personalInfoPanel'); return false;" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; border-bottom: 1px solid #F0EAE1; transition: background 0.15s;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">PERSONAL INFORMATION</span>
           </div>
-          <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 600; color: #1E1C19; margin: 0 0 14px 0;">
-            Delivery Details
-          </h3>
-
-          {% if customer.default_address %}
-            <div style="font-size: 12.5px; color: #4A4238; line-height: 1.6; margin-bottom: 16px;">
-              <strong>{{ customer.default_address.name }}</strong><br>
-              {{ customer.default_address.address1 }}<br>
-              {% if customer.default_address.address2 != blank %}
-                {{ customer.default_address.address2 }}<br>
-              {% endif %}
-              {{ customer.default_address.city }}, {{ customer.default_address.province_code }} {{ customer.default_address.zip }}<br>
-              {{ customer.default_address.country }}<br>
-              {% if customer.default_address.phone != blank %}
-                Phone: {{ customer.default_address.phone }}
-              {% endif %}
-            </div>
-          {% else %}
-            <p style="font-size: 12.5px; color: #8C8275; margin-bottom: 16px;">
-              No default address saved yet. Addresses are automatically saved upon your first order checkout.
-            </p>
-          {% endif %}
-
-          <a href="{{ routes.account_addresses_url }}" style="display: block; width: 100%; box-sizing: border-box; text-align: center; padding: 10px 0; border: 1px solid #1E1C19; background: #FAF8F5; color: #1E1C19; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
-            MANAGE SAVED ADDRESSES ({{ customer.addresses_count }})
-          </a>
+          <span class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
+        </a>
+        <div id="personalInfoPanel" style="display: none; padding: 18px 24px; background: #FAF8F5; border-bottom: 1px solid #F0EAE1; font-size: 12.5px; color: #4A4238;">
+          <div style="margin-bottom: 6px;"><strong>Name:</strong> {{ customer.name | default: 'Sandeep Singh' }}</div>
+          <div style="margin-bottom: 6px;"><strong>Email:</strong> {{ customer.email | default: 'sandeepsinghjatav@gmail.com' }}</div>
+          <div style="margin-bottom: 6px;"><strong>Default Destination:</strong> {{ customer.default_address.city | default: 'Mohali' }}, {{ customer.default_address.province_code | default: 'Punjab' }}</div>
+          <div style="margin-bottom: 6px;"><strong>Atelier Privilege:</strong> Debut Drop 01 VIP Access</div>
+          <div style="font-size: 11px; color: #8C8275; margin-top: 10px;">To update your contact details or measurements, chat with our Chandigarh atelier concierge.</div>
         </div>
 
-        <!-- Atelier Concierge Card -->
-        <div style="background: #FAF7F2; border: 1px solid #EAE3D9; border-radius: 12px; padding: 24px;">
-          <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #9B7846; margin-bottom: 4px;">
-            &#10024; CLIENT CARE PRIVILEGE
+        <!-- Saved Addresses -->
+        <a href="{{ routes.account_addresses_url }}" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; transition: background 0.15s;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">SAVED ADDRESSES</span>
           </div>
-          <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 600; color: #1E1C19; margin: 0 0 8px 0;">
-            Direct Atelier Styling &amp; Support
-          </h3>
-          <p style="font-size: 12px; color: #6E6459; line-height: 1.5; margin: 0 0 16px 0;">
-            Need sleeve alteration, doorstep size exchange, or urgent delivery coordination? Our Chandigarh atelier stylists are available directly on WhatsApp.
-          </p>
-
-          <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20order%20inquiry%20from%20my%20account." target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; padding: 11px 0; background: #25D366; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
-            CHAT ON WHATSAPP (+91 85116 16133)
-          </a>
-        </div>
+          <span class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
+        </a>
 
       </div>
+    </div>
 
+    <!-- Group 2: SHOPPING -->
+    <div class="snitch-menu-group" style="margin-bottom: 32px;">
+      <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #8C8275; margin-bottom: 8px; padding-left: 4px;">
+        SHOPPING
+      </div>
+      <div style="border: 1px solid #EAE5DE; border-radius: 8px; overflow: hidden; background: #FFFFFF; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+        
+        <!-- ORDERS (Direct In-Theme Portal with 1-Click Tracking & Images) -->
+        <a href="/pages/my-orders" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; border-bottom: 1px solid #F0EAE1; transition: background 0.15s;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">ORDERS</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 10px; font-weight: 700; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9B7846; padding: 3px 9px; border-radius: 4px; letter-spacing: 0.04em;">1-CLICK TRACKING &bull; LIVE STATUS</span>
+            <span class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
+          </div>
+        </a>
+
+        <!-- REFUNDS & DOORSTEP EXCHANGES -->
+        <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20would%20like%20to%20request%20a%20doorstep%20size%20exchange%20or%20refund." target="_blank" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; border-bottom: 1px solid #F0EAE1; transition: background 0.15s;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
+            <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">REFUNDS &amp; DOORSTEP EXCHANGES</span>
+          </div>
+          <span class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
+        </a>
+
+        <!-- GIFTING & SPECIAL OCCASIONS -->
+        <a href="/collections/all" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; border-bottom: 1px solid #F0EAE1; transition: background 0.15s;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+            <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">GIFTING &amp; SPECIAL OCCASIONS</span>
+          </div>
+          <span class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
+        </a>
+
+        <!-- FIND AN ATELIER -->
+        <a href="https://maps.google.com/?q=Sector+17+Chandigarh" target="_blank" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; border-bottom: 1px solid #F0EAE1; transition: background 0.15s;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">FIND AN ATELIER (SECTOR 17, CHANDIGARH)</span>
+          </div>
+          <span class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
+        </a>
+
+        <!-- RATE & REVIEW -->
+        <a href="/pages/my-orders" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; transition: background 0.15s;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">RATE &amp; REVIEW SILHOUETTES</span>
+          </div>
+          <span class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Group 3: COMMUNITY & VIP ATELIER -->
+    <div class="snitch-menu-group" style="margin-bottom: 32px;">
+      <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #8C8275; margin-bottom: 8px; padding-left: 4px;">
+        COMMUNITY &amp; VIP ATELIER
+      </div>
+      <div style="border: 1px solid #EAE5DE; border-radius: 8px; overflow: hidden; background: #FFFFFF; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+        
+        <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20am%20interested%20in%20the%20VIP%20Atelier%20Ambassador%20program." target="_blank" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; border-bottom: 1px solid #F0EAE1; transition: background 0.15s;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+            <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">CREATE AND EARN (VIP AMBASSADOR)</span>
+          </div>
+          <span class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
+        </a>
+
+        <a href="https://wa.me/918511616133" target="_blank" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; transition: background 0.15s;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">24/7 WHATSAPP CONCIERGE HELP</span>
+          </div>
+          <span class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
+        </a>
+
+      </div>
     </div>
 
   </div>
 </div>
 
 <style>
-  @media (max-width: 860px) {
-    .account-grid-responsive {
-      grid-template-columns: 1fr !important;
-    }
+  .snitch-menu-row:hover {
+    background: #FAF8F5 !important;
+  }
+  .snitch-menu-row:hover .snitch-arrow {
+    transform: translateX(4px);
+    color: #1E1C19 !important;
   }
 </style>
+
+<script>
+  function toggleAccountSubpanel(id) {
+    var p = document.getElementById(id);
+    if (!p) return;
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  }
+</script>
