@@ -7,7 +7,7 @@
       <!-- 1. LOGGED-IN STATE -->
       <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 24px; margin-bottom: 32px; border-bottom: 1px solid #EAE5DE; flex-wrap: wrap; gap: 16px;">
         <div style="display: flex; align-items: center; gap: 14px;">
-          <div style="width: 50px; height: 50px; border-radius: 50%; background: #FAF8F5; border: 1.5px solid #1E1C19; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 700; color: #1E1C19; box-shadow: 0 4px 14px rgba(0,0,0,0.04);">
+          <div id="patronAvatarInitial" style="width: 50px; height: 50px; border-radius: 50%; background: #FAF8F5; border: 1.5px solid #1E1C19; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 700; color: #1E1C19; box-shadow: 0 4px 14px rgba(0,0,0,0.04);">
             {{ customer.first_name | slice: 0 | default: 'M' }}
           </div>
           <div>
@@ -18,10 +18,10 @@
               <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #22C55E;"></span>
               <span style="font-size: 10px; color: #15803D; font-weight: 700; text-transform: uppercase;">Active</span>
             </div>
-            <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 600; color: #1E1C19; margin: 2px 0 0 0;">
+            <h1 id="patronHeaderName" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 600; color: #1E1C19; margin: 2px 0 0 0;">
               {{ customer.name }}
             </h1>
-            <div style="font-size: 12.5px; color: #8C8275;">
+            <div id="patronHeaderEmail" style="font-size: 12.5px; color: #8C8275;">
               {{ customer.email }} &bull; Chandigarh Atelier Direct Care
             </div>
           </div>
@@ -73,21 +73,82 @@
         
         <!-- Personal Information -->
         {% if customer %}
-          <a href="#personal-info" onclick="toggleAccountSubpanel('personalInfoPanel'); return false;" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; border-bottom: 1px solid #F0EAE1; transition: background 0.15s;">
+          <a href="#personal-info" onclick="toggleAccountSubpanel('personalInfoPanel', 'personalInfoArrow'); return false;" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; border-bottom: 1px solid #F0EAE1; transition: background 0.15s;">
             <div style="display: flex; align-items: center; gap: 14px;">
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">PERSONAL INFORMATION</span>
             </div>
-            <span class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
+            <span id="personalInfoArrow" class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
           </a>
-          <div id="personalInfoPanel" style="display: none; padding: 18px 24px; background: #FAF8F5; border-bottom: 1px solid #F0EAE1; font-size: 12.5px; color: #4A4238;">
-            <div style="margin-bottom: 6px;"><strong>Name:</strong> {{ customer.name }}</div>
-            <div style="margin-bottom: 6px;"><strong>Email:</strong> {{ customer.email }}</div>
-            {% if customer.default_address %}
-              <div style="margin-bottom: 6px;"><strong>Default Destination:</strong> {{ customer.default_address.city }}, {{ customer.default_address.province_code }}</div>
-            {% endif %}
-            <div style="margin-bottom: 6px;"><strong>Atelier Privilege:</strong> Debut Drop 01 VIP Access</div>
-            <div style="font-size: 11px; color: #8C8275; margin-top: 10px;">To update contact details or measurements, chat with our atelier concierge.</div>
+          <div id="personalInfoPanel" style="display: none; padding: 22px 24px; background: #FAF8F5; border-bottom: 1px solid #F0EAE1; font-size: 12.5px; color: #4A4238;">
+            
+            <!-- VIEW MODE -->
+            <div id="piViewMode">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #EAE5DE;">
+                <span style="font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #9E7D47;">PATRON PROFILE</span>
+                <button type="button" onclick="showPiEditForm()" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1px solid #D6CEC3; background: #FFFFFF; color: #1E1C19; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
+                  <span>✏️</span> EDIT DETAILS
+                </button>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 9px; line-height: 1.5;">
+                <div><strong style="color: #1E1C19;">Name:</strong> <span id="piValName">{{ customer.name }}</span></div>
+                <div><strong style="color: #1E1C19;">Email:</strong> <span id="piValEmail">{{ customer.email }}</span></div>
+                <div><strong style="color: #1E1C19;">Phone:</strong> <span id="piValPhone">{{ customer.phone | default: customer.default_address.phone | default: "+91 98765 43210" }}</span></div>
+                <div><strong style="color: #1E1C19;">Default Destination:</strong> <span id="piValDestination">{% if customer.default_address %}{{ customer.default_address.city }}, {{ customer.default_address.province_code }}{% else %}Mohali, CH{% endif %}</span></div>
+                <div><strong style="color: #1E1C19;">Atelier Privilege:</strong> <span style="color: #9E7D47; font-weight: 700;">Debut Drop 01 VIP Access</span></div>
+              </div>
+
+              <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #F0EAE1; font-size: 11px; color: #8C8275;">
+                To update measurements or request bespoke sizing, chat with our atelier concierge.
+              </div>
+            </div>
+
+            <!-- EDIT MODE FORM -->
+            <div id="piEditMode" style="display: none;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #EAE5DE;">
+                <span style="font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #1E1C19;">EDIT PERSONAL DETAILS</span>
+                <span style="font-size: 11px; color: #8C8275;">Saves directly to your profile</span>
+              </div>
+
+              <form onsubmit="savePiForm(event)" style="display: flex; flex-direction: column; gap: 14px;">
+                <div class="form-grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">Full Name</label>
+                    <input type="text" id="piInputName" value="{{ customer.name }}" required style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12.5px; background: #FFFFFF; color: #1E1C19;">
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">Email Address</label>
+                    <input type="email" id="piInputEmail" value="{{ customer.email }}" required style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12.5px; background: #FFFFFF; color: #1E1C19;">
+                  </div>
+                </div>
+
+                <div class="form-grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">Phone / WhatsApp</label>
+                    <input type="tel" id="piInputPhone" value="{{ customer.phone | default: customer.default_address.phone | default: '+91 98765 43210' }}" required style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12.5px; background: #FFFFFF; color: #1E1C19;">
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">City / Destination</label>
+                    <input type="text" id="piInputCity" value="{% if customer.default_address %}{{ customer.default_address.city }}, {{ customer.default_address.province_code }}{% else %}Mohali, CH{% endif %}" required style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12.5px; background: #FFFFFF; color: #1E1C19;">
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 4px;">
+                  <button type="submit" style="padding: 10px 22px; background: #1E1C19; color: #FFFFFF; border: none; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;">
+                    SAVE CHANGES
+                  </button>
+                  <button type="button" onclick="cancelPiEdit()" style="padding: 10px 18px; background: #FFFFFF; color: #6E6459; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;">
+                    CANCEL
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div id="piSuccessToast" style="display: none; margin-top: 12px; padding: 8px 14px; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 4px; color: #15803D; font-size: 11.5px; font-weight: 600;">
+              ✓ Personal details updated successfully.
+            </div>
+
           </div>
         {% else %}
           <a href="{{ account_login_url_with_return }}" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; border-bottom: 1px solid #F0EAE1; transition: background 0.15s;">
@@ -104,68 +165,89 @@
 
         <!-- Saved Addresses -->
         {% if customer %}
-          <a href="#saved-addresses" onclick="toggleAccountSubpanel('savedAddressesPanel'); return false;" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; transition: background 0.15s;">
+          <a href="#saved-addresses" onclick="toggleAccountSubpanel('savedAddressesPanel', 'savedAddressesArrow'); return false;" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; transition: background 0.15s;">
             <div style="display: flex; align-items: center; gap: 14px;">
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
               <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">SAVED ADDRESSES</span>
             </div>
-            <span class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
+            <span id="savedAddressesArrow" class="snitch-arrow" style="color: #8C8275; font-size: 18px; font-weight: 300; transition: transform 0.2s;">&rsaquo;</span>
           </a>
-          <div id="savedAddressesPanel" style="display: none; padding: 20px 24px; background: #FAF8F5; border-top: 1px solid #F0EAE1; font-size: 12.5px; color: #4A4238;">
-            {% if customer.addresses.size > 0 %}
-              <div style="display: flex; flex-direction: column; gap: 14px;">
-                {% for address in customer.addresses %}
-                  <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 8px; padding: 16px 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                      <span style="font-weight: 700; color: #1E1C19; font-size: 13px;">{{ address.name }}</span>
-                      {% if address == customer.default_address %}
-                        <span style="font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9B7846; padding: 2px 8px; border-radius: 4px;">DEFAULT ADDRESS</span>
-                      {% endif %}
-                    </div>
-                    <div style="color: #6E6459; line-height: 1.5; font-size: 12px;">
-                      <div>{{ address.address1 }}</div>
-                      {% if address.address2 != blank %}
-                        <div>{{ address.address2 }}</div>
-                      {% endif %}
-                      <div>{{ address.city }}{% if address.province_code != blank %}, {{ address.province_code }}{% endif %} {{ address.zip }}</div>
-                      <div>{{ address.country }}</div>
-                      {% if address.phone != blank %}
-                        <div style="margin-top: 4px; color: #1E1C19; font-weight: 600;">Phone: {{ address.phone }}</div>
-                      {% endif %}
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-            {% elsif customer.default_address %}
-              <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 8px; padding: 16px 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                  <span style="font-weight: 700; color: #1E1C19; font-size: 13px;">{{ customer.default_address.name | default: customer.name }}</span>
-                  <span style="font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9B7846; padding: 2px 8px; border-radius: 4px;">DEFAULT ADDRESS</span>
-                </div>
-                <div style="color: #6E6459; line-height: 1.5; font-size: 12px;">
-                  <div>{{ customer.default_address.address1 }}</div>
-                  {% if customer.default_address.address2 != blank %}
-                    <div>{{ customer.default_address.address2 }}</div>
-                  {% endif %}
-                  <div>{{ customer.default_address.city }}{% if customer.default_address.province_code != blank %}, {{ customer.default_address.province_code }}{% endif %} {{ customer.default_address.zip }}</div>
-                  <div>{{ customer.default_address.country }}</div>
-                  {% if customer.default_address.phone != blank %}
-                    <div style="margin-top: 4px; color: #1E1C19; font-weight: 600;">Phone: {{ customer.default_address.phone }}</div>
-                  {% endif %}
-                </div>
-              </div>
-            {% else %}
-              <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 8px; padding: 16px 18px; text-align: center; color: #8C8275;">
-                No saved shipping addresses found yet. Delivery addresses are automatically saved here upon checkout.
-              </div>
-            {% endif %}
+          <div id="savedAddressesPanel" style="display: none; padding: 22px 24px; background: #FAF8F5; border-top: 1px solid #F0EAE1; font-size: 12.5px; color: #4A4238;">
+            
+            <!-- Top bar with + ADD NEW ADDRESS button -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #EAE5DE;">
+              <span style="font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #9E7D47;">SAVED DELIVERY DESTINATIONS</span>
+              <button type="button" onclick="showAddAddressForm()" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1px solid #1E1C19; background: #1E1C19; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                <span>+</span> ADD NEW ADDRESS
+              </button>
+            </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px solid #F0EAE1; flex-wrap: wrap; gap: 8px;">
+            <!-- ADD NEW ADDRESS FORM (COLLAPSIBLE) -->
+            <div id="newAddressFormContainer" style="display: none; background: #FFFFFF; border: 1.5px solid #1E1C19; border-radius: 8px; padding: 20px; margin-bottom: 18px; box-shadow: 0 4px 16px rgba(0,0,0,0.04);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #F0EAE1;">
+                <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #1E1C19;">Add New Delivery Destination</span>
+                <button type="button" onclick="hideAddAddressForm()" style="background: none; border: none; font-size: 18px; color: #8C8275; cursor: pointer;">&times;</button>
+              </div>
+              <form onsubmit="saveNewAddress(event)" style="display: flex; flex-direction: column; gap: 12px;">
+                <div class="form-grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">Recipient Name</label>
+                    <input type="text" id="newAddrName" required placeholder="Full Name" style="width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px; background: #FAF8F5;">
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">Phone Number</label>
+                    <input type="tel" id="newAddrPhone" required placeholder="+91 98765 43210" style="width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px; background: #FAF8F5;">
+                  </div>
+                </div>
+                <div>
+                  <label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">Address Line 1 (House, Flat, Street)</label>
+                  <input type="text" id="newAddr1" required placeholder="e.g. Phase 1 Mohali Village" style="width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px; background: #FAF8F5;">
+                </div>
+                <div class="form-grid-2col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">City</label>
+                    <input type="text" id="newAddrCity" required placeholder="Mohali" style="width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px; background: #FAF8F5;">
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">State / Province</label>
+                    <input type="text" id="newAddrState" required placeholder="Punjab" style="width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px; background: #FAF8F5;">
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">PIN Code</label>
+                    <input type="text" id="newAddrZip" required placeholder="160055" style="width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px; background: #FAF8F5;">
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin: 4px 0;">
+                  <input type="checkbox" id="newAddrDefault" style="width: 16px; height: 16px; accent-color: #1E1C19; cursor: pointer;">
+                  <label for="newAddrDefault" style="font-size: 12px; color: #1E1C19; cursor: pointer; font-weight: 600;">Set as default delivery address</label>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 4px;">
+                  <button type="submit" style="padding: 10px 22px; background: #1E1C19; color: #FFFFFF; border: none; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;">
+                    SAVE NEW ADDRESS
+                  </button>
+                  <button type="button" onclick="hideAddAddressForm()" style="padding: 10px 18px; background: #FAF8F5; color: #6E6459; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;">
+                    CANCEL
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- LIST OF SAVED ADDRESSES -->
+            <div id="addressesListContainer" style="display: flex; flex-direction: column; gap: 14px;">
+              <!-- Rendered by JavaScript dynamically -->
+            </div>
+
+            <div id="addrSuccessToast" style="display: none; margin-top: 14px; padding: 8px 14px; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 4px; color: #15803D; font-size: 11.5px; font-weight: 600;">
+              ✓ Address updated successfully.
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid #F0EAE1; flex-wrap: wrap; gap: 8px;">
               <span style="font-size: 11px; color: #8C8275;">Need to update your delivery address or measurements?</span>
               <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20would%20like%20to%20update%20my%20saved%20shipping%20address." target="_blank" style="color: #25D366; font-size: 11.5px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
                 <span>💬</span> WhatsApp Concierge
               </a>
             </div>
+
           </div>
         {% else %}
           <a href="{{ account_login_url_with_return }}" class="snitch-menu-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; text-decoration: none; color: #1E1C19; transition: background 0.15s;">
@@ -304,12 +386,402 @@
     transform: translateX(4px);
     color: #1E1C19 !important;
   }
+  @media (max-width: 640px) {
+    .form-grid-2col {
+      grid-template-columns: 1fr !important;
+    }
+  }
 </style>
 
 <script>
-  function toggleAccountSubpanel(id) {
-    var p = document.getElementById(id);
+  function toggleAccountSubpanel(panelId, arrowId) {
+    var p = document.getElementById(panelId);
     if (!p) return;
-    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+    var isOpen = p.style.display !== 'none';
+    p.style.display = isOpen ? 'none' : 'block';
+    if (arrowId) {
+      var arr = document.getElementById(arrowId);
+      if (arr) {
+        arr.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)';
+        arr.style.color = isOpen ? '#8C8275' : '#1E1C19';
+      }
+    }
+  }
+
+  // --- Seed addresses from Liquid ---
+  var defaultAddressesFromLiquid = [
+    {% if customer %}
+      {% if customer.addresses.size > 0 %}
+        {% for address in customer.addresses %}
+          {
+            id: 'addr_{{ address.id | default: forloop.index }}',
+            name: '{{ address.name | default: customer.name | escape }}',
+            address1: '{{ address.address1 | escape }}',
+            city: '{{ address.city | escape }}',
+            province: '{{ address.province | escape }}',
+            province_code: '{{ address.province_code | escape }}',
+            zip: '{{ address.zip | escape }}',
+            country: '{{ address.country | default: "India" | escape }}',
+            phone: '{{ address.phone | default: customer.phone | default: "" | escape }}',
+            isDefault: {% if address == customer.default_address %}true{% else %}false{% endif %}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      {% elsif customer.default_address %}
+        {
+          id: 'addr_default',
+          name: '{{ customer.default_address.name | default: customer.name | escape }}',
+          address1: '{{ customer.default_address.address1 | escape }}',
+          city: '{{ customer.default_address.city | escape }}',
+          province: '{{ customer.default_address.province | escape }}',
+          province_code: '{{ customer.default_address.province_code | escape }}',
+          zip: '{{ customer.default_address.zip | escape }}',
+          country: '{{ customer.default_address.country | default: "India" | escape }}',
+          phone: '{{ customer.default_address.phone | default: customer.phone | default: "" | escape }}',
+          isDefault: true
+        }
+      {% else %}
+        {
+          id: 'addr_demo',
+          name: '{{ customer.name | escape }}',
+          address1: 'Phase 1 Mohali Village',
+          city: 'Mohali',
+          province: 'Punjab',
+          province_code: 'PB',
+          zip: '160055',
+          country: 'India',
+          phone: '{{ customer.phone | default: "+91 98765 43210" | escape }}',
+          isDefault: true
+        }
+      {% endif %}
+    {% endif %}
+  ];
+
+  var savedAddresses = [];
+  var editingAddressId = null;
+
+  function initCustomerProfileAndAddresses() {
+    // 1. Restore Personal Profile
+    try {
+      var savedProfile = localStorage.getItem('meenu_customer_profile');
+      if (savedProfile) {
+        var prof = JSON.parse(savedProfile);
+        if (prof.name) {
+          var nameEl = document.getElementById('piValName');
+          if (nameEl) nameEl.innerText = prof.name;
+          var headName = document.getElementById('patronHeaderName');
+          if (headName) headName.innerText = prof.name;
+          var av = document.getElementById('patronAvatarInitial');
+          if (av) av.innerText = prof.name.charAt(0).toUpperCase();
+          var inpName = document.getElementById('piInputName');
+          if (inpName) inpName.value = prof.name;
+        }
+        if (prof.email) {
+          var emEl = document.getElementById('piValEmail');
+          if (emEl) emEl.innerText = prof.email;
+          var headEm = document.getElementById('patronHeaderEmail');
+          if (headEm) headEm.innerText = prof.email + ' • Chandigarh Atelier Direct Care';
+          var inpEm = document.getElementById('piInputEmail');
+          if (inpEm) inpEm.value = prof.email;
+        }
+        if (prof.phone) {
+          var phEl = document.getElementById('piValPhone');
+          if (phEl) phEl.innerText = prof.phone;
+          var inpPh = document.getElementById('piInputPhone');
+          if (inpPh) inpPh.value = prof.phone;
+        }
+        if (prof.city) {
+          var destEl = document.getElementById('piValDestination');
+          if (destEl) destEl.innerText = prof.city;
+          var inpCity = document.getElementById('piInputCity');
+          if (inpCity) inpCity.value = prof.city;
+        }
+      }
+    } catch(e) {}
+
+    // 2. Restore Saved Addresses
+    try {
+      var storedAddrs = localStorage.getItem('meenu_saved_addresses');
+      if (storedAddrs) {
+        var parsed = JSON.parse(storedAddrs);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          savedAddresses = parsed;
+        } else {
+          savedAddresses = defaultAddressesFromLiquid;
+        }
+      } else {
+        savedAddresses = defaultAddressesFromLiquid;
+      }
+    } catch(e) {
+      savedAddresses = defaultAddressesFromLiquid;
+    }
+
+    renderAddresses();
+  }
+
+  function renderAddresses() {
+    var container = document.getElementById('addressesListContainer');
+    if (!container) return;
+    
+    if (savedAddresses.length === 0) {
+      container.innerHTML = '<div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 8px; padding: 16px 18px; text-align: center; color: #8C8275;">' +
+        'No saved shipping addresses found yet. Click "+ ADD NEW ADDRESS" to create one.' +
+        '</div>';
+      return;
+    }
+
+    var html = '';
+    savedAddresses.forEach(function(addr) {
+      if (editingAddressId === addr.id) {
+        // Render inline edit form
+        html += '<div style="background: #FFFFFF; border: 1.5px solid #1E1C19; border-radius: 8px; padding: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.04);">' +
+          '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #F0EAE1;">' +
+            '<span style="font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #1E1C19;">Edit Destination</span>' +
+            '<button type="button" onclick="cancelAddressEdit()" style="background: none; border: none; font-size: 18px; color: #8C8275; cursor: pointer;">&times;</button>' +
+          '</div>' +
+          '<form onsubmit="saveAddressEdit(event, \'' + addr.id + '\')" style="display: flex; flex-direction: column; gap: 12px;">' +
+            '<div class="form-grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">' +
+              '<div>' +
+                '<label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">Recipient Name</label>' +
+                '<input type="text" id="editAddrName_' + addr.id + '" value="' + (addr.name || '') + '" required style="width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px; background: #FAF8F5;">' +
+              '</div>' +
+              '<div>' +
+                '<label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">Phone Number</label>' +
+                '<input type="tel" id="editAddrPhone_' + addr.id + '" value="' + (addr.phone || '') + '" required style="width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px; background: #FAF8F5;">' +
+              '</div>' +
+            '</div>' +
+            '<div>' +
+              '<label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">Address Line 1</label>' +
+              '<input type="text" id="editAddr1_' + addr.id + '" value="' + (addr.address1 || '') + '" required style="width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px; background: #FAF8F5;">' +
+            '</div>' +
+            '<div class="form-grid-2col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">' +
+              '<div>' +
+                '<label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">City</label>' +
+                '<input type="text" id="editAddrCity_' + addr.id + '" value="' + (addr.city || '') + '" required style="width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px; background: #FAF8F5;">' +
+              '</div>' +
+              '<div>' +
+                '<label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">State / Province</label>' +
+                '<input type="text" id="editAddrState_' + addr.id + '" value="' + (addr.province || '') + '" required style="width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px; background: #FAF8F5;">' +
+              '</div>' +
+              '<div>' +
+                '<label style="display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1E1C19; margin-bottom: 4px;">PIN Code</label>' +
+                '<input type="text" id="editAddrZip_' + addr.id + '" value="' + (addr.zip || '') + '" required style="width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 12px; background: #FAF8F5;">' +
+              '</div>' +
+            '</div>' +
+            '<div style="display: flex; align-items: center; gap: 8px; margin: 4px 0;">' +
+              '<input type="checkbox" id="editAddrDefault_' + addr.id + '" ' + (addr.isDefault ? 'checked' : '') + ' style="width: 16px; height: 16px; accent-color: #1E1C19; cursor: pointer;">' +
+              '<label for="editAddrDefault_' + addr.id + '" style="font-size: 12px; color: #1E1C19; cursor: pointer; font-weight: 600;">Set as default delivery address</label>' +
+            '</div>' +
+            '<div style="display: flex; gap: 10px; margin-top: 4px;">' +
+              '<button type="submit" style="padding: 10px 22px; background: #1E1C19; color: #FFFFFF; border: none; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;">SAVE ADDRESS</button>' +
+              '<button type="button" onclick="cancelAddressEdit()" style="padding: 10px 18px; background: #FAF8F5; color: #6E6459; border: 1px solid #D6CEC3; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;">CANCEL</button>' +
+            '</div>' +
+          '</form>' +
+        '</div>';
+      } else {
+        // Display card
+        html += '<div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 8px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">' +
+          '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
+            '<div style="display: flex; align-items: center; gap: 10px;">' +
+              '<span style="font-weight: 700; color: #1E1C19; font-size: 13.5px;">' + (addr.name || 'Recipient') + '</span>' +
+              (addr.isDefault ? '<span style="font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9B7846; padding: 3px 10px; border-radius: 4px;">DEFAULT ADDRESS</span>' : '') +
+            '</div>' +
+            '<div style="display: flex; align-items: center; gap: 8px;">' +
+              '<button type="button" onclick="startAddressEdit(\'' + addr.id + '\')" style="padding: 5px 12px; border: 1px solid #D6CEC3; background: #FAF8F5; color: #1E1C19; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.2s;">' +
+                '✏️ EDIT' +
+              '</button>' +
+              (savedAddresses.length > 1 ? '<button type="button" onclick="deleteAddress(\'' + addr.id + '\')" title="Delete Address" style="padding: 5px 8px; border: 1px solid #FECACA; background: #FEF2F2; color: #991B1B; font-size: 11px; font-weight: 700; border-radius: 4px; cursor: pointer;">🗑️</button>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div style="color: #6E6459; line-height: 1.6; font-size: 12.5px;">' +
+            '<div>' + (addr.address1 || '') + '</div>' +
+            '<div>' + (addr.city || '') + ', ' + (addr.province_code || addr.province || '') + ' ' + (addr.zip || '') + '</div>' +
+            '<div>' + (addr.country || 'India') + '</div>' +
+            (addr.phone ? '<div style="margin-top: 4px; color: #1E1C19; font-weight: 600;">Phone: ' + addr.phone + '</div>' : '') +
+          '</div>' +
+        '</div>';
+      }
+    });
+    container.innerHTML = html;
+  }
+
+  function showPiEditForm() {
+    var v = document.getElementById('piViewMode');
+    var e = document.getElementById('piEditMode');
+    if (v) v.style.display = 'none';
+    if (e) e.style.display = 'block';
+  }
+
+  function cancelPiEdit() {
+    var v = document.getElementById('piViewMode');
+    var e = document.getElementById('piEditMode');
+    if (v) v.style.display = 'block';
+    if (e) e.style.display = 'none';
+  }
+
+  function savePiForm(e) {
+    e.preventDefault();
+    var name = (document.getElementById('piInputName').value || '').trim();
+    var email = (document.getElementById('piInputEmail').value || '').trim();
+    var phone = (document.getElementById('piInputPhone').value || '').trim();
+    var city = (document.getElementById('piInputCity').value || '').trim();
+
+    var nameEl = document.getElementById('piValName');
+    if (nameEl) nameEl.innerText = name;
+    var emEl = document.getElementById('piValEmail');
+    if (emEl) emEl.innerText = email;
+    var phEl = document.getElementById('piValPhone');
+    if (phEl) phEl.innerText = phone;
+    var destEl = document.getElementById('piValDestination');
+    if (destEl) destEl.innerText = city;
+
+    var headName = document.getElementById('patronHeaderName');
+    if (headName) headName.innerText = name;
+    var headEm = document.getElementById('patronHeaderEmail');
+    if (headEm) headEm.innerText = email + ' • Chandigarh Atelier Direct Care';
+    if (name.length > 0) {
+      var av = document.getElementById('patronAvatarInitial');
+      if (av) av.innerText = name.charAt(0).toUpperCase();
+    }
+
+    try {
+      localStorage.setItem('meenu_customer_profile', JSON.stringify({
+        name: name,
+        email: email,
+        phone: phone,
+        city: city
+      }));
+    } catch(err) {}
+
+    cancelPiEdit();
+    var toast = document.getElementById('piSuccessToast');
+    if (toast) {
+      toast.style.display = 'block';
+      setTimeout(function() { toast.style.display = 'none'; }, 4000);
+    }
+  }
+
+  function showAddAddressForm() {
+    var form = document.getElementById('newAddressFormContainer');
+    if (form) form.style.display = 'block';
+  }
+
+  function hideAddAddressForm() {
+    var form = document.getElementById('newAddressFormContainer');
+    if (form) form.style.display = 'none';
+  }
+
+  function startAddressEdit(id) {
+    editingAddressId = id;
+    renderAddresses();
+  }
+
+  function cancelAddressEdit() {
+    editingAddressId = null;
+    renderAddresses();
+  }
+
+  function saveAddressEdit(e, id) {
+    e.preventDefault();
+    var name = (document.getElementById('editAddrName_' + id).value || '').trim();
+    var phone = (document.getElementById('editAddrPhone_' + id).value || '').trim();
+    var addr1 = (document.getElementById('editAddr1_' + id).value || '').trim();
+    var city = (document.getElementById('editAddrCity_' + id).value || '').trim();
+    var state = (document.getElementById('editAddrState_' + id).value || '').trim();
+    var zip = (document.getElementById('editAddrZip_' + id).value || '').trim();
+    var isDef = document.getElementById('editAddrDefault_' + id).checked;
+
+    savedAddresses.forEach(function(item) {
+      if (item.id === id) {
+        item.name = name;
+        item.phone = phone;
+        item.address1 = addr1;
+        item.city = city;
+        item.province = state;
+        item.zip = zip;
+        if (isDef) item.isDefault = true;
+      } else if (isDef) {
+        item.isDefault = false;
+      }
+    });
+
+    if (isDef) {
+      var destEl = document.getElementById('piValDestination');
+      if (destEl) destEl.innerText = city + ', ' + state;
+    }
+
+    try {
+      localStorage.setItem('meenu_saved_addresses', JSON.stringify(savedAddresses));
+    } catch(err) {}
+
+    editingAddressId = null;
+    renderAddresses();
+    showAddrToast();
+  }
+
+  function saveNewAddress(e) {
+    e.preventDefault();
+    var name = (document.getElementById('newAddrName').value || '').trim();
+    var phone = (document.getElementById('newAddrPhone').value || '').trim();
+    var addr1 = (document.getElementById('newAddr1').value || '').trim();
+    var city = (document.getElementById('newAddrCity').value || '').trim();
+    var state = (document.getElementById('newAddrState').value || '').trim();
+    var zip = (document.getElementById('newAddrZip').value || '').trim();
+    var isDef = document.getElementById('newAddrDefault').checked;
+
+    var newId = 'addr_' + Date.now();
+    if (isDef) {
+      savedAddresses.forEach(function(a) { a.isDefault = false; });
+      var destEl = document.getElementById('piValDestination');
+      if (destEl) destEl.innerText = city + ', ' + state;
+    }
+
+    savedAddresses.push({
+      id: newId,
+      name: name,
+      phone: phone,
+      address1: addr1,
+      city: city,
+      province: state,
+      zip: zip,
+      country: 'India',
+      isDefault: isDef || savedAddresses.length === 0
+    });
+
+    try {
+      localStorage.setItem('meenu_saved_addresses', JSON.stringify(savedAddresses));
+    } catch(err) {}
+
+    hideAddAddressForm();
+    renderAddresses();
+    showAddrToast();
+  }
+
+  function deleteAddress(id) {
+    if (confirm('Are you sure you want to remove this delivery address?')) {
+      savedAddresses = savedAddresses.filter(function(a) { return a.id !== id; });
+      if (savedAddresses.length > 0 && !savedAddresses.some(function(a) { return a.isDefault; })) {
+        savedAddresses[0].isDefault = true;
+      }
+      try {
+        localStorage.setItem('meenu_saved_addresses', JSON.stringify(savedAddresses));
+      } catch(err) {}
+      renderAddresses();
+      showAddrToast();
+    }
+  }
+
+  function showAddrToast() {
+    var toast = document.getElementById('addrSuccessToast');
+    if (toast) {
+      toast.style.display = 'block';
+      setTimeout(function() { toast.style.display = 'none'; }, 4000);
+    }
+  }
+
+  // Run on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCustomerProfileAndAddresses);
+  } else {
+    initCustomerProfileAndAddresses();
   }
 </script>
