@@ -55,7 +55,11 @@
         <!-- ORDERS CONTAINER (REAL SHOPIFY ORDERS) -->
         <div id="myOrdersListContainer" style="display: flex; flex-direction: column; gap: 20px;">
           {% for order in customer.orders %}
-            <div class="luxury-order-card codify-order-item" id="order_{{ order.id }}" data-order-id="{{ order.id }}" data-order-number="{{ order.name }}" data-order-status-url="{{ order.order_status_url }}" data-status="{% if order.cancelled %}canceled{% elsif order.fulfillment_status == 'fulfilled' %}delivered{% else %}dispatched{% endif %}" style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
+            {% assign is_order_canceled = false %}
+            {% if order.cancelled or order.cancel_reason != blank or order.financial_status == 'refunded' or order.financial_status == 'voided' or order.tags contains 'canceled' or order.tags contains 'cancelled' or order.tags contains 'Cancellation requested' or order.line_items.size == 0 %}
+              {% assign is_order_canceled = true %}
+            {% endif %}
+            <div class="luxury-order-card codify-order-item" id="order_{{ order.id }}" data-order-id="{{ order.id }}" data-order-number="{{ order.name }}" data-order-status-url="{{ order.order_status_url }}" data-status="{% if is_order_canceled %}canceled{% elsif order.fulfillment_status == 'fulfilled' %}delivered{% else %}dispatched{% endif %}" style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
               
               <!-- Card Header Bar (Amazon / Myntra Style) -->
               <div style="background: #FAF8F5; border-bottom: 1px solid #EAE5DE; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 12px;">
@@ -86,9 +90,14 @@
                 <!-- Status Heading -->
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 8px;">
                   <div style="display: flex; align-items: center; gap: 8px;">
-                    {% if order.cancelled %}
+                    {% if is_order_canceled %}
                       <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #DC2626;"></span>
-                      <span style="font-size: 13.5px; font-weight: 700; color: #991B1B;">Canceled on {{ order.cancelled_at | date: "%B %d, %Y" }}</span>
+                      <span style="font-size: 13.5px; font-weight: 700; color: #991B1B;">
+                        Canceled on {{ order.cancelled_at | default: order.created_at | date: "%B %d, %Y" }}
+                        {% if order.cancel_reason != blank and order.cancel_reason != 'other' %}
+                          ({{ order.cancel_reason | capitalize }})
+                        {% endif %}
+                      </span>
                     {% elsif order.fulfillment_status == 'fulfilled' %}
                       <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22C55E;"></span>
                       <span style="font-size: 13.5px; font-weight: 700; color: #15803D;">Delivered</span>
@@ -132,7 +141,7 @@
                       <a href="{{ line_item.url }}" style="display: block; text-align: center; padding: 9px 14px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
                         BUY IT AGAIN
                       </a>
-                      {% unless order.cancelled or order.fulfillment_status == 'fulfilled' %}
+                      {% unless is_order_canceled or order.fulfillment_status == 'fulfilled' %}
                         <button type="button" class="cancel-order-trigger-btn codify-custom-cancel-trigger" data-order-id="{{ order.id }}" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ line_item.title | escape }}', '{{ order.total_price | money }}', '{{ order.order_status_url }}', '{{ order.customer_url }}')" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
                           <span>&#10005;</span> CANCEL ORDER
                         </button>
@@ -147,7 +156,7 @@
                 {% endfor %}
 
                 <!-- EXPANDABLE PANEL (CANCELED VS ACTIVE) -->
-                {% if order.cancelled %}
+                {% if is_order_canceled %}
                   <!-- CANCELLATION DETAILS PANEL -->
                   <div id="trackingPanel_{{ order.id }}" style="display: none; margin-top: 20px; padding: 22px; background: #FFF5F5; border: 1px solid #FED7D7; border-radius: 8px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid #FEB2B2; padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
@@ -238,7 +247,7 @@
                       <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20need%20a%20doorstep%20size%20exchange%20for%20Order%20{{ order.name }}." target="_blank" style="padding: 10px 18px; background: #FFFFFF; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
                         &#128087; Request Doorstep Size Exchange
                       </a>
-                      {% unless order.cancelled or order.fulfillment_status == 'fulfilled' %}
+                      {% unless is_order_canceled or order.fulfillment_status == 'fulfilled' %}
                         <button type="button" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ order.line_items.first.title | escape }}', '{{ order.total_price | money }}', '{{ order.order_status_url }}', '{{ order.customer_url }}')" style="padding: 10px 18px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; cursor: pointer;">
                           &#10005; Cancel This Order
                         </button>
