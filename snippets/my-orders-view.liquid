@@ -464,42 +464,32 @@
     var reason = reasonSelect ? reasonSelect.value : 'Ordered by mistake';
     var orderId = currentCancelOrderId;
     var orderNum = currentCancelOrderNum;
-    var dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    var targetUrl = currentCancelOrderStatusUrl || currentCancelCustomerUrl;
 
-    // 0. Trigger Codify App cancellation if Codify widget exists on the card
-    try {
-      var codifyBtn = document.querySelector('.codify-cancel-button-wrapper[data-order-id="' + orderId + '"] button, #order_' + orderId + ' [class*="codify"] button, #order_' + orderId + ' [class*="cancel"][class*="btn"]');
-      if (codifyBtn && codifyBtn !== event.target) {
-        closeCancelOrderModal();
-        codifyBtn.click();
-        return;
-      }
-    } catch(err) {}
-
-    // 1. Send asynchronous notification to Shopify Contact endpoint so Store Admin receives an official email alert
+    // 1. Submit urgent cancellation notification to store contact endpoint
     try {
       var formData = new FormData();
       formData.append('form_type', 'contact');
       formData.append('utf8', '✓');
       formData.append('contact[name]', '{{ customer.name | default: "Customer" }}');
       formData.append('contact[email]', '{{ customer.email }}');
-      formData.append('contact[body]', 'URGENT: Customer requested cancellation for Order ' + orderNum + ' (Order ID: ' + orderId + '). Reason: ' + reason + '. Requested on: ' + new Date().toISOString() + '. Please verify and mark canceled in Shopify Admin Orders dashboard.');
+      formData.append('contact[body]', 'URGENT: Order Cancellation Request for Order ' + orderNum + ' (ID: ' + orderId + '). Reason: ' + reason + '. Requested on: ' + new Date().toISOString() + '. Customer confirmed cancellation on meenulabel.com.');
       fetch('/contact', {
         method: 'POST',
         body: formData
       }).catch(function(e) { console.log(e); });
     } catch(err) {}
 
-    // 2. Clear local storage so browser never gets stuck in a permanent test lock
+    // 2. Clear any lingering simulated local storage
     try {
       localStorage.removeItem('meenu_canceled_orders_data');
       localStorage.removeItem('meenu_canceled_orders');
     } catch(e) {}
 
+    // 3. Close modal
     closeCancelOrderModal();
 
-    // 3. Navigate directly to the official Order Status page where Codify & Shopify execute the real backend cancellation
-    var targetUrl = currentCancelOrderStatusUrl || currentCancelCustomerUrl;
+    // 4. Navigate directly to the official Order Status / Cancellation page
     if (targetUrl && targetUrl !== '') {
       window.location.href = targetUrl;
     } else {
