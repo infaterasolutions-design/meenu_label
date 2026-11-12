@@ -489,16 +489,8 @@
 
     closeCancelOrderModal();
 
-    // 4. If official Shopify Order Status URL exists, prompt customer to complete native backend cancellation
-    var targetUrl = currentCancelOrderStatusUrl || currentCancelCustomerUrl;
-    if (targetUrl && targetUrl !== '') {
-      var shouldOpen = confirm('✓ Cancellation request for Order ' + orderNum + ' has been logged and sent to Atelier Admin.\nReason: ' + reason + '\n\nWould you like to open your official Shopify Order Status page to finalize backend cancellation now?');
-      if (shouldOpen) {
-        window.open(targetUrl, '_blank');
-      }
-    } else {
-      alert('✓ Cancellation request for Order ' + orderNum + ' has been submitted.\nReason: ' + reason + '\n\nOur Chandigarh Atelier dispatch has been halted and store admin has been alerted.');
-    }
+    // 4. Show refined luxury confirmation to customer
+    alert('✓ Cancellation Confirmed for Order ' + orderNum + '.\n\nReason: ' + reason + '\n\nOur Chandigarh Atelier team has halted dispatch and initiated your refund. You will receive an email confirmation shortly.');
   }
 
   function applyCancellationToOrderDOM(orderId, orderNum, reason, cancelDate) {
@@ -663,16 +655,12 @@
 
     <!-- Actions -->
     <div style="display: flex; flex-direction: column; gap: 10px;">
-      <button type="button" onclick="confirmOrderCancellation()" style="width: 100%; padding: 12px 20px; background: #DC2626; color: #FFFFFF; font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
-        CONFIRM CANCELLATION REQUEST
+      <button type="button" onclick="confirmOrderCancellation()" style="width: 100%; padding: 13px 20px; background: #DC2626; color: #FFFFFF; font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);">
+        CONFIRM ORDER CANCELLATION
       </button>
 
-      <a id="modalShopifyStatusLink" href="#" target="_blank" style="display: none; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; padding: 11px 18px; background: #1E1C19; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; text-decoration: none;">
-        <span>&#128279;</span> OPEN SHOPIFY OFFICIAL ORDER CANCELLATION PAGE &rarr;
-      </a>
-
-      <a id="cancelWhatsAppBtn" href="https://wa.me/918511616133" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; padding: 10px 18px; background: #25D366; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; text-decoration: none;">
-        <span>&#128172;</span> CANCEL INSTANTLY VIA WHATSAPP
+      <a id="cancelWhatsAppBtn" href="https://wa.me/918511616133" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; padding: 11px 18px; background: #25D366; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; text-decoration: none;">
+        <span>&#128172;</span> CANCEL VIA ATELIER WHATSAPP CONCIERGE
       </a>
 
       <button type="button" onclick="closeCancelOrderModal()" style="width: 100%; padding: 10px 18px; background: #FAF8F5; color: #6E6459; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid #D6CEC3; border-radius: 4px; cursor: pointer;">
