@@ -478,20 +478,10 @@
       }).catch(function(e) { console.log(e); });
     } catch(err) {}
 
-    // 2. Save locally for instantaneous browser responsiveness
+    // 2. Clear local storage so browser never gets stuck in a permanent test lock
     try {
-      var canceledData = JSON.parse(localStorage.getItem('meenu_canceled_orders_data') || '{}');
-      canceledData[orderId] = {
-        num: orderNum,
-        reason: reason,
-        date: dateStr
-      };
-      localStorage.setItem('meenu_canceled_orders_data', JSON.stringify(canceledData));
-
-      // Also keep array for safety
-      var canceledList = JSON.parse(localStorage.getItem('meenu_canceled_orders') || '[]');
-      if (canceledList.indexOf(orderId) === -1) canceledList.push(orderId);
-      localStorage.setItem('meenu_canceled_orders', JSON.stringify(canceledList));
+      localStorage.removeItem('meenu_canceled_orders_data');
+      localStorage.removeItem('meenu_canceled_orders');
     } catch(e) {}
 
     // 3. Update DOM thoroughly
@@ -589,6 +579,9 @@
             '</div>' +
           '</div>' +
           '<div style="display: flex; gap: 10px; flex-wrap: wrap;">' +
+            '<button type="button" onclick="openCancelOrderModal(\'' + orderId + '\', \'' + numText + '\', \'' + (currentCancelItemTitle || '') + '\', \'' + (currentCancelTotalAmount || '') + '\', \'' + (currentCancelOrderStatusUrl || '') + '\', \'' + (currentCancelCustomerUrl || '') + '\')" style="padding: 10px 18px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; cursor: pointer;">' +
+              '✕ RE-TEST CANCEL ORDER MODAL' +
+            '</button>' +
             '<a href="/collections/all" style="padding: 10px 18px; background: #1E1C19; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">' +
               'RE-ORDER SILHOUETTE &rarr;' +
             '</a>' +
@@ -601,22 +594,11 @@
     });
   }
 
-  // Restore any locally canceled orders on page load
+  // Ensure orders always reflect real Shopify backend state and reset any previous simulated locks
   function initCanceledOrders() {
     try {
-      var canceledData = JSON.parse(localStorage.getItem('meenu_canceled_orders_data') || '{}');
-      for (var orderId in canceledData) {
-        if (canceledData.hasOwnProperty(orderId)) {
-          var item = canceledData[orderId];
-          applyCancellationToOrderDOM(orderId, item.num, item.reason, item.date);
-        }
-      }
-      var oldArray = JSON.parse(localStorage.getItem('meenu_canceled_orders') || '[]');
-      oldArray.forEach(function(oId) {
-        if (!canceledData[oId]) {
-          applyCancellationToOrderDOM(oId, '', 'Ordered by mistake', '');
-        }
-      });
+      localStorage.removeItem('meenu_canceled_orders_data');
+      localStorage.removeItem('meenu_canceled_orders');
     } catch(e) {}
   }
 
