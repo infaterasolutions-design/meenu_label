@@ -55,7 +55,7 @@
         <!-- ORDERS CONTAINER (REAL SHOPIFY ORDERS) -->
         <div id="myOrdersListContainer" style="display: flex; flex-direction: column; gap: 20px;">
           {% for order in customer.orders %}
-            <div class="luxury-order-card" data-status="{% if order.cancelled %}canceled{% elsif order.fulfillment_status == 'fulfilled' %}delivered{% else %}dispatched{% endif %}" style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
+            <div class="luxury-order-card codify-order-item" id="order_{{ order.id }}" data-order-id="{{ order.id }}" data-order-number="{{ order.name }}" data-order-status-url="{{ order.order_status_url }}" data-status="{% if order.cancelled %}canceled{% elsif order.fulfillment_status == 'fulfilled' %}delivered{% else %}dispatched{% endif %}" style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
               
               <!-- Card Header Bar (Amazon / Myntra Style) -->
               <div style="background: #FAF8F5; border-bottom: 1px solid #EAE5DE; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 12px;">
@@ -133,9 +133,11 @@
                         BUY IT AGAIN
                       </a>
                       {% unless order.cancelled or order.fulfillment_status == 'fulfilled' %}
-                        <button type="button" class="cancel-order-trigger-btn" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ line_item.title | escape }}', '{{ order.total_price | money }}', '{{ order.order_status_url }}', '{{ order.customer_url }}')" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
+                        <button type="button" class="cancel-order-trigger-btn codify-custom-cancel-trigger" data-order-id="{{ order.id }}" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ line_item.title | escape }}', '{{ order.total_price | money }}', '{{ order.order_status_url }}', '{{ order.customer_url }}')" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
                           <span>&#10005;</span> CANCEL ORDER
                         </button>
+                        <!-- Codify App Injected Container Hook -->
+                        <div class="codify-cancel-button-wrapper" data-order-id="{{ order.id }}" style="margin-top: 4px;"></div>
                       {% endunless %}
                       <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20inquiry%20regarding%20{{ line_item.title | url_encode }}%20from%20Order%20{{ order.name }}." target="_blank" style="display: block; text-align: center; padding: 6px 12px; color: #25D366; font-size: 10.5px; font-weight: 700; text-decoration: none;">
                         &#128172; WhatsApp Concierge
