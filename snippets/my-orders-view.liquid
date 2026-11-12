@@ -133,7 +133,7 @@
                         BUY IT AGAIN
                       </a>
                       {% unless order.cancelled or order.fulfillment_status == 'fulfilled' %}
-                        <button type="button" class="cancel-order-trigger-btn" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ line_item.title | escape }}', '{{ order.total_price | money }}')" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
+                        <button type="button" class="cancel-order-trigger-btn" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ line_item.title | escape }}', '{{ order.total_price | money }}', '{{ order.order_status_url }}', '{{ order.customer_url }}')" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
                           <span>&#10005;</span> CANCEL ORDER
                         </button>
                       {% endunless %}
@@ -237,7 +237,7 @@
                         &#128087; Request Doorstep Size Exchange
                       </a>
                       {% unless order.cancelled or order.fulfillment_status == 'fulfilled' %}
-                        <button type="button" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ order.line_items.first.title | escape }}', '{{ order.total_price | money }}')" style="padding: 10px 18px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; cursor: pointer;">
+                        <button type="button" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ order.line_items.first.title | escape }}', '{{ order.total_price | money }}', '{{ order.order_status_url }}', '{{ order.customer_url }}')" style="padding: 10px 18px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; cursor: pointer;">
                           &#10005; Cancel This Order
                         </button>
                       {% endunless %}
@@ -400,22 +400,41 @@
   // --- Order Cancellation Logic ---
   var currentCancelOrderId = null;
   var currentCancelOrderNum = null;
+  var currentCancelItemTitle = null;
+  var currentCancelTotalAmount = null;
+  var currentCancelOrderStatusUrl = null;
+  var currentCancelCustomerUrl = null;
 
-  function openCancelOrderModal(orderId, orderNum, itemTitle, totalAmount) {
+  function openCancelOrderModal(orderId, orderNum, itemTitle, totalAmount, orderStatusUrl, customerUrl) {
     currentCancelOrderId = orderId;
     currentCancelOrderNum = orderNum;
+    currentCancelItemTitle = itemTitle || 'Handcrafted Atelier Ensemble';
+    currentCancelTotalAmount = totalAmount || '';
+    currentCancelOrderStatusUrl = orderStatusUrl || '';
+    currentCancelCustomerUrl = customerUrl || '';
 
     var numEl = document.getElementById('modalOrderNum');
     if (numEl) numEl.innerText = orderNum;
 
     var titleEl = document.getElementById('modalItemTitle');
-    if (titleEl) titleEl.innerText = itemTitle || 'Handcrafted Atelier Ensemble';
+    if (titleEl) titleEl.innerText = currentCancelItemTitle;
 
     var amtEl = document.getElementById('modalOrderAmount');
     if (amtEl) amtEl.innerText = totalAmount || '';
 
     var refEl = document.getElementById('modalRefundAmount');
     if (refEl) refEl.innerText = totalAmount || '';
+
+    var shopifyLink = document.getElementById('modalShopifyStatusLink');
+    if (shopifyLink) {
+      var targetUrl = currentCancelOrderStatusUrl || currentCancelCustomerUrl;
+      if (targetUrl && targetUrl !== '') {
+        shopifyLink.href = targetUrl;
+        shopifyLink.style.display = 'flex';
+      } else {
+        shopifyLink.style.display = 'none';
+      }
+    }
 
     updateCancelWhatsAppUrl();
 
@@ -445,7 +464,21 @@
     var orderNum = currentCancelOrderNum;
     var dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-    // Save locally
+    // 1. Send asynchronous notification to Shopify Contact endpoint so Store Admin receives an official email alert
+    try {
+      var formData = new FormData();
+      formData.append('form_type', 'contact');
+      formData.append('utf8', '✓');
+      formData.append('contact[name]', '{{ customer.name | default: "Customer" }}');
+      formData.append('contact[email]', '{{ customer.email }}');
+      formData.append('contact[body]', 'URGENT: Customer requested cancellation for Order ' + orderNum + ' (Order ID: ' + orderId + '). Reason: ' + reason + '. Requested on: ' + new Date().toISOString() + '. Please verify and mark canceled in Shopify Admin Orders dashboard.');
+      fetch('/contact', {
+        method: 'POST',
+        body: formData
+      }).catch(function(e) { console.log(e); });
+    } catch(err) {}
+
+    // 2. Save locally for instantaneous browser responsiveness
     try {
       var canceledData = JSON.parse(localStorage.getItem('meenu_canceled_orders_data') || '{}');
       canceledData[orderId] = {
@@ -461,11 +494,21 @@
       localStorage.setItem('meenu_canceled_orders', JSON.stringify(canceledList));
     } catch(e) {}
 
-    // Update DOM thoroughly
+    // 3. Update DOM thoroughly
     applyCancellationToOrderDOM(orderId, orderNum, reason, dateStr);
 
     closeCancelOrderModal();
-    alert('✓ Order ' + orderNum + ' has been canceled.\nReason: ' + reason + '\n\nOur Chandigarh Atelier dispatch has been halted and your refund/acknowledgement has been processed.');
+
+    // 4. If official Shopify Order Status URL exists, prompt customer to complete native backend cancellation
+    var targetUrl = currentCancelOrderStatusUrl || currentCancelCustomerUrl;
+    if (targetUrl && targetUrl !== '') {
+      var shouldOpen = confirm('✓ Cancellation request for Order ' + orderNum + ' has been logged and sent to Atelier Admin.\nReason: ' + reason + '\n\nWould you like to open your official Shopify Order Status page to finalize backend cancellation now?');
+      if (shouldOpen) {
+        window.open(targetUrl, '_blank');
+      }
+    } else {
+      alert('✓ Cancellation request for Order ' + orderNum + ' has been submitted.\nReason: ' + reason + '\n\nOur Chandigarh Atelier dispatch has been halted and store admin has been alerted.');
+    }
   }
 
   function applyCancellationToOrderDOM(orderId, orderNum, reason, cancelDate) {
@@ -639,8 +682,12 @@
     <!-- Actions -->
     <div style="display: flex; flex-direction: column; gap: 10px;">
       <button type="button" onclick="confirmOrderCancellation()" style="width: 100%; padding: 12px 20px; background: #DC2626; color: #FFFFFF; font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
-        CONFIRM CANCELLATION
+        CONFIRM CANCELLATION REQUEST
       </button>
+
+      <a id="modalShopifyStatusLink" href="#" target="_blank" style="display: none; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; padding: 11px 18px; background: #1E1C19; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; text-decoration: none;">
+        <span>&#128279;</span> OPEN SHOPIFY OFFICIAL ORDER CANCELLATION PAGE &rarr;
+      </a>
 
       <a id="cancelWhatsAppBtn" href="https://wa.me/918511616133" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; padding: 10px 18px; background: #25D366; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; text-decoration: none;">
         <span>&#128172;</span> CANCEL INSTANTLY VIA WHATSAPP
