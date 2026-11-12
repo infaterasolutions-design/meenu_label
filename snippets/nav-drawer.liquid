@@ -7,47 +7,13 @@
       <button style="background:none; border:none; font-size:26px; cursor:pointer; color:var(--text-color); padding:4px 8px; line-height:1;" onclick="closeNavDrawer()" aria-label="Close Menu">&times;</button>
     </div>
 
-    <div class="nav-drawer-body">
-      <ul class="nav-drawer-links" style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:16px;">
-        <li><a href="/collections/all" style="text-decoration:none; color:var(--text-color); font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.08em;">All Silhouettes</a></li>
-        <li><a href="/collections/co-ord-sets" style="text-decoration:none; color:var(--text-color); font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.08em;">Co-ord Sets</a></li>
-        <li><a href="/collections/festive-suits" style="text-decoration:none; color:var(--text-color); font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.08em;">Festive Suits</a></li>
-        <li><a href="/collections/dresses" style="text-decoration:none; color:var(--text-color); font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.08em;">Midi Dresses</a></li>
-        <li><a href="/collections/tops" style="text-decoration:none; color:var(--text-color); font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.08em;">Tops &amp; Blouses</a></li>
-        
-        <li style="border-top:1px solid var(--border-color); margin-top:16px; padding-top:16px;">
-          <a href="/pages/my-orders" style="text-decoration:none; color:var(--text-color); font-size:13.5px; font-weight:700; display:flex; align-items:center; justify-content:space-between;">
-            <span style="display:flex; align-items:center; gap:8px;">
-              <span>&#128230;</span>
-              <span>My Orders</span>
-            </span>
-            <span style="font-size:10px; font-weight:700; background:#FAF8F5; border:1px solid #DFD8CE; color:#9B7846; padding:2px 8px; border-radius:3px; letter-spacing:0.04em;">ALL ORDERS &rarr;</span>
-          </a>
-        </li>
-        <li>
-          <a href="javascript:void(0)" onclick="closeNavDrawer(); toggleWishlistDrawer();" style="text-decoration:none; color:var(--text-color); font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:space-between;">
-            <span>❤️ Saved Wishlist</span>
-            <span class="header-badge-pill nav-drawer-wishlist-count" style="display:none; position:static;">0</span>
-          </a>
-        </li>
-        <li>
-          <a href="/cart" style="text-decoration:none; color:var(--text-color); font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:space-between;">
-            <span>🛍️ Shopping Bag</span>
-            <span class="header-badge-pill nav-drawer-cart-count" style="{% if cart.item_count > 0 %}display:inline-flex;{% else %}display:none;{% endif %} position:static;">{{ cart.item_count }}</span>
-          </a>
-        </li>
-        <li>
-          <a href="javascript:void(0)" onclick="closeNavDrawer(); openAccountModal('track');" style="text-decoration:none; color:var(--text-color); font-size:13px; font-weight:600;">&#128666; Track Shipment</a>
-        </li>
-        <li>
-          <a href="javascript:void(0)" onclick="closeNavDrawer(); openAccountModal('concierge');" style="text-decoration:none; color:var(--text-color); font-size:13px; font-weight:600;">&#128100; VIP Atelier Concierge</a>
-        </li>
-        <li>
-          <a href="javascript:void(0)" onclick="closeNavDrawer(); openSizeGuideModal();" style="text-decoration:none; color:var(--text-color); font-size:13px;">&#128207; Size &amp; Fit Guide</a>
-        </li>
-        <li>
-          <a href="https://wa.me/918511616133" target="_blank" style="text-decoration:none; color:#25D366; font-size:13px;">&#128172; WhatsApp Concierge (+91 85116 16133)</a>
-        </li>
+    <div class="nav-drawer-body" style="padding: 24px;">
+      <ul class="nav-drawer-links" style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
+        <li><a href="/collections/all" style="text-decoration:none; color:var(--text-color); font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.12em; display:block; padding:4px 0;">All Silhouettes</a></li>
+        <li><a href="/collections/co-ord-sets" style="text-decoration:none; color:var(--text-color); font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.12em; display:block; padding:4px 0;">Co-ord Sets</a></li>
+        <li><a href="/collections/festive-suits" style="text-decoration:none; color:var(--text-color); font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.12em; display:block; padding:4px 0;">Festive Suits</a></li>
+        <li><a href="/collections/dresses" style="text-decoration:none; color:var(--text-color); font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.12em; display:block; padding:4px 0;">Midi Dresses</a></li>
+        <li><a href="/collections/tops" style="text-decoration:none; color:var(--text-color); font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.12em; display:block; padding:4px 0;">Tops &amp; Blouses</a></li>
       </ul>
     </div>
   </div>
