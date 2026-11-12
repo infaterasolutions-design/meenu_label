@@ -1,3 +1,7 @@
+<div id="custom404AccountHubContainer" style="display:none; width:100%;">
+  {% render 'snitch-account-hub' %}
+</div>
+
 <div id="custom404MyOrdersContainer" style="display:none; width:100%;">
   {% render 'my-orders-view' %}
 </div>
@@ -32,6 +36,14 @@
       ordersCont.style.display = 'block';
       std404.style.display = 'none';
       document.title = 'My Orders & Purchases — Meenu Label';
+    }
+  } else if (window.location.pathname.indexOf('account') !== -1) {
+    var hubCont = document.getElementById('custom404AccountHubContainer');
+    var std404 = document.getElementById('standard404Content');
+    if (hubCont && std404) {
+      hubCont.style.display = 'block';
+      std404.style.display = 'none';
+      document.title = 'My Account Hub — Meenu Label';
     }
   }
 </script>
