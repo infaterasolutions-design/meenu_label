@@ -466,6 +466,16 @@
     var orderNum = currentCancelOrderNum;
     var dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
+    // 0. Trigger Codify App cancellation if Codify widget exists on the card
+    try {
+      var codifyBtn = document.querySelector('.codify-cancel-button-wrapper[data-order-id="' + orderId + '"] button, #order_' + orderId + ' [class*="codify"] button, #order_' + orderId + ' [class*="cancel"][class*="btn"]');
+      if (codifyBtn && codifyBtn !== event.target) {
+        closeCancelOrderModal();
+        codifyBtn.click();
+        return;
+      }
+    } catch(err) {}
+
     // 1. Send asynchronous notification to Shopify Contact endpoint so Store Admin receives an official email alert
     try {
       var formData = new FormData();
