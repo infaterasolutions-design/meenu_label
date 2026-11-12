@@ -83,12 +83,12 @@
           </div>
 
           <!-- Email Login Form -->
-          <form action="/account/login" method="post" id="atelierLoginForm" onsubmit="handleAtelierLoginSubmit(event)" style="margin-bottom: 18px;">
+          <form action="/account/login" method="get" id="atelierLoginForm" onsubmit="return handleAtelierLoginSubmit(event)" style="margin-bottom: 18px;">
             <label class="snitch-input-heading" for="atelierLoginEmail">YOUR EMAIL ADDRESS</label>
             <div class="tracking-input-wrap" style="position: relative; margin-bottom: 12px;">
               <input 
                 type="email" 
-                name="customer[email]" 
+                name="email" 
                 id="atelierLoginEmail" 
                 class="tracking-input-field" 
                 placeholder="name@example.com" 
@@ -141,12 +141,12 @@
 
 <script>
   function handleAtelierLoginSubmit(e) {
+    if (e && e.preventDefault) e.preventDefault();
     var emailInput = document.getElementById('atelierLoginEmail');
     var errorDiv = document.getElementById('atelierLoginError');
     var submitBtn = document.getElementById('atelierLoginSubmitBtn');
-    
+
     if (!emailInput || !emailInput.value || !emailInput.value.includes('@')) {
-      e.preventDefault();
       if (errorDiv) {
         errorDiv.textContent = 'Please enter a valid email address';
         errorDiv.style.display = 'block';
@@ -156,7 +156,7 @@
 
     if (errorDiv) errorDiv.style.display = 'none';
     if (submitBtn) {
-      submitBtn.innerHTML = '<span>SENDING 6-DIGIT CODE...</span>';
+      submitBtn.innerHTML = '<span>CONNECTING SECURE LOGIN...</span>';
       submitBtn.style.opacity = '0.75';
       submitBtn.style.pointerEvents = 'none';
     }
@@ -166,8 +166,8 @@
       localStorage.setItem('meenu_customer_email', emailInput.value.trim());
     } catch(err) {}
 
-    // Allow natural form post or redirect to Shopify auth with email
+    // Clean GET navigation to Shopify 1-click code auth (NO invalid raw POST)
     window.location.href = '/account/login';
-    return true;
+    return false;
   }
 </script>
