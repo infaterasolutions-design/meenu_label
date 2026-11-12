@@ -1,3 +1,8 @@
+{% if routes.account_login_url contains '?' %}
+  {% assign my_orders_login_url_with_return = routes.account_login_url | append: '&return_to=%2Fpages%2Fmy-orders' %}
+{% else %}
+  {% assign my_orders_login_url_with_return = routes.account_login_url | append: '?return_to=%2Fpages%2Fmy-orders' %}
+{% endif %}
 <div class="my-orders-page-section" style="background: #FAF8F5; min-height: 85vh; padding: 40px 20px 80px;">
   <div style="max-width: 980px; margin: 0 auto;">
     
@@ -280,7 +285,7 @@
         </p>
 
         <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 340px; margin: 0 auto;">
-          <a href="{{ routes.account_login_url }}" style="display: block; width: 100%; box-sizing: border-box; text-align: center; padding: 14px 24px; background: #1E1C19; color: #FFFFFF; font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,0.15); transition: background 0.2s;">
+          <a href="{{ my_orders_login_url_with_return }}" style="display: block; width: 100%; box-sizing: border-box; text-align: center; padding: 14px 24px; background: #1E1C19; color: #FFFFFF; font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,0.15); transition: background 0.2s;">
             SIGN IN TO YOUR ACCOUNT &rarr;
           </a>
 
