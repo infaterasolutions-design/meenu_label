@@ -496,13 +496,15 @@
       localStorage.removeItem('meenu_canceled_orders');
     } catch(e) {}
 
-    // 3. Update DOM thoroughly
-    applyCancellationToOrderDOM(orderId, orderNum, reason, dateStr);
-
     closeCancelOrderModal();
 
-    // 4. Show refined luxury confirmation to customer
-    alert('✓ Cancellation Confirmed for Order ' + orderNum + '.\n\nReason: ' + reason + '\n\nOur Chandigarh Atelier team has halted dispatch and initiated your refund. You will receive an email confirmation shortly.');
+    // 3. Navigate directly to the official Order Status page where Codify & Shopify execute the real backend cancellation
+    var targetUrl = currentCancelOrderStatusUrl || currentCancelCustomerUrl;
+    if (targetUrl && targetUrl !== '') {
+      window.location.href = targetUrl;
+    } else {
+      window.location.href = '/account';
+    }
   }
 
   function applyCancellationToOrderDOM(orderId, orderNum, reason, cancelDate) {
