@@ -7601,3 +7601,626 @@ html, body {
     flex-shrink: 0 !important;
   }
 }
+
+/* ==========================================================================
+   MEENU LABEL - LUXURY EDITORIAL PAGES & SHOPIFY POLICIES STYLING
+   ========================================================================== */
+
+.luxury-page-wrapper {
+  background: #FAF8F5;
+  min-height: 85vh;
+  padding: 40px 20px 80px;
+}
+
+.luxury-page-container {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.luxury-page-breadcrumb {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8C8275;
+  margin-bottom: 24px;
+}
+
+.luxury-page-breadcrumb a {
+  color: #8C8275;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.luxury-page-breadcrumb a:hover {
+  color: #1E1C19;
+}
+
+.luxury-page-breadcrumb .bc-sep {
+  margin: 0 6px;
+  opacity: 0.6;
+}
+
+.luxury-page-breadcrumb .bc-current {
+  color: #1E1C19;
+}
+
+.luxury-page-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.luxury-page-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  background: #FAF5ED;
+  border: 1px solid #EAE1D3;
+  color: #9B7846;
+  padding: 5px 14px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.luxury-page-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 38px;
+  font-weight: 600;
+  color: #1E1C19;
+  margin: 0 0 10px;
+  line-height: 1.2;
+}
+
+.luxury-page-subtitle {
+  font-size: 14px;
+  color: #6E6459;
+  max-width: 620px;
+  margin: 0 auto 16px;
+  line-height: 1.6;
+}
+
+.luxury-page-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 200px;
+  margin: 16px auto 0;
+}
+
+.luxury-page-divider .divider-line {
+  flex: 1;
+  height: 1px;
+  background: #E0D7CB;
+}
+
+.luxury-page-divider .divider-gem {
+  color: #9B7846;
+  font-size: 10px;
+}
+
+.luxury-page-body {
+  background: #FFFFFF;
+  border: 1px solid #EAE5DE;
+  border-radius: 12px;
+  padding: 44px 48px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+  line-height: 1.8;
+  color: #3D3730;
+  font-size: 14.5px;
+}
+
+.luxury-page-body h2,
+.luxury-page-body h3,
+.luxury-page-body h4 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: #1E1C19;
+  font-weight: 600;
+  margin: 28px 0 12px;
+  line-height: 1.3;
+}
+
+.luxury-page-body h2 { font-size: 28px; }
+.luxury-page-body h3 { font-size: 24px; }
+.luxury-page-body h4 { font-size: 20px; }
+
+.luxury-page-body p {
+  margin: 0 0 16px;
+}
+
+.luxury-page-body ul,
+.luxury-page-body ol {
+  padding-left: 24px;
+  margin: 0 0 20px;
+}
+
+.luxury-page-body li {
+  margin-bottom: 8px;
+}
+
+.editorial-callout {
+  background: #FAF7F2;
+  border-left: 3px solid #9B7846;
+  padding: 18px 24px;
+  border-radius: 0 8px 8px 0;
+  margin: 24px 0;
+}
+
+.editorial-callout h4 {
+  margin: 0 0 8px;
+  color: #6E1A24;
+}
+
+.editorial-callout p {
+  margin: 0;
+}
+
+.luxury-feature-list {
+  list-style: none;
+  padding: 0 !important;
+  margin: 24px 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.luxury-feature-list li {
+  background: #FAF9F6;
+  border: 1px solid #ECE7E0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 0 !important;
+}
+
+.policy-timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.timeline-box {
+  background: #FAF8F5;
+  border: 1px solid #EAE3D9;
+  border-radius: 8px;
+  padding: 20px 18px;
+  text-align: center;
+}
+
+.timeline-city {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8C8275;
+  margin-bottom: 6px;
+}
+
+.timeline-time {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #6E1A24;
+  margin-bottom: 8px;
+}
+
+.timeline-box p {
+  font-size: 12.5px;
+  color: #6E6459;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.exchange-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.step-card {
+  background: #FAF8F5;
+  border: 1px solid #EAE3D9;
+  border-radius: 8px;
+  padding: 24px 18px;
+  text-align: center;
+  position: relative;
+}
+
+.step-num {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 50%;
+  background: #6E1A24;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.step-card h4 {
+  font-size: 17px !important;
+  margin: 0 0 8px !important;
+}
+
+.step-card p {
+  font-size: 12.5px;
+  color: #6E6459;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.editorial-faq-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.faq-item {
+  background: #FAF8F5;
+  border: 1px solid #EAE3D9;
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+
+.faq-question {
+  font-size: 18px !important;
+  margin: 0 0 8px !important;
+  color: #1E1C19;
+}
+
+.faq-answer {
+  font-size: 13.5px;
+  color: #5C5248;
+  margin: 0 !important;
+  line-height: 1.6;
+}
+
+.luxury-page-footer-card {
+  background: #FFFFFF;
+  border: 1px solid #EAE5DE;
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+
+.support-badge {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9B7846;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.support-content h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 21px;
+  color: #1E1C19;
+  margin: 0 0 4px;
+}
+
+.support-content p {
+  font-size: 13px;
+  color: #6E6459;
+  margin: 0;
+}
+
+.support-actions {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.btn-whatsapp-concierge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #25D366;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 12px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.btn-whatsapp-concierge:hover {
+  opacity: 0.9;
+}
+
+.btn-email-concierge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1E1C19;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 12px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.btn-email-concierge:hover {
+  opacity: 0.85;
+}
+
+/* Contact Page Specific */
+.contact-editorial-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 28px;
+  margin-top: 16px;
+}
+
+.contact-cards-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-info-card {
+  background: #FFFFFF;
+  border: 1px solid #EAE5DE;
+  border-radius: 10px;
+  padding: 22px 24px;
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.contact-info-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+}
+
+.contact-info-card.highlight-card {
+  border-color: #25D366;
+  background: #FAFCFA;
+}
+
+.contact-info-card .card-icon {
+  font-size: 24px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.contact-info-card .card-eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8C8275;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.contact-info-card h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 20px;
+  color: #1E1C19;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+
+.contact-info-card p {
+  font-size: 13px;
+  color: #6E6459;
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.contact-action-btn {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6E1A24;
+  text-decoration: none;
+}
+
+.contact-action-btn.wa-btn {
+  color: #128C7E;
+}
+
+.contact-form-card {
+  background: #FFFFFF;
+  border: 1px solid #EAE5DE;
+  border-radius: 12px;
+  padding: 36px 36px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+
+.contact-form-card .form-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 26px;
+  color: #1E1C19;
+  margin: 0 0 6px;
+}
+
+.contact-form-card .form-subtitle {
+  font-size: 13px;
+  color: #6E6459;
+  margin: 0 0 24px;
+}
+
+.contact-form-card .form-group {
+  margin-bottom: 18px;
+}
+
+.contact-form-card .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.contact-form-card label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4A423B;
+  margin-bottom: 6px;
+}
+
+.contact-form-card input,
+.contact-form-card textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #D6CEC3;
+  border-radius: 6px;
+  font-size: 13.5px;
+  background: #FAF8F5;
+  color: #1E1C19;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.contact-form-card input:focus,
+.contact-form-card textarea:focus {
+  outline: none;
+  border-color: #9B7846;
+  background: #FFFFFF;
+}
+
+.contact-submit-btn {
+  width: 100%;
+  background: #1E1C19;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 8px;
+}
+
+.contact-submit-btn:hover {
+  background: #6E1A24;
+}
+
+.contact-form-success {
+  background: #E8F5E9;
+  border: 1px solid #C8E6C9;
+  color: #2E7D32;
+  padding: 14px 18px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  margin-bottom: 20px;
+}
+
+.contact-form-error {
+  background: #FFEBEE;
+  border: 1px solid #FFCDD2;
+  color: #C62828;
+  padding: 14px 18px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  margin-bottom: 20px;
+}
+
+/* Shopify Native Policy Page Styling (/policies/...) */
+.shopify-policy__container {
+  max-width: 900px !important;
+  margin: 40px auto 80px !important;
+  padding: 0 20px !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+.shopify-policy__title {
+  text-align: center !important;
+  margin-bottom: 32px !important;
+}
+
+.shopify-policy__title h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 40px !important;
+  font-weight: 600 !important;
+  color: #1E1C19 !important;
+  margin: 0 !important;
+}
+
+.shopify-policy__body {
+  background: #FFFFFF !important;
+  border: 1px solid #EAE5DE !important;
+  border-radius: 12px !important;
+  padding: 44px 48px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02) !important;
+  line-height: 1.8 !important;
+  color: #3D3730 !important;
+  font-size: 14.5px !important;
+}
+
+.shopify-policy__body h2,
+.shopify-policy__body h3,
+.shopify-policy__body h4 {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  color: #1E1C19 !important;
+  font-weight: 600 !important;
+  margin: 28px 0 12px !important;
+}
+
+/* Mobile Responsiveness for Pages & Policies */
+@media (max-width: 768px) {
+  .luxury-page-wrapper {
+    padding: 24px 16px 60px;
+  }
+  .luxury-page-title {
+    font-size: 28px;
+  }
+  .luxury-page-body,
+  .shopify-policy__body {
+    padding: 24px 18px !important;
+  }
+  .luxury-page-footer-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 24px 20px;
+  }
+  .support-actions {
+    flex-direction: column;
+  }
+  .btn-whatsapp-concierge,
+  .btn-email-concierge {
+    justify-content: center;
+  }
+  .contact-editorial-grid {
+    grid-template-columns: 1fr;
+  }
+  .contact-form-card .form-row {
+    grid-template-columns: 1fr;
+  }
+  .contact-form-card {
+    padding: 24px 20px;
+  }
+  .shopify-policy__title h1 {
+    font-size: 30px !important;
+  }
+}

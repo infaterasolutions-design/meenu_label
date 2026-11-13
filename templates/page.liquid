@@ -1,0 +1,236 @@
+<div class="luxury-page-wrapper">
+  <div class="luxury-page-container">
+    
+    <!-- Editorial Breadcrumb -->
+    <nav class="luxury-page-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">HOME</a>
+      <span class="bc-sep">/</span>
+      <span class="bc-current">{{ page.title | default: 'ATELIER' | upcase }}</span>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="luxury-page-header">
+      <div class="luxury-page-tag">&#10024; MEENU LABEL &bull; OFFICIAL CLIENT EDITORIAL</div>
+      <h1 class="luxury-page-title">{{ page.title }}</h1>
+      <div class="luxury-page-divider">
+        <span class="divider-line"></span>
+        <span class="divider-gem">&#9670;</span>
+        <span class="divider-line"></span>
+      </div>
+    </header>
+
+    <!-- Page Main Content -->
+    <article class="luxury-page-body rte">
+      {% if page.content != blank %}
+        {{ page.content }}
+      {% else %}
+        {% comment %}
+          Smart Dynamic Fallback based on page handle if page content is blank in Shopify Admin
+        {% endcomment %}
+        {% assign p_handle = page.handle %}
+        {% if p_handle contains 'about' or p_handle contains 'story' %}
+          <div class="editorial-story-card">
+            <h3>Handcrafted in Chandigarh. Inspired by Grace.</h3>
+            <p><strong>Meenu Label</strong> is a contemporary designer pret atelier born in Chandigarh, dedicated to crafting breathable, modern silhouettes for women across India.</p>
+            <p>The label was founded by Sandeep Singh and named with deep affection after his sister, <strong>Meenu</strong>&mdash;embodying a family commitment to thoughtfulness, warmth, and artisanal integrity.</p>
+            
+            <div class="editorial-callout">
+              <h4>Why We Exist</h4>
+              <p>For too long, modern women in India have had to settle between stiff, synthetic fast-fashion that wrinkles in hours, or heavy, uncomfortable traditional wear that cannot be worn beyond a single festive celebration.</p>
+              <p>We created <strong>Meenu Label</strong> to provide an effortless middle ground:</p>
+            </div>
+
+            <ul class="luxury-feature-list">
+              <li>
+                <strong>100% Pure, Breathable Textiles:</strong> We work exclusively with rich Jaipur cottons, soft muslins, fluid silk crepes, and authentic Chanderi silks. Zero synthetic friction.
+              </li>
+              <li>
+                <strong>Thoughtful, Functional Tailoring:</strong> Every bottom silhouette features deep, functional pockets that securely hold your smartphone. Tunics and kurtas feature relaxed comfort waistbands and modest, flattering hemlines designed for all-day ease.
+              </li>
+              <li>
+                <strong>Strict Atelier Scarcity:</strong> We reject mass factory production. Drop 01 is produced in strictly small batches (only 3 pieces per size nationwide) to preserve individuality and minimize textile waste.
+              </li>
+            </ul>
+
+            <p style="font-style: italic; color: #6E6459; margin-top: 24px;">
+              From morning boardroom meetings and cafe brunches to intimate evening celebrations, Meenu Label pieces are made to move with you in effortless grace.
+            </p>
+          </div>
+
+        {% elsif p_handle contains 'shipping' or p_handle contains 'delivery' %}
+          <div class="editorial-policy-card">
+            <h3>Pan-India Priority Dispatch &amp; Doorstep Delivery</h3>
+            <p>Every Meenu Label garment is hand-inspected, steam-pressed, wrapped in protective butter paper, and packed in our signature atelier box before dispatch from our Chandigarh facility.</p>
+            
+            <div class="policy-timeline-grid">
+              <div class="timeline-box">
+                <span class="timeline-city">Chandigarh Tricity</span>
+                <span class="timeline-time">24 &ndash; 48 Hours</span>
+                <p>Express doorstep delivery across Chandigarh, Mohali &amp; Panchkula.</p>
+              </div>
+              <div class="timeline-box">
+                <span class="timeline-city">Metro Cities</span>
+                <span class="timeline-time">2 &ndash; 4 Business Days</span>
+                <p>Delhi-NCR, Mumbai, Bengaluru, Jaipur, Hyderabad, Pune, Kolkata.</p>
+              </div>
+              <div class="timeline-box">
+                <span class="timeline-city">Rest of India</span>
+                <span class="timeline-time">3 &ndash; 6 Business Days</span>
+                <p>Delivered via premium air express to 26,000+ Indian pincodes.</p>
+              </div>
+            </div>
+
+            <h4>Shipping Charges</h4>
+            <ul>
+              <li><strong>Prepaid Orders (UPI, Cards, NetBanking):</strong> 100% FREE express shipping all across India.</li>
+              <li><strong>Prepaid Privilege:</strong> Automatic flat &#8377;100 discount applied at checkout when paying online (Code: <strong>UPI100</strong>).</li>
+            </ul>
+
+            <h4>Cash on Delivery (COD)</h4>
+            <p>Cash on Delivery is available pan-India. To avoid transit wastage, our automated concierge verifies all COD orders via WhatsApp prior to dispatch.</p>
+
+            <h4>Real-Time Tracking</h4>
+            <p>The moment your package leaves our studio, you will receive real-time courier tracking links via SMS and WhatsApp. You can also track anytime on our <a href="/pages/track-order" style="color: #6E1A24; font-weight: 700; text-decoration: underline;">Track Shipment Page</a>.</p>
+          </div>
+
+        {% elsif p_handle contains 'return' or p_handle contains 'exchange' or p_handle contains 'refund' %}
+          <div class="editorial-policy-card">
+            <h3>7-Day Hassle-Free Doorstep Size Exchange</h3>
+            <p>At Meenu Label, we want your silhouette to fit like it was custom-tailored for you. If your piece doesn't fit exactly as desired, we offer a seamless <strong>7-Day Doorstep Size Exchange</strong>.</p>
+
+            <div class="exchange-steps-grid">
+              <div class="step-card">
+                <span class="step-num">01</span>
+                <h4>Initiate</h4>
+                <p>Message our Concierge on WhatsApp at <strong>+91 85116 16133</strong> or use your <a href="/pages/my-orders">Order Portal</a> with your Order ID and replacement size (M, L, XL).</p>
+              </div>
+              <div class="step-card">
+                <span class="step-num">02</span>
+                <h4>Doorstep Pickup</h4>
+                <p>Our courier partner arrives at your address to inspect and collect the original ensemble.</p>
+              </div>
+              <div class="step-card">
+                <span class="step-num">03</span>
+                <h4>Fresh Delivery</h4>
+                <p>Your fresh replacement piece is dispatched immediately with zero extra shipping charges.</p>
+              </div>
+            </div>
+
+            <h4>Eligibility Terms</h4>
+            <ul>
+              <li>Garments must be unworn, unwashed, and undamaged with all original atelier brand tags intact.</li>
+              <li>Must be returned in the original reusable EVA zipper pouch provided.</li>
+              <li>Exchange request must be submitted within 7 calendar days of delivery.</li>
+            </ul>
+
+            <h4>Order Cancellations</h4>
+            <p>Orders can be cancelled with a 100% instant refund before dispatch directly from your <a href="/pages/my-orders" style="color: #6E1A24; font-weight: 700;">My Orders page</a> or by messaging our WhatsApp concierge.</p>
+          </div>
+
+        {% elsif p_handle contains 'terms' %}
+          <div class="editorial-policy-card">
+            <h3>Terms &amp; Conditions of Service</h3>
+            <p>Welcome to Meenu Label (official website: <strong>meenulabel.com</strong> &amp; <strong>meenulabel.in</strong>). By accessing or placing an order on our store, you agree to the following terms governed by Indian laws.</p>
+            <h4>1. Orders &amp; Contract of Sale</h4>
+            <p>All orders placed on Meenu Label constitute an offer to purchase our handcrafted designer apparel. Order confirmation does not signify final acceptance until dispatched from our Chandigarh atelier.</p>
+            <h4>2. Pricing &amp; Taxes</h4>
+            <p>All prices displayed on Meenu Label are in Indian Rupees (INR, &#8377;) and are inclusive of all applicable Goods and Services Tax (GST).</p>
+            <h4>3. Intellectual Property</h4>
+            <p>All designs, silhouette photography, brand logos, and editorial content are the exclusive intellectual property of Meenu Label. Unauthorized commercial reproduction is strictly prohibited.</p>
+            <h4>4. Jurisdiction</h4>
+            <p>Any dispute arising under these terms shall be subject to the exclusive jurisdiction of the competent courts in Chandigarh / Mohali, India.</p>
+          </div>
+
+        {% elsif p_handle contains 'faq' %}
+          <div class="editorial-faq-container">
+            <div class="faq-item">
+              <h4 class="faq-question">&#10022; What fabrics does Meenu Label use?</h4>
+              <p class="faq-answer">We work exclusively with 100% natural, breathable textiles including authentic Jaipur chanderi silk, pure cotton mulmul, and high-twist crepe silks. We never use cheap synthetic polyesters.</p>
+            </div>
+            <div class="faq-item">
+              <h4 class="faq-question">&#10022; How do I know my correct size?</h4>
+              <p class="faq-answer">Our silhouettes follow standardized Indian sizing: Medium (Chest 38"), Large (Chest 40"), and X-Large (Chest 42"). Every bottom features an elasticated comfort waistband with deep functional pockets. Refer to our Size Guide modal on any product page.</p>
+            </div>
+            <div class="faq-item">
+              <h4 class="faq-question">&#10022; How long does delivery take?</h4>
+              <p class="faq-answer">Chandigarh Tricity deliveries arrive within 24 to 48 hours. Metro cities take 2 to 4 business days, and the rest of India takes 3 to 6 business days via air express.</p>
+            </div>
+            <div class="faq-item">
+              <h4 class="faq-question">&#10022; What if the outfit doesn't fit me?</h4>
+              <p class="faq-answer">We provide a 7-day doorstep size exchange. Our courier picks up the outfit from your home and delivers the replacement size with zero extra fees.</p>
+            </div>
+            <div class="faq-item">
+              <h4 class="faq-question">&#10022; Is Cash on Delivery (COD) available?</h4>
+              <p class="faq-answer">Yes, COD is available across India. However, paying online via UPI/Card gives you 100% Free Shipping plus an extra flat &#8377;100 discount (Code: UPI100).</p>
+            </div>
+          </div>
+
+        {% elsif p_handle contains 'size' %}
+          <div class="editorial-policy-card">
+            <h3>Atelier Silhouette Size &amp; Measurement Guide</h3>
+            <p>All Meenu Label garments are engineered with relaxed comfort ease for authentic Indian body silhouettes. Measurements below are in inches.</p>
+            
+            <div style="overflow-x: auto; margin: 24px 0;">
+              <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px;">
+                <thead>
+                  <tr style="background: #FAF7F2; border-bottom: 2px solid #EAE3D9;">
+                    <th style="padding: 12px 16px;">Size</th>
+                    <th style="padding: 12px 16px;">Bust / Chest</th>
+                    <th style="padding: 12px 16px;">Waist (Elastic)</th>
+                    <th style="padding: 12px 16px;">Hip</th>
+                    <th style="padding: 12px 16px;">Standard Fit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom: 1px solid #EAE5DE;">
+                    <td style="padding: 12px 16px; font-weight: 700; color: #6E1A24;">M (Medium)</td>
+                    <td style="padding: 12px 16px;">38 in</td>
+                    <td style="padding: 12px 16px;">30 &ndash; 34 in</td>
+                    <td style="padding: 12px 16px;">41 in</td>
+                    <td style="padding: 12px 16px;">Comfort Fluid</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #EAE5DE;">
+                    <td style="padding: 12px 16px; font-weight: 700; color: #6E1A24;">L (Large)</td>
+                    <td style="padding: 12px 16px;">40 in</td>
+                    <td style="padding: 12px 16px;">32 &ndash; 36 in</td>
+                    <td style="padding: 12px 16px;">43 in</td>
+                    <td style="padding: 12px 16px;">Comfort Fluid</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 12px 16px; font-weight: 700; color: #6E1A24;">XL (X-Large)</td>
+                    <td style="padding: 12px 16px;">42 in</td>
+                    <td style="padding: 12px 16px;">34 &ndash; 38 in</td>
+                    <td style="padding: 12px 16px;">45 in</td>
+                    <td style="padding: 12px 16px;">Comfort Fluid</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p><strong>Need custom fit styling?</strong> Connect directly with our atelier stylist via WhatsApp at <strong>+91 85116 16133</strong>.</p>
+          </div>
+
+        {% else %}
+          <p>{{ page.content | default: 'Welcome to Meenu Label. Our team is updating this editorial page.' }}</p>
+        {% endif %}
+      {% endif %}
+    </article>
+
+    <!-- Atelier Support Bar -->
+    <div class="luxury-page-footer-card">
+      <div class="support-content">
+        <span class="support-badge">&#128100; ATELIER CONCIERGE</span>
+        <h3>Need styling advice or have questions about our policies?</h3>
+        <p>Our personal stylist and concierge team in Chandigarh is available Monday to Saturday (10 AM &ndash; 7 PM IST).</p>
+      </div>
+      <div class="support-actions">
+        <a href="https://wa.me/918511616133" target="_blank" class="btn-whatsapp-concierge">
+          &#128172; CHAT ON WHATSAPP (+91 85116 16133)
+        </a>
+        <a href="mailto:support@meenulabel.com" class="btn-email-concierge">
+          &#9993; EMAIL SUPPORT
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>

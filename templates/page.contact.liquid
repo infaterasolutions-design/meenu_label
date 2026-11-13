@@ -1,0 +1,134 @@
+<div class="luxury-page-wrapper">
+  <div class="luxury-page-container">
+    
+    <!-- Editorial Breadcrumb -->
+    <nav class="luxury-page-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">HOME</a>
+      <span class="bc-sep">/</span>
+      <span class="bc-current">CONTACT ATELIER</span>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="luxury-page-header">
+      <div class="luxury-page-tag">&#10024; ATELIER CLIENT CARE &bull; CHANDIGARH</div>
+      <h1 class="luxury-page-title">Contact Us &amp; VIP Concierge</h1>
+      <p class="luxury-page-subtitle">
+        Have questions about sizing, silhouette fabric, custom alterations, or an existing order? Our concierge is here to assist you with bespoke warmth.
+      </p>
+      <div class="luxury-page-divider">
+        <span class="divider-line"></span>
+        <span class="divider-gem">&#9670;</span>
+        <span class="divider-line"></span>
+      </div>
+    </header>
+
+    <div class="contact-editorial-grid">
+      <!-- Left Column: Atelier Contact Cards -->
+      <div class="contact-cards-col">
+        
+        <div class="contact-info-card highlight-card">
+          <div class="card-icon">&#128172;</div>
+          <div class="card-details">
+            <span class="card-eyebrow">FASTEST RESPONSE (10 AM &ndash; 7 PM IST)</span>
+            <h3>WhatsApp Concierge</h3>
+            <p>Chat directly with our styling &amp; order fulfillment team.</p>
+            <a href="https://wa.me/918511616133" target="_blank" class="contact-action-btn wa-btn">
+              Chat on WhatsApp (+91 85116 16133) &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div class="contact-info-card">
+          <div class="card-icon">&#9993;</div>
+          <div class="card-details">
+            <span class="card-eyebrow">OFFICIAL EMAIL SUPPORT</span>
+            <h3>support@meenulabel.com</h3>
+            <p>For order queries, invoices, exchanges, and founder inquiries.</p>
+            <a href="mailto:support@meenulabel.com" class="contact-action-btn">
+              Send Email &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div class="contact-info-card">
+          <div class="card-icon">&#128205;</div>
+          <div class="card-details">
+            <span class="card-eyebrow">ATELIER STUDIO &amp; REGISTERED OFFICE</span>
+            <h3>Meenu Label Headquarters</h3>
+            <p>
+              Chandigarh Tricity, Punjab &amp; Haryana, India.<br>
+              <strong>Official Stores:</strong> meenulabel.com &bull; meenulabel.in
+            </p>
+          </div>
+        </div>
+
+        <div class="contact-info-card grievance-card">
+          <div class="card-icon">&#128220;</div>
+          <div class="card-details">
+            <span class="card-eyebrow">GOVERNMENT COMPLIANCE</span>
+            <h3>Grievance Redressal Officer</h3>
+            <p>
+              As per Consumer Protection (E-Commerce) Rules, 2020:<br>
+              <strong>Officer:</strong> Sandeep Singh<br>
+              <strong>Email:</strong> support@meenulabel.com
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Interactive Inquiry Form -->
+      <div class="contact-form-col">
+        <div class="contact-form-card">
+          <h3 class="form-title">Send Us a Direct Message</h3>
+          <p class="form-subtitle">We reply to all inquiries within 2 to 4 business hours.</p>
+
+          {% form 'contact' %}
+            {% if form.posted_successfully? %}
+              <div class="contact-form-success">
+                &#10004; Thank you for contacting Meenu Label! Our concierge will connect with you shortly.
+              </div>
+            {% endif %}
+
+            {% if form.errors %}
+              <div class="contact-form-error">
+                Please check the form fields and try submitting again.
+              </div>
+            {% endif %}
+
+            <div class="form-group">
+              <label for="ContactFormName">Your Full Name *</label>
+              <input type="text" id="ContactFormName" name="contact[name]" placeholder="e.g. Ananya Sharma" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ContactFormEmail">Email Address *</label>
+                <input type="email" id="ContactFormEmail" name="contact[email]" placeholder="ananya@example.com" required>
+              </div>
+              <div class="form-group">
+                <label for="ContactFormPhone">WhatsApp / Mobile Number *</label>
+                <input type="tel" id="ContactFormPhone" name="contact[phone]" placeholder="+91 98765 43210" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="ContactFormOrder">Order ID (Optional)</label>
+              <input type="text" id="ContactFormOrder" name="contact[order_id]" placeholder="e.g. #1004">
+            </div>
+
+            <div class="form-group">
+              <label for="ContactFormMessage">How Can We Assist You? *</label>
+              <textarea id="ContactFormMessage" name="contact[body]" rows="5" placeholder="Tell us about your sizing requirement, styling query, or delivery request..." required></textarea>
+            </div>
+
+            <button type="submit" class="contact-submit-btn">
+              SEND MESSAGE TO ATELIER &rarr;
+            </button>
+          {% endform %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
