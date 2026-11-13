@@ -35,6 +35,17 @@
       if (window.location.pathname.indexOf('jaipur-chanderi-silk-festive-suit') !== -1) {
         window.location.replace('/products/the-royal-wine-chanderi-festive-suit');
       }
+      // 2. Seamless instant redirects to official published Shopify policy URLs
+      var _path = window.location.pathname.toLowerCase();
+      if (_path.indexOf('/pages/returns-exchanges') !== -1 || _path.indexOf('/pages/refund-policy') !== -1 || _path.indexOf('/pages/return-policy') !== -1) {
+        window.location.replace('/policies/refund-policy');
+      } else if (_path.indexOf('/pages/shipping-delivery') !== -1 || _path.indexOf('/pages/shipping-policy') !== -1) {
+        window.location.replace('/policies/shipping-policy');
+      } else if (_path.indexOf('/pages/terms-of-service') !== -1 || _path.indexOf('/pages/terms') !== -1) {
+        window.location.replace('/policies/terms-of-service');
+      } else if (_path.indexOf('/pages/contact') !== -1) {
+        window.location.replace('/policies/contact-information');
+      }
     </script>
 
     <script>
