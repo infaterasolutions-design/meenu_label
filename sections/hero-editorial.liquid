@@ -1,4 +1,3 @@
-
 <style>
 @media (max-width: 768px) {
   .snitch-hero-viewport {
@@ -13,38 +12,26 @@
     background-image: url('{{ "banner_modern_ethnic_mob.jpg" | asset_url }}') !important;
     background-position: center center !important;
   }
-  .snitch-slide.snitch-slide-hero2 {
-    background-image: url('{{ "banner_grace_in_every_drape_mob.jpg" | asset_url }}') !important;
-    background-position: center center !important;
-  }
-  .snitch-slide.snitch-slide-hero3 {
-    background-image: url('{{ "banner_everyday_dresses_mob.jpg" | asset_url }}') !important;
-    background-position: center center !important;
-  }
-  .snitch-slide.snitch-slide-hero4 {
-    background-image: url('{{ "banner_chic_yellow_coord_mob.jpg" | asset_url }}') !important;
-    background-position: center center !important;
-  }
 }
 </style>
 <section class="snitch-hero-section">
   <div class="snitch-hero-viewport" id="heroSlider">
     <div class="snitch-track" id="sliderTrack">
       
-      <!-- Slide 1: Modern Ethnic Elegance (Flagship Hero Banner) -->
+      <!-- Slide 1: Modern Ethnic Elegance (LCP Preloaded Hero Banner) -->
       <div class="snitch-slide snitch-slide-hero1" style="background-image: url('{{ 'banner_modern_ethnic.jpg' | asset_url }}'); cursor: pointer;" onclick="window.location.href='/collections/all'" title="Shop Modern Ethnic Elegance">
       </div>
 
-      <!-- Slide 2: Grace in Every Drape (New Arrivals Hero Banner) -->
-      <div class="snitch-slide snitch-slide-hero2" style="background-image: url('{{ 'banner_grace_in_every_drape.jpg' | asset_url }}'); cursor: pointer;" onclick="window.location.href='/collections/all'" title="Shop Grace in Every Drape">
+      <!-- Slide 2: Grace in Every Drape (Deferred Lazy Background) -->
+      <div class="snitch-slide snitch-slide-hero2" data-bg-desktop="{{ 'banner_grace_in_every_drape.jpg' | asset_url }}" data-bg-mobile="{{ 'banner_grace_in_every_drape_mob.jpg' | asset_url }}" style="cursor: pointer;" onclick="window.location.href='/collections/all'" title="Shop Grace in Every Drape">
       </div>
 
-      <!-- Slide 3: Everyday Dresses (New Collection Hero Banner) -->
-      <div class="snitch-slide snitch-slide-hero3" style="background-image: url('{{ 'banner_everyday_dresses.jpg' | asset_url }}'); cursor: pointer;" onclick="window.location.href='/collections/dresses'" title="Shop Everyday Dresses Collection">
+      <!-- Slide 3: Everyday Dresses (Deferred Lazy Background) -->
+      <div class="snitch-slide snitch-slide-hero3" data-bg-desktop="{{ 'banner_everyday_dresses.jpg' | asset_url }}" data-bg-mobile="{{ 'banner_everyday_dresses_mob.jpg' | asset_url }}" style="cursor: pointer;" onclick="window.location.href='/collections/dresses'" title="Shop Everyday Dresses Collection">
       </div>
 
-      <!-- Slide 4: Chic Yellow Co-Ord Sets (New Collection Hero Banner) -->
-      <div class="snitch-slide snitch-slide-hero4" style="background-image: url('{{ 'banner_chic_yellow_coord.jpg' | asset_url }}'); cursor: pointer;" onclick="window.location.href='/collections/co-ord-sets'" title="Shop Chic Yellow Co-Ord Collection">
+      <!-- Slide 4: Chic Yellow Co-Ord Sets (Deferred Lazy Background) -->
+      <div class="snitch-slide snitch-slide-hero4" data-bg-desktop="{{ 'banner_chic_yellow_coord.jpg' | asset_url }}" data-bg-mobile="{{ 'banner_chic_yellow_coord_mob.jpg' | asset_url }}" style="cursor: pointer;" onclick="window.location.href='/collections/co-ord-sets'" title="Shop Chic Yellow Co-Ord Collection">
       </div>
 
     </div>
@@ -62,6 +49,35 @@
     </div>
   </div>
 </section>
+
+<script>
+  // Deferred Hero Slider Loader: Prioritizes Slide 1 LCP, then smoothly loads Slides 2-4
+  function loadDeferredHeroSlides() {
+    var isMob = window.innerWidth <= 768;
+    var deferredSlides = document.querySelectorAll('.snitch-slide[data-bg-desktop]');
+    deferredSlides.forEach(function(slide) {
+      var bgUrl = isMob ? slide.getAttribute('data-bg-mobile') : slide.getAttribute('data-bg-desktop');
+      if (bgUrl) {
+        slide.style.backgroundImage = "url('" + bgUrl + "')";
+        slide.removeAttribute('data-bg-desktop');
+        slide.removeAttribute('data-bg-mobile');
+      }
+    });
+  }
+
+  // Load remaining slides after initial paint or immediately on interaction
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(loadDeferredHeroSlides, { timeout: 1500 });
+  } else {
+    setTimeout(loadDeferredHeroSlides, 1000);
+  }
+  window.addEventListener('load', loadDeferredHeroSlides);
+  var sliderEl = document.getElementById('heroSlider');
+  if (sliderEl) {
+    sliderEl.addEventListener('touchstart', loadDeferredHeroSlides, { passive: true, once: true });
+    sliderEl.addEventListener('mouseenter', loadDeferredHeroSlides, { once: true });
+  }
+</script>
 
 {% schema %}
 {

@@ -14,7 +14,19 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    {% if template.name == 'index' %}
+      <!-- LCP Hero Image Preload (High-Priority Mobile & Desktop) -->
+      <link rel="preload" as="image" href="{{ 'banner_modern_ethnic_mob.jpg' | asset_url }}" media="(max-width: 768px)" fetchpriority="high">
+      <link rel="preload" as="image" href="{{ 'banner_modern_ethnic.jpg' | asset_url }}" media="(min-width: 769px)" fetchpriority="high">
+    {% endif %}
+
+    <!-- Optimized Non-Blocking Google Fonts -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    </noscript>
 
     {{ 'meenu-luxury.css' | asset_url | stylesheet_tag }}
 
@@ -23,143 +35,6 @@
       if (window.location.pathname.indexOf('jaipur-chanderi-silk-festive-suit') !== -1) {
         window.location.replace('/products/the-royal-wine-chanderi-festive-suit');
       }
-
-      // 2. Client-side instant sync for Card 1 (Title: The Royal Wine Chanderi Festive Suit, Price: ₹2,799, MRP: ₹4,499)
-      function syncCampaignCardDetails() {
-        // Fix all URLs & onclick handlers targeting legacy slug
-        document.querySelectorAll('a[href*="jaipur-chanderi-silk-festive-suit"]').forEach(function(el) {
-          el.href = '/products/the-royal-wine-chanderi-festive-suit';
-        });
-        document.querySelectorAll('[onclick*="jaipur-chanderi-silk-festive-suit"]').forEach(function(el) {
-          el.setAttribute('onclick', "window.location.href='/products/the-royal-wine-chanderi-festive-suit'");
-        });
-
-        // Fix Card 1 Title & Headings
-        document.querySelectorAll('.campaign-hero-name, h3, h4, h2').forEach(function(el) {
-          if (el.textContent && el.textContent.indexOf('Jaipur Chanderi') !== -1) {
-            el.textContent = 'The Royal Wine Chanderi Festive Suit';
-          }
-        });
-
-        // Fix Card 1 Image alt tags
-        document.querySelectorAll('.campaign-hero-img, img[alt*="Jaipur Chanderi"]').forEach(function(el) {
-          el.setAttribute('alt', 'The Royal Wine Chanderi Festive Suit');
-        });
-
-        // Fix Card 1 Price: ensure ₹2,799 (and replace old ₹2,299)
-        document.querySelectorAll('.campaign-price').forEach(function(el) {
-          if (el.textContent && (el.textContent.indexOf('2,299') !== -1 || el.textContent.indexOf('2299') !== -1)) {
-            el.innerHTML = '&#8377;2,799';
-          }
-        });
-
-        // Fix Card 1 MRP: ensure ₹4,499 (and replace old ₹3,699)
-        document.querySelectorAll('.campaign-mrp').forEach(function(el) {
-          if (el.textContent && (el.textContent.indexOf('3,699') !== -1 || el.textContent.indexOf('3699') !== -1)) {
-            el.innerHTML = '&#8377;4,499';
-          }
-        });
-
-        // 3. Cart Page Suggestion Products: replace legacy category cards with particular suits & co-ord sets
-        var legacyCard = document.querySelector('.crosssell-card a[href*="/collections/festive-suits"], a.crosssell-add-btn[href*="/collections/"], .crosssell-card img[src*="campaign_cafe"]');
-        if (legacyCard) {
-          var grid = document.querySelector('.crosssell-grid');
-          if (grid && !grid.getAttribute('data-particular-synced')) {
-            grid.setAttribute('data-particular-synced', 'true');
-            grid.innerHTML = `
-              <a href="/products/noor-chanderi-silk-straight-kurta-suit" class="crosssell-card">
-                <div class="crosssell-thumb-wrap">
-                  <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/DSC09628.jpg?v=1793648783" alt="The Noor Petrol Teal Chanderi Suit" class="crosssell-thumb" loading="lazy">
-                  <span class="crosssell-badge">Festive Suit</span>
-                </div>
-                <div class="crosssell-body">
-                  <div>
-                    <div class="crosssell-cat">Pure Chanderi Silk</div>
-                    <h4 class="crosssell-card-title">The Noor Petrol Teal Chanderi Suit</h4>
-                  </div>
-                  <div>
-                    <div class="crosssell-price-row">
-                      <span class="crosssell-price">&#8377;2,999</span>
-                      <span class="crosssell-mrp">&#8377;4,799</span>
-                    </div>
-                    <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
-                  </div>
-                </div>
-              </a>
-              <a href="/products/mustard-crepe-angrakha-co-ord-set" class="crosssell-card">
-                <div class="crosssell-thumb-wrap">
-                  <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/MustardElegancewithPampasAccent.png?v=1793999431" alt="The Gulzar Angrakha Crepe Silk Set" class="crosssell-thumb" loading="lazy">
-                  <span class="crosssell-badge">Co-ord Set</span>
-                </div>
-                <div class="crosssell-body">
-                  <div>
-                    <div class="crosssell-cat">Crepe Silk Angrakha</div>
-                    <h4 class="crosssell-card-title">The Gulzar Angrakha Crepe Silk Set</h4>
-                  </div>
-                  <div>
-                    <div class="crosssell-price-row">
-                      <span class="crosssell-price">&#8377;2,399</span>
-                      <span class="crosssell-mrp">&#8377;3,799</span>
-                    </div>
-                    <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
-                  </div>
-                </div>
-              </a>
-              <a href="/products/roohani-chanderi-sharara-festive-set" class="crosssell-card">
-                <div class="crosssell-thumb-wrap">
-                  <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/DSC09411.jpg?v=1793916535" alt="The Roohani Champagne Sharara Set" class="crosssell-thumb" loading="lazy">
-                  <span class="crosssell-badge">Sharara Set</span>
-                </div>
-                <div class="crosssell-body">
-                  <div>
-                    <div class="crosssell-cat">Zari Chanderi Silk</div>
-                    <h4 class="crosssell-card-title">The Roohani Champagne Sharara Set</h4>
-                  </div>
-                  <div>
-                    <div class="crosssell-price-row">
-                      <span class="crosssell-price">&#8377;3,199</span>
-                      <span class="crosssell-mrp">&#8377;4,999</span>
-                    </div>
-                    <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
-                  </div>
-                </div>
-              </a>
-              <a href="/products/lime-silk-v-neck-tunic-co-ord" class="crosssell-card">
-                <div class="crosssell-thumb-wrap">
-                  <img src="https://cdn.shopify.com/s/files/1/0722/3325/4983/files/ElegantYellowEmbroideredPortrait.png?v=1793918415" alt="The Mehr Lime Silk Blend Tunic Set" class="crosssell-thumb" loading="lazy">
-                  <span class="crosssell-badge">Co-ord Set</span>
-                </div>
-                <div class="crosssell-body">
-                  <div>
-                    <div class="crosssell-cat">Silk Blend Tunic</div>
-                    <h4 class="crosssell-card-title">The Mehr Lime Silk Blend Tunic Set</h4>
-                  </div>
-                  <div>
-                    <div class="crosssell-price-row">
-                      <span class="crosssell-price">&#8377;2,499</span>
-                      <span class="crosssell-mrp">&#8377;3,999</span>
-                    </div>
-                    <span class="crosssell-action-btn">VIEW SILHOUETTE</span>
-                  </div>
-                </div>
-              </a>
-            `;
-          }
-        }
-      }
-
-      // Run immediately if DOM elements exist, and on ready/load events
-      syncCampaignCardDetails();
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', syncCampaignCardDetails);
-      } else {
-        syncCampaignCardDetails();
-      }
-      window.addEventListener('load', syncCampaignCardDetails);
-
-      // Keep active for dynamic hydration & theme section reloads
-      var _cardSyncTimer = setInterval(syncCampaignCardDetails, 200);
-      setTimeout(function() { clearInterval(_cardSyncTimer); }, 4000);
     </script>
 
     <script>

@@ -561,6 +561,9 @@ var slideInterval = 6000;
 var slideTimer = null;
 
 function updateSlider() {
+  if (typeof loadDeferredHeroSlides === 'function') {
+    loadDeferredHeroSlides();
+  }
   var track = document.getElementById('sliderTrack');
   var dotsContainer = document.getElementById('sliderDots');
   if (track) {
