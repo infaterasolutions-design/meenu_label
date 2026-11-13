@@ -1,33 +1,36 @@
 {% assign my_orders_login_url_with_return = '/customer_authentication/login?return_to=/pages/my-orders' %}
-<div class="my-orders-page-section" style="background: #FAF8F5; min-height: 85vh; padding: 40px 20px 80px;">
-  <div style="max-width: 980px; margin: 0 auto;">
+<div class="my-orders-page-section">
+  <div class="my-orders-container">
     
     <!-- Breadcrumb -->
-    <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #8C8275; margin-bottom: 24px;">
-      <a href="/" style="color: inherit; text-decoration: none;">HOME</a> &nbsp;/&nbsp; 
-      <a href="/pages/account" style="color: inherit; text-decoration: none;">MY ACCOUNT</a> &nbsp;/&nbsp; 
-      <span style="color: #1E1C19;">MY ORDERS</span>
+    <div class="orders-breadcrumb">
+      <a href="/">HOME</a> &nbsp;/&nbsp; 
+      <a href="/pages/account">MY ACCOUNT</a> &nbsp;/&nbsp; 
+      <span class="breadcrumb-current">MY ORDERS</span>
     </div>
 
     <!-- Header Banner -->
-    <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; padding: 28px 32px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
-      <div>
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-          <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9B7846; padding: 3px 10px; border-radius: 4px;">
-            &#10024; ATELIER CLIENT PORTAL
-          </span>
-          <span style="font-size: 11px; color: #8C8275; font-weight: 600;">Live Status &bull; 1-Click Tracking &bull; Doorstep Exchanges</span>
+    <div class="orders-header-card">
+      <div class="orders-header-main-col">
+        <div class="orders-badge-row">
+          <span class="orders-atelier-badge">&#10024; ATELIER CLIENT PORTAL</span>
+          <span class="orders-header-perks-desktop">Live Status &bull; 1-Click Tracking &bull; Doorstep Exchanges</span>
+          <div class="orders-header-action-mobile">
+            <a href="/collections/all" class="orders-header-cta-btn-mobile">
+              EXPLORE DROP 01 &rarr;
+            </a>
+          </div>
         </div>
-        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; font-weight: 600; color: #1E1C19; margin: 0 0 4px 0;">
+        <h1 class="orders-header-title">
           My Orders &amp; Purchases
         </h1>
-        <div style="font-size: 13px; color: #6E6459;">
+        <div class="orders-header-subtitle">
           Review all your handcrafted ensembles, live dispatch timelines, and cancellation records.
         </div>
       </div>
 
-      <div style="display: flex; gap: 10px; align-items: center;">
-        <a href="/collections/all" style="display: inline-block; padding: 10px 18px; background: #1E1C19; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+      <div class="orders-header-action-desktop">
+        <a href="/collections/all" class="orders-header-cta-btn-desktop">
           EXPLORE DROP 01 &rarr;
         </a>
       </div>
@@ -36,120 +39,156 @@
     {% if customer %}
       <!-- 1. AUTHENTICATED CUSTOMER VIEW -->
       {% if customer.orders.size > 0 %}
-        <!-- Order Status Filter Pills (Flipkart/Myntra Style) -->
-        <div style="display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px;" class="orders-filter-bar">
-          <button type="button" class="order-filter-pill active" onclick="filterOrderCards('all', this)" style="padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 700; border: 1px solid #1E1C19; background: #1E1C19; color: #FFFFFF; cursor: pointer;">
+        <!-- Order Status Filter Pills (Flipkart/Myntra Horizontal Touch Scroll) -->
+        <div class="orders-filter-bar">
+          <button type="button" class="order-filter-pill active" onclick="filterOrderCards('all', this)">
             All Orders ({{ customer.orders.size }})
           </button>
-          <button type="button" class="order-filter-pill" onclick="filterOrderCards('dispatched', this)" style="padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 600; border: 1px solid #D6CEC3; background: #FFFFFF; color: #4A4238; cursor: pointer;">
+          <button type="button" class="order-filter-pill" onclick="filterOrderCards('dispatched', this)">
             Dispatched / In Transit
           </button>
-          <button type="button" class="order-filter-pill" onclick="filterOrderCards('delivered', this)" style="padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 600; border: 1px solid #D6CEC3; background: #FFFFFF; color: #4A4238; cursor: pointer;">
+          <button type="button" class="order-filter-pill" onclick="filterOrderCards('delivered', this)">
             Delivered
           </button>
-          <button type="button" class="order-filter-pill" onclick="filterOrderCards('canceled', this)" style="padding: 8px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 600; border: 1px solid #D6CEC3; background: #FFFFFF; color: #4A4238; cursor: pointer;">
+          <button type="button" class="order-filter-pill" onclick="filterOrderCards('canceled', this)">
             Canceled
           </button>
         </div>
 
         <!-- ORDERS CONTAINER (REAL SHOPIFY ORDERS) -->
-        <div id="myOrdersListContainer" style="display: flex; flex-direction: column; gap: 20px;">
+        <div id="myOrdersListContainer" class="orders-list-container">
           {% for order in customer.orders %}
             {% assign is_order_canceled = false %}
             {% if order.cancelled or order.cancel_reason != blank or order.financial_status == 'refunded' or order.financial_status == 'voided' or order.tags contains 'canceled' or order.tags contains 'cancelled' or order.tags contains 'Cancellation requested' or order.line_items.size == 0 %}
               {% assign is_order_canceled = true %}
             {% endif %}
-            <div class="luxury-order-card codify-order-item" id="order_{{ order.id }}" data-order-id="{{ order.id }}" data-order-number="{{ order.name }}" data-order-status-url="{{ order.order_status_url }}" data-status="{% if is_order_canceled %}canceled{% elsif order.fulfillment_status == 'fulfilled' %}delivered{% else %}dispatched{% endif %}" style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
+            
+            <div class="luxury-order-card codify-order-item" id="order_{{ order.id }}" data-order-id="{{ order.id }}" data-order-number="{{ order.name }}" data-order-status-url="{{ order.order_status_url }}" data-status="{% if is_order_canceled %}canceled{% elsif order.fulfillment_status == 'fulfilled' %}delivered{% else %}dispatched{% endif %}">
               
-              <!-- Card Header Bar (Amazon / Myntra Style) -->
-              <div style="background: #FAF8F5; border-bottom: 1px solid #EAE5DE; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 12px;">
-                <div style="display: flex; gap: 24px; flex-wrap: wrap;">
-                  <div>
-                    <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #8C8275;">ORDER PLACED</div>
-                    <div style="font-weight: 600; color: #1E1C19; margin-top: 2px;">{{ order.created_at | date: "%B %d, %Y" }}</div>
+              <!-- Card Header Bar Desktop (Amazon / Myntra Style) -->
+              <div class="order-card-header-desktop">
+                <div class="order-header-meta-group">
+                  <div class="order-meta-col">
+                    <div class="order-meta-label">ORDER PLACED</div>
+                    <div class="order-meta-val">{{ order.created_at | date: "%B %d, %Y" }}</div>
                   </div>
-                  <div>
-                    <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #8C8275;">TOTAL AMOUNT</div>
-                    <div style="font-weight: 700; color: #1E1C19; margin-top: 2px;">{{ order.total_price | money }}</div>
+                  <div class="order-meta-col">
+                    <div class="order-meta-label">TOTAL AMOUNT</div>
+                    <div class="order-meta-val total-price-val">{{ order.total_price | money }}</div>
                   </div>
-                  <div>
-                    <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #8C8275;">SHIP TO</div>
-                    <div style="font-weight: 600; color: #1E1C19; margin-top: 2px;">{{ order.shipping_address.name | default: customer.name }}</div>
+                  <div class="order-meta-col">
+                    <div class="order-meta-label">SHIP TO</div>
+                    <div class="order-meta-val">{{ order.shipping_address.name | default: customer.name }}</div>
                   </div>
                 </div>
 
-                <div>
-                  <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #8C8275; text-align: right;">ORDER NUMBER</div>
-                  <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 18px; font-weight: 700; color: #1E1C19; margin-top: 1px;">{{ order.name }}</div>
+                <div class="order-header-number-group">
+                  <div class="order-meta-label">ORDER NUMBER</div>
+                  <div class="order-number-title">{{ order.name }}</div>
+                </div>
+              </div>
+
+              <!-- Card Header Bar Mobile (Compact Luxury View) -->
+              <div class="order-card-header-mobile">
+                <div class="order-mob-header-top">
+                  <div class="order-mob-number">
+                    <span>Order</span> <strong>{{ order.name }}</strong>
+                  </div>
+                  <div class="order-mob-status-pill status-pill-{% if is_order_canceled %}canceled{% elsif order.fulfillment_status == 'fulfilled' %}delivered{% else %}active{% endif %}">
+                    {% if is_order_canceled %}
+                      <span class="status-dot-mini red"></span> Canceled
+                    {% elsif order.fulfillment_status == 'fulfilled' %}
+                      <span class="status-dot-mini green"></span> Delivered
+                    {% else %}
+                      <span class="status-dot-mini amber"></span> In Transit
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="order-mob-header-sub">
+                  <span>{{ order.created_at | date: "%b %d, %Y" }}</span>
+                  <span class="sub-dot">&bull;</span>
+                  <span class="mob-sub-price">{{ order.total_price | money }}</span>
+                  {% if order.shipping_address.first_name != blank %}
+                    <span class="sub-dot">&bull;</span>
+                    <span class="mob-sub-name">Ship to {{ order.shipping_address.first_name }}</span>
+                  {% endif %}
                 </div>
               </div>
 
               <!-- Card Body: Products & Status -->
-              <div style="padding: 24px;">
+              <div class="order-card-body">
                 
-                <!-- Status Heading -->
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 8px;">
-                  <div style="display: flex; align-items: center; gap: 8px;">
+                <!-- Desktop Status Heading -->
+                <div class="order-card-status-headline-desktop">
+                  <div class="status-indicator-left">
                     {% if is_order_canceled %}
-                      <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #DC2626;"></span>
-                      <span style="font-size: 13.5px; font-weight: 700; color: #991B1B;">
+                      <span class="status-dot red"></span>
+                      <span class="status-text red">
                         Canceled on {{ order.cancelled_at | default: order.created_at | date: "%B %d, %Y" }}
                         {% if order.cancel_reason != blank and order.cancel_reason != 'other' %}
                           ({{ order.cancel_reason | capitalize }})
                         {% endif %}
                       </span>
                     {% elsif order.fulfillment_status == 'fulfilled' %}
-                      <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22C55E;"></span>
-                      <span style="font-size: 13.5px; font-weight: 700; color: #15803D;">Delivered</span>
+                      <span class="status-dot green"></span>
+                      <span class="status-text green">Delivered</span>
                     {% else %}
-                      <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #F59E0B;"></span>
-                      <span style="font-size: 13.5px; font-weight: 700; color: #B45309;">Atelier Crafting &bull; Express Dispatch in Progress</span>
+                      <span class="status-dot amber"></span>
+                      <span class="status-text amber">Atelier Crafting &bull; Express Dispatch in Progress</span>
                     {% endif %}
                   </div>
 
-                  <span style="font-size: 11px; color: #8C8275; font-weight: 600;">
+                  <span class="order-craft-tag">
                     Chandigarh Atelier &bull; Handcrafted Pure Silk
                   </span>
                 </div>
 
                 <!-- Product Lines -->
                 {% for line_item in order.line_items %}
-                  <div style="display: flex; gap: 18px; align-items: center; padding: 14px 0; border-top: 1px solid #F0EAE1; flex-wrap: wrap;">
-                    {% if line_item.image %}
-                      <img src="{{ line_item.image | image_url: width: 160 }}" alt="{{ line_item.title }}" style="width: 75px; height: 95px; object-fit: cover; border-radius: 6px; border: 1px solid #EAE5DE;">
-                    {% endif %}
-
-                    <div style="flex: 1; min-width: 200px;">
-                      <a href="{{ line_item.url }}" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 19px; font-weight: 600; color: #1E1C19; text-decoration: none; display: block; line-height: 1.3;">
-                        {{ line_item.title }}
-                      </a>
-                      {% if line_item.variant.title != 'Default Title' %}
-                        <div style="font-size: 12px; color: #8C8275; margin-top: 3px;">
-                          Size / Variant: <strong>{{ line_item.variant.title }}</strong>
-                        </div>
+                  <div class="order-product-item">
+                    <div class="order-product-main">
+                      {% if line_item.image %}
+                        <img src="{{ line_item.image | image_url: width: 180 }}" alt="{{ line_item.title }}" class="order-product-img">
                       {% endif %}
-                      <div style="font-size: 13px; font-weight: 700; color: #1E1C19; margin-top: 4px;">
-                        {{ line_item.final_price | money }} &bull; Qty: {{ line_item.quantity }}
+
+                      <div class="order-product-details">
+                        <a href="{{ line_item.url }}" class="order-product-title">
+                          {{ line_item.title }}
+                        </a>
+                        {% if line_item.variant.title != 'Default Title' %}
+                          <div class="order-product-variant">
+                            Size / Variant: <strong>{{ line_item.variant.title }}</strong>
+                          </div>
+                        {% endif %}
+                        <div class="order-product-pricing">
+                          <span class="item-price">{{ line_item.final_price | money }}</span>
+                          <span class="item-qty">&bull; Qty: {{ line_item.quantity }}</span>
+                        </div>
                       </div>
                     </div>
 
-                    <!-- Actions per item (Amazon/Flipkart Style) -->
-                    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 175px;">
-                      <button type="button" onclick="toggleOrderTrackingPanel('{{ order.id }}')" id="trackBtn_{{ order.id }}" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 18px; background: #9E7D47; color: #FFFFFF; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(158, 125, 71, 0.25);">
-                        <span>&#128230;</span> <span class="track-btn-label">TRACK SHIPMENT</span>
-                      </button>
-                      <a href="{{ line_item.url }}" style="display: block; text-align: center; padding: 9px 14px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
-                        BUY IT AGAIN
-                      </a>
-                      {% unless is_order_canceled or order.fulfillment_status == 'fulfilled' %}
-                        <button type="button" class="cancel-order-trigger-btn codify-custom-cancel-trigger" data-order-id="{{ order.id }}" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ line_item.title | escape }}', '{{ order.total_price | money }}', '{{ order.order_status_url }}', '{{ order.customer_url }}')" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
-                          <span>&#10005;</span> CANCEL ORDER
+                    <!-- Actions per item (Amazon/Flipkart Style Desktop + 2-Column Mobile Grid) -->
+                    <div class="order-product-actions">
+                      <div class="order-actions-buttons-row">
+                        <button type="button" onclick="toggleOrderTrackingPanel('{{ order.id }}')" id="trackBtn_{{ order.id }}" class="order-btn-track {% if is_order_canceled %}btn-canceled-state{% endif %}">
+                          <span>&#128230;</span> <span class="track-btn-label">{% if is_order_canceled %}✕ CANCELLATION DETAILS{% else %}TRACK SHIPMENT{% endif %}</span>
                         </button>
-                        <!-- Codify App Injected Container Hook -->
-                        <div class="codify-cancel-button-wrapper" data-order-id="{{ order.id }}" style="margin-top: 4px;"></div>
-                      {% endunless %}
-                      <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20inquiry%20regarding%20{{ line_item.title | url_encode }}%20from%20Order%20{{ order.name }}." target="_blank" style="display: block; text-align: center; padding: 6px 12px; color: #25D366; font-size: 10.5px; font-weight: 700; text-decoration: none;">
-                        &#128172; WhatsApp Concierge
+                        
+                        {% if is_order_canceled or order.fulfillment_status == 'fulfilled' %}
+                          <a href="{{ line_item.url }}" class="order-btn-buyagain">
+                            BUY IT AGAIN
+                          </a>
+                        {% else %}
+                          <button type="button" class="cancel-order-trigger-btn codify-custom-cancel-trigger order-btn-cancel" data-order-id="{{ order.id }}" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ line_item.title | escape }}', '{{ order.total_price | money }}', '{{ order.order_status_url }}', '{{ order.customer_url }}')">
+                            <span>&#10005;</span> CANCEL ORDER
+                          </button>
+                          <!-- Codify App Injected Container Hook -->
+                          <div class="codify-cancel-button-wrapper" data-order-id="{{ order.id }}"></div>
+                        {% endif %}
+                      </div>
+
+                      <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20inquiry%20regarding%20{{ line_item.title | url_encode }}%20from%20Order%20{{ order.name }}." target="_blank" class="order-wa-link">
+                        <span>&#128172;</span> Chat with Stylist on WhatsApp
                       </a>
                     </div>
                   </div>
@@ -158,35 +197,35 @@
                 <!-- EXPANDABLE PANEL (CANCELED VS ACTIVE) -->
                 {% if is_order_canceled %}
                   <!-- CANCELLATION DETAILS PANEL -->
-                  <div id="trackingPanel_{{ order.id }}" style="display: none; margin-top: 20px; padding: 22px; background: #FFF5F5; border: 1px solid #FED7D7; border-radius: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid #FEB2B2; padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                  <div id="trackingPanel_{{ order.id }}" class="order-tracking-panel canceled-panel" style="display: none;">
+                    <div class="order-tracking-panel-header canceled-header">
                       <div>
-                        <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #991B1B;">✕ CANCELLATION &amp; REFUND STATUS</span>
-                        <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 700; color: #1E1C19;">
+                        <span class="tracking-panel-tag red">&#10005; CANCELLATION &amp; REFUND STATUS</span>
+                        <div class="tracking-panel-title">
                           Order {{ order.name }} Details
                         </div>
                       </div>
-                      <span style="background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">
-                        ✕ Order Canceled
+                      <span class="tracking-panel-status-pill red">
+                        &#10005; Order Canceled
                       </span>
                     </div>
 
-                    <div style="background: #FFFFFF; border: 1px solid #FCA5A5; border-radius: 6px; padding: 12px 16px; margin-bottom: 16px; font-size: 12.5px; color: #7F1D1D; line-height: 1.5;">
+                    <div class="cancellation-notice-box">
                       <strong>Order Notice:</strong> This order was canceled on {{ order.cancelled_at | date: "%B %d, %Y" }}. Because the order was canceled, no courier shipment was dispatched.
                     </div>
 
-                    <div class="shipment-timeline" style="margin: 16px 0 20px; padding-left: 26px;">
+                    <div class="shipment-timeline">
                       <div class="timeline-step completed">
-                        <div class="timeline-title" style="color: #1E1C19;">Order Placed &amp; Confirmed</div>
-                        <div class="timeline-desc" style="color: #6E6459;">{{ order.created_at | date: "%B %d, %Y at %I:%M %p" }}</div>
+                        <div class="timeline-title">Order Placed &amp; Confirmed</div>
+                        <div class="timeline-desc">{{ order.created_at | date: "%B %d, %Y at %I:%M %p" }}</div>
                       </div>
                       <div class="timeline-step canceled-step">
-                        <div class="timeline-title" style="color: #991B1B; font-weight: 700;">Order Canceled</div>
-                        <div class="timeline-desc" style="color: #7F1D1D;">Canceled on {{ order.cancelled_at | date: "%B %d, %Y" }}</div>
+                        <div class="timeline-title red">Order Canceled</div>
+                        <div class="timeline-desc red">Canceled on {{ order.cancelled_at | date: "%B %d, %Y" }}</div>
                       </div>
                       <div class="timeline-step completed">
-                        <div class="timeline-title" style="color: #1E1C19;">Payment &amp; Refund Status</div>
-                        <div class="timeline-desc" style="color: #2E6B38;">
+                        <div class="timeline-title">Payment &amp; Refund Status</div>
+                        <div class="timeline-desc green">
                           {% if order.financial_status == 'refunded' %}
                             &#10003; 100% Refund Completed
                           {% else %}
@@ -196,59 +235,59 @@
                       </div>
                     </div>
 
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                      <a href="/collections/all" style="padding: 10px 18px; background: #1E1C19; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+                    <div class="tracking-panel-actions">
+                      <a href="/collections/all" class="tracking-panel-btn dark">
                         RE-ORDER SILHOUETTE &rarr;
                       </a>
-                      <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20inquiry%20regarding%20my%20canceled%20Order%20{{ order.name }}." target="_blank" style="padding: 10px 18px; background: #25D366; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
-                        <span>&#128172;</span> Chat on WhatsApp
+                      <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20inquiry%20regarding%20my%20canceled%20Order%20{{ order.name }}." target="_blank" class="tracking-panel-btn wa">
+                        <span>&#128172;</span> Chat on WhatsApp Regarding Refund
                       </a>
                     </div>
                   </div>
 
                 {% else %}
                   <!-- ACTIVE SHIPMENT TIMELINE PANEL -->
-                  <div id="trackingPanel_{{ order.id }}" style="display: none; margin-top: 20px; padding: 22px; background: #FAF7F2; border: 1px solid #EAE3D9; border-radius: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #ECE4D8; padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                  <div id="trackingPanel_{{ order.id }}" class="order-tracking-panel active-panel" style="display: none;">
+                    <div class="order-tracking-panel-header active-header">
                       <div>
-                        <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #9B7846;">LIVE SHIPMENT TIMELINE</span>
-                        <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 700; color: #1E1C19;">
+                        <span class="tracking-panel-tag gold">LIVE SHIPMENT TIMELINE</span>
+                        <div class="tracking-panel-title">
                           Order {{ order.name }} Status
                         </div>
                       </div>
-                      <span style="background: #F3F8F2; border: 1px solid #D6E8D5; color: #2E6B38; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">
+                      <span class="tracking-panel-status-pill green">
                         {% if order.fulfillment_status == 'fulfilled' %}&#10003; Delivered{% else %}&#9203; In Process{% endif %}
                       </span>
                     </div>
 
-                    <div class="shipment-timeline" style="margin: 16px 0 20px; padding-left: 26px;">
+                    <div class="shipment-timeline">
                       <div class="timeline-step completed">
-                        <div class="timeline-title" style="color: #1E1C19;">Order Confirmed &amp; Silk Reserved</div>
-                        <div class="timeline-desc" style="color: #6E6459;">Chandigarh Studio Atelier &bull; Fabrics allocated</div>
+                        <div class="timeline-title">Order Confirmed &amp; Silk Reserved</div>
+                        <div class="timeline-desc">Chandigarh Studio Atelier &bull; Fabrics allocated</div>
                       </div>
                       <div class="timeline-step completed">
-                        <div class="timeline-title" style="color: #1E1C19;">Handcrafted &amp; Master Quality Inspected</div>
-                        <div class="timeline-desc" style="color: #6E6459;">Passed 14-point artisan luxury inspection</div>
+                        <div class="timeline-title">Handcrafted &amp; Master Quality Inspected</div>
+                        <div class="timeline-desc">Passed 14-point artisan luxury inspection</div>
                       </div>
                       <div class="timeline-step {% if order.fulfillment_status == 'fulfilled' %}completed{% else %}active{% endif %}">
-                        <div class="timeline-title" style="color: #1E1C19;">Dispatched in Express Transit</div>
-                        <div class="timeline-desc" style="color: #6E6459;">Express Courier Handover &bull; Tricity / National Air</div>
+                        <div class="timeline-title">Dispatched in Express Transit</div>
+                        <div class="timeline-desc">Express Courier Handover &bull; Tricity / National Air</div>
                       </div>
                       <div class="timeline-step {% if order.fulfillment_status == 'fulfilled' %}completed{% endif %}">
-                        <div class="timeline-title" style="color: #1E1C19;">Out for Delivery &amp; VIP Handover</div>
-                        <div class="timeline-desc" style="color: #6E6459;">Direct delivery to {{ order.shipping_address.name | default: 'Customer Destination' }}</div>
+                        <div class="timeline-title">Out for Delivery &amp; VIP Handover</div>
+                        <div class="timeline-desc">Direct delivery to {{ order.shipping_address.name | default: 'Customer Destination' }}</div>
                       </div>
                     </div>
 
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                      <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20please%20share%20courier%20tracking%20update%20for%20Order%20{{ order.name }}." target="_blank" style="padding: 10px 18px; background: #25D366; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
+                    <div class="tracking-panel-actions">
+                      <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20please%20share%20courier%20tracking%20update%20for%20Order%20{{ order.name }}." target="_blank" class="tracking-panel-btn wa">
                         <span>&#128172;</span> Chat With Atelier Stylist
                       </a>
-                      <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20need%20a%20doorstep%20size%20exchange%20for%20Order%20{{ order.name }}." target="_blank" style="padding: 10px 18px; background: #FFFFFF; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
-                        &#128087; Request Doorstep Size Exchange
+                      <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20need%20a%20doorstep%20size%20exchange%20for%20Order%20{{ order.name }}." target="_blank" class="tracking-panel-btn outline">
+                        <span>&#128087;</span> Request Doorstep Size Exchange
                       </a>
                       {% unless is_order_canceled or order.fulfillment_status == 'fulfilled' %}
-                        <button type="button" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ order.line_items.first.title | escape }}', '{{ order.total_price | money }}', '{{ order.order_status_url }}', '{{ order.customer_url }}')" style="padding: 10px 18px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; cursor: pointer;">
+                        <button type="button" class="tracking-panel-btn cancel-light" onclick="openCancelOrderModal('{{ order.id }}', '{{ order.name }}', '{{ order.line_items.first.title | escape }}', '{{ order.total_price | money }}', '{{ order.order_status_url }}', '{{ order.customer_url }}')">
                           &#10005; Cancel This Order
                         </button>
                       {% endunless %}
@@ -262,20 +301,20 @@
         </div>
       {% else %}
         <!-- CUSTOMER LOGGED IN WITH 0 ORDERS -->
-        <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; padding: 48px 24px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
-          <div style="width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 50%; background: #FAF7F2; border: 1px solid #EAE3D9; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+        <div class="orders-empty-state">
+          <div class="empty-icon-circle">
             &#128087;
           </div>
-          <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #9E7D47; margin-bottom: 6px;">
+          <div class="empty-state-tag">
             ATELIER ORDER ARCHIVE
           </div>
-          <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 600; color: #1E1C19; margin: 0 0 10px 0;">
+          <h2 class="empty-state-title">
             No Orders Found Yet
           </h2>
-          <p style="font-size: 13.5px; color: #6E6459; max-width: 440px; margin: 0 auto 24px; line-height: 1.6;">
+          <p class="empty-state-desc">
             You have not placed any orders under <strong>{{ customer.email }}</strong> yet. Explore our handcrafted debut capsule drop.
           </p>
-          <a href="/collections/all" style="display: inline-block; padding: 12px 28px; background: #1E1C19; color: #FFFFFF; font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+          <a href="/collections/all" class="empty-state-cta">
             EXPLORE DROP 01 SILHOUETTES &rarr;
           </a>
         </div>
@@ -283,58 +322,56 @@
 
     {% else %}
       <!-- 2. GUEST / LOGGED-OUT: ATELIER CONFIDENTIALITY GATE (ZERO FAKE ORDERS) -->
-      <div style="background: #FFFFFF; border: 1px solid #EAE5DE; border-radius: 12px; padding: 56px 28px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.02); max-width: 640px; margin: 0 auto;">
-        
-        <div style="width: 64px; height: 64px; margin: 0 auto 20px; border-radius: 50%; background: #FAF7F2; border: 1.5px solid #EAE3D9; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #9E7D47;">
+      <div class="orders-guest-gate">
+        <div class="guest-gate-icon">
           &#128274;
         </div>
 
-        <div style="display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; background: #FAF7F2; border: 1px solid #EAE3D9; color: #9E7D47; padding: 4px 12px; border-radius: 4px; margin-bottom: 12px;">
+        <div class="guest-gate-tag">
           ATELIER CONFIDENTIALITY &bull; SIGN IN REQUIRED
         </div>
 
-        <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 600; color: #1E1C19; margin: 0 0 10px 0; line-height: 1.2;">
+        <h2 class="guest-gate-title">
           Sign In to View Your Purchases
         </h2>
 
-        <p style="font-size: 13.5px; color: #6E6459; line-height: 1.6; max-width: 480px; margin: 0 auto 28px;">
+        <p class="guest-gate-desc">
           Your order records, doorstep exchange status, and live courier tracking are private. Please sign in to your Atelier Account to view your purchases.
         </p>
 
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 340px; margin: 0 auto;">
-          <a href="{{ my_orders_login_url_with_return }}" style="display: block; width: 100%; box-sizing: border-box; text-align: center; padding: 14px 24px; background: #1E1C19; color: #FFFFFF; font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,0.15); transition: background 0.2s;">
+        <div class="guest-gate-actions">
+          <a href="{{ my_orders_login_url_with_return }}" class="guest-btn-primary">
             SIGN IN TO YOUR ACCOUNT &rarr;
           </a>
 
-          <a href="/collections/all" style="display: block; width: 100%; box-sizing: border-box; text-align: center; padding: 12px 24px; background: #FAF8F5; border: 1px solid #D6CEC3; color: #1E1C19; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+          <a href="/collections/all" class="guest-btn-secondary">
             EXPLORE DROP 01 SILHOUETTES
           </a>
         </div>
 
-        <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #F0EAE1; font-size: 12px; color: #8C8275;">
+        <div class="guest-gate-footer">
           Looking for a guest checkout order? 
-          <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20placed%20an%20order%20as%20a%20guest%20and%20need%20tracking%20assistance." target="_blank" style="color: #25D366; font-weight: 700; text-decoration: none; margin-left: 4px;">
+          <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20placed%20an%20order%20as%20a%20guest%20and%20need%20tracking%20assistance." target="_blank" class="guest-wa-link">
             Chat on WhatsApp (+91 85116 16133)
           </a>
         </div>
-
       </div>
     {% endif %}
 
     <!-- Atelier Privilege Banner -->
-    <div style="margin-top: 36px; background: #FAF7F2; border: 1px solid #EAE3D9; border-radius: 12px; padding: 24px 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-      <div>
-        <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #9B7846; margin-bottom: 2px;">
+    <div class="orders-care-banner">
+      <div class="orders-care-text">
+        <div class="orders-care-tag">
           &#10024; ATELIER CLIENT CARE
         </div>
-        <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 600; color: #1E1C19;">
+        <div class="orders-care-title">
           Questions About an Order or Delivery?
         </div>
-        <div style="font-size: 12.5px; color: #6E6459; margin-top: 2px;">
+        <div class="orders-care-sub">
           Free 7-day exchange window &bull; Sector 17, Chandigarh Direct Concierge
         </div>
       </div>
-      <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20inquiry%20regarding%20my%20orders." target="_blank" style="display: flex; align-items: center; gap: 8px; padding: 11px 22px; background: #25D366; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
+      <a href="https://wa.me/918511616133?text=Hi%20Meenu%20Label%2C%20I%20have%20an%20inquiry%20regarding%20my%20orders." target="_blank" class="orders-care-wa-btn">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
         CHAT ON WHATSAPP (+91 85116 16133)
       </a>
@@ -343,14 +380,1126 @@
   </div>
 </div>
 
+<!-- STYLES -->
 <style>
-  .timeline-step.canceled-step::before {
+  .my-orders-page-section {
+    background: #FAF8F5;
+    min-height: 85vh;
+    padding: 40px 20px 90px;
+    box-sizing: border-box;
+    width: 100%;
+    overflow-x: clip;
+  }
+  .my-orders-container {
+    max-width: 980px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Breadcrumb */
+  .orders-breadcrumb {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8C8275;
+    margin-bottom: 24px;
+  }
+  .orders-breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .orders-breadcrumb .breadcrumb-current {
+    color: #1E1C19;
+  }
+
+  /* Header Banner */
+  .orders-header-card {
+    background: #FFFFFF;
+    border: 1px solid #EAE5DE;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .orders-header-main-col {
+    flex: 1;
+  }
+  .orders-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .orders-atelier-badge {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: #FAF7F2;
+    border: 1px solid #EAE3D9;
+    color: #9B7846;
+    padding: 3px 10px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .orders-header-perks-desktop {
+    font-size: 11px;
+    color: #8C8275;
+    font-weight: 600;
+  }
+  .orders-header-action-mobile {
+    display: none;
+  }
+  .orders-header-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: #1E1C19;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+  }
+  .orders-header-subtitle {
+    font-size: 13px;
+    color: #6E6459;
+    line-height: 1.4;
+  }
+  .orders-header-cta-btn-desktop {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    background: #1E1C19;
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  /* Filter Bar */
+  .orders-filter-bar {
+    display: flex !important;
+    gap: 8px !important;
+    margin-bottom: 22px !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding: 2px 2px 8px 2px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .orders-filter-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+  .order-filter-pill {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    height: 34px !important;
+    line-height: 32px !important;
+    padding: 0 16px !important;
+    border-radius: 17px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    border: 1px solid #D6CEC3 !important;
+    background: #FFFFFF !important;
+    color: #4A4238 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
+  }
+  .order-filter-pill.active {
+    background: #1E1C19 !important;
+    color: #FFFFFF !important;
+    border-color: #1E1C19 !important;
+    box-shadow: 0 2px 8px rgba(30, 28, 25, 0.15) !important;
+  }
+
+  /* Order Card */
+  .orders-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+  .luxury-order-card {
+    background: #FFFFFF;
+    border: 1px solid #EAE5DE;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Desktop Header Bar */
+  .order-card-header-desktop {
+    background: #FAF8F5;
+    border-bottom: 1px solid #EAE5DE;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .order-header-meta-group {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .order-meta-col {
+    display: flex;
+    flex-direction: column;
+  }
+  .order-meta-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8C8275;
+    margin-bottom: 2px;
+  }
+  .order-meta-val {
+    font-weight: 600;
+    color: #1E1C19;
+  }
+  .order-meta-val.total-price-val {
+    font-weight: 700;
+  }
+  .order-header-number-group {
+    text-align: right;
+  }
+  .order-number-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1E1C19;
+    margin-top: 1px;
+  }
+
+  /* Mobile Header Bar (hidden on desktop) */
+  .order-card-header-mobile {
+    display: none;
+    background: #FAF8F5;
+    border-bottom: 1px solid #EAE5DE;
+    padding: 11px 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .order-mob-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
+    width: 100%;
+  }
+  .order-mob-number {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 17.5px;
+    font-weight: 700;
+    color: #1E1C19;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+  .order-mob-number span {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #8C8275;
+  }
+  .order-mob-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2.5px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .status-pill-active {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+  }
+  .status-pill-delivered {
+    background: #DCFCE7;
+    color: #166534;
+    border: 1px solid #BBF7D0;
+  }
+  .status-pill-canceled {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #FECACA;
+  }
+  .status-dot-mini {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .status-dot-mini.amber { background: #F59E0B; }
+  .status-dot-mini.green { background: #22C55E; }
+  .status-dot-mini.red { background: #DC2626; }
+
+  .order-mob-header-sub {
+    font-size: 11px;
+    color: #6E6459;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .order-mob-header-sub .sub-dot {
+    color: #D6CEC3;
+  }
+  .order-mob-header-sub .mob-sub-price {
+    font-weight: 700;
+    color: #1E1C19;
+  }
+
+  /* Card Body */
+  .order-card-body {
+    padding: 24px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .order-card-status-headline-desktop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .status-indicator-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .status-dot.amber { background: #F59E0B; }
+  .status-dot.green { background: #22C55E; }
+  .status-dot.red { background: #DC2626; }
+  .status-text {
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+  .status-text.amber { color: #B45309; }
+  .status-text.green { color: #15803D; }
+  .status-text.red { color: #991B1B; }
+  .order-craft-tag {
+    font-size: 11px;
+    color: #8C8275;
+    font-weight: 600;
+  }
+
+  /* Product Items */
+  .order-product-item {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    padding: 14px 0;
+    border-top: 1px solid #F0EAE1;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .order-product-main {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+  }
+  .order-product-img {
+    width: 75px;
+    height: 95px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #EAE5DE;
+    flex-shrink: 0;
+  }
+  .order-product-details {
+    flex: 1;
+    min-width: 0;
+  }
+  .order-product-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: #1E1C19;
+    text-decoration: none;
+    display: block;
+    line-height: 1.3;
+  }
+  .order-product-variant {
+    font-size: 12px;
+    color: #8C8275;
+    margin-top: 3px;
+  }
+  .order-product-pricing {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1E1C19;
+    margin-top: 4px;
+  }
+  .order-product-pricing .item-qty {
+    color: #6E6459;
+    font-weight: 500;
+    font-size: 12px;
+  }
+
+  /* Action Buttons Column on Desktop */
+  .order-product-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 175px;
+    flex-shrink: 0;
+  }
+  .order-actions-buttons-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  .order-btn-track {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    background: #9E7D47;
+    color: #FFFFFF;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(158, 125, 71, 0.25);
+  }
+  .order-btn-track.btn-canceled-state {
+    background: #991B1B !important;
+    box-shadow: 0 4px 12px rgba(153, 27, 27, 0.25) !important;
+  }
+  .order-btn-buyagain {
+    display: block;
+    text-align: center;
+    padding: 9px 14px;
+    background: #FAF8F5;
+    border: 1px solid #D6CEC3;
+    color: #1E1C19;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+  .order-btn-cancel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 14px;
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #991B1B;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .order-wa-link {
+    display: block;
+    text-align: center;
+    padding: 6px 12px;
+    color: #15803D;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  /* Expandable Tracking & Cancellation Panels */
+  .order-tracking-panel {
+    margin-top: 20px;
+    padding: 22px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .order-tracking-panel.active-panel {
+    background: #FAF7F2;
+    border: 1px solid #EAE3D9;
+  }
+  .order-tracking-panel.canceled-panel {
+    background: #FFF5F5;
+    border: 1px solid #FED7D7;
+  }
+  .order-tracking-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .order-tracking-panel-header.active-header {
+    border-bottom: 1px solid #ECE4D8;
+  }
+  .order-tracking-panel-header.canceled-header {
+    border-bottom: 1px solid #FEB2B2;
+  }
+  .tracking-panel-tag {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+  }
+  .tracking-panel-tag.gold { color: #9B7846; }
+  .tracking-panel-tag.red { color: #991B1B; }
+  .tracking-panel-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1E1C19;
+    margin-top: 2px;
+  }
+  .tracking-panel-status-pill {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .tracking-panel-status-pill.green {
+    background: #F3F8F2;
+    border: 1px solid #D6E8D5;
+    color: #2E6B38;
+  }
+  .tracking-panel-status-pill.red {
+    background: #FEE2E2;
+    border: 1px solid #FCA5A5;
+    color: #991B1B;
+  }
+  .cancellation-notice-box {
+    background: #FFFFFF;
+    border: 1px solid #FCA5A5;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 12.5px;
+    color: #7F1D1D;
+    line-height: 1.5;
+  }
+
+  /* Timeline */
+  .my-orders-page-section .shipment-timeline {
+    margin: 16px 0 20px;
+    padding-left: 24px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .my-orders-page-section .shipment-timeline::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 5px;
+    width: 2px;
+    background: #D6CEC3 !important;
+  }
+  .my-orders-page-section .timeline-step {
+    position: relative;
+  }
+  .my-orders-page-section .timeline-step::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 2px solid #C4B9A9;
+    box-sizing: border-box;
+  }
+  .my-orders-page-section .timeline-step.completed::before {
+    background: #25D366 !important;
+    border-color: #25D366 !important;
+    box-shadow: 0 0 6px rgba(37, 211, 102, 0.4) !important;
+  }
+  .my-orders-page-section .timeline-step.active::before {
+    background: #C8A364 !important;
+    border-color: #C8A364 !important;
+    box-shadow: 0 0 6px rgba(200, 163, 100, 0.4) !important;
+  }
+  .my-orders-page-section .timeline-step.canceled-step::before {
     background: #DC2626 !important;
     border-color: #DC2626 !important;
-    box-shadow: 0 0 8px rgba(220, 38, 38, 0.4) !important;
+    box-shadow: 0 0 6px rgba(220, 38, 38, 0.4) !important;
+  }
+  .timeline-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #1E1C19;
+    line-height: 1.3;
+  }
+  .timeline-title.red { color: #991B1B; }
+  .timeline-desc {
+    font-size: 11.5px;
+    color: #6E6459;
+    margin-top: 2px;
+  }
+  .timeline-desc.red { color: #7F1D1D; }
+  .timeline-desc.green { color: #2E6B38; font-weight: 600; }
+
+  .tracking-panel-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tracking-panel-btn {
+    padding: 10px 18px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+  .tracking-panel-btn.dark {
+    background: #1E1C19;
+    color: #FFFFFF;
+    border: none;
+  }
+  .tracking-panel-btn.wa {
+    background: #25D366;
+    color: #FFFFFF;
+    border: none;
+  }
+  .tracking-panel-btn.outline {
+    background: #FFFFFF;
+    border: 1px solid #D6CEC3;
+    color: #1E1C19;
+  }
+  .tracking-panel-btn.cancel-light {
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #991B1B;
+  }
+
+  /* Empty State */
+  .orders-empty-state {
+    background: #FFFFFF;
+    border: 1px solid #EAE5DE;
+    border-radius: 12px;
+    padding: 48px 24px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+  }
+  .empty-icon-circle {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: #FAF7F2;
+    border: 1px solid #EAE3D9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .empty-state-tag {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #9E7D47;
+    margin-bottom: 6px;
+  }
+  .empty-state-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #1E1C19;
+    margin: 0 0 10px 0;
+  }
+  .empty-state-desc {
+    font-size: 13.5px;
+    color: #6E6459;
+    max-width: 440px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+  }
+  .empty-state-cta {
+    display: inline-block;
+    padding: 12px 28px;
+    background: #1E1C19;
+    color: #FFFFFF;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+
+  /* Guest Gate */
+  .orders-guest-gate {
+    background: #FFFFFF;
+    border: 1px solid #EAE5DE;
+    border-radius: 12px;
+    padding: 56px 28px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    max-width: 640px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+  .guest-gate-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: #FAF7F2;
+    border: 1.5px solid #EAE3D9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: #9E7D47;
+  }
+  .guest-gate-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: #FAF7F2;
+    border: 1px solid #EAE3D9;
+    color: #9B7846;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .guest-gate-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: #1E1C19;
+    margin: 0 0 10px 0;
+    line-height: 1.2;
+  }
+  .guest-gate-desc {
+    font-size: 13.5px;
+    color: #6E6459;
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto 28px;
+  }
+  .guest-gate-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    max-width: 340px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .guest-btn-primary {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 14px 24px;
+    background: #1E1C19;
+    color: #FFFFFF;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+  .guest-btn-secondary {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 12px 24px;
+    background: #FAF8F5;
+    border: 1px solid #D6CEC3;
+    color: #1E1C19;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+  .guest-gate-footer {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #F0EAE1;
+    font-size: 12px;
+    color: #8C8275;
+  }
+  .guest-wa-link {
+    color: #25D366;
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 4px;
+  }
+
+  /* Bottom Care Banner */
+  .orders-care-banner {
+    margin-top: 36px;
+    background: #FAF7F2;
+    border: 1px solid #EAE3D9;
+    border-radius: 12px;
+    padding: 24px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    box-sizing: border-box;
+  }
+  .orders-care-text {
+    flex: 1;
+    min-width: 240px;
+  }
+  .orders-care-tag {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #9B7846;
+    margin-bottom: 2px;
+  }
+  .orders-care-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1E1C19;
+  }
+  .orders-care-sub {
+    font-size: 12.5px;
+    color: #6E6459;
+    margin-top: 2px;
+  }
+  .orders-care-wa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    background: #25D366;
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* ============================================================
+     RESPONSIVE MOBILE RULES (max-width: 768px)
+     ============================================================ */
+  @media (max-width: 768px) {
+    .my-orders-page-section {
+      padding: 16px 14px 120px !important;
+    }
+    .orders-breadcrumb {
+      font-size: 10px !important;
+      margin-bottom: 12px !important;
+    }
+
+    /* Header Banner Mobile */
+    .orders-header-card {
+      padding: 14px 16px !important;
+      margin-bottom: 14px !important;
+      border-radius: 10px !important;
+      display: block !important;
+    }
+    .orders-badge-row {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      margin-bottom: 5px !important;
+      width: 100% !important;
+    }
+    .orders-atelier-badge {
+      font-size: 9.5px !important;
+      padding: 2.5px 8px !important;
+    }
+    .orders-header-perks-desktop {
+      display: none !important;
+    }
+    .orders-header-action-desktop {
+      display: none !important;
+    }
+    .orders-header-action-mobile {
+      display: inline-block !important;
+    }
+    .orders-header-cta-btn-mobile {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 3px 8px !important;
+      background: #FAF7F2 !important;
+      border: 1px solid #D6CEC3 !important;
+      color: #1E1C19 !important;
+      font-size: 9px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.04em !important;
+      text-transform: uppercase !important;
+      border-radius: 12px !important;
+      white-space: nowrap !important;
+      text-decoration: none !important;
+    }
+    .orders-header-title {
+      font-size: 21px !important;
+      margin: 2px 0 2px 0 !important;
+      line-height: 1.15 !important;
+    }
+    .orders-header-subtitle {
+      font-size: 11.5px !important;
+      color: #786F64 !important;
+      line-height: 1.35 !important;
+    }
+
+    /* Filter Bar Mobile */
+    .orders-filter-bar {
+      margin-bottom: 16px !important;
+      gap: 7px !important;
+      padding: 2px 1px 8px 1px !important;
+    }
+    .order-filter-pill {
+      height: 32px !important;
+      line-height: 30px !important;
+      padding: 0 14px !important;
+      border-radius: 16px !important;
+      font-size: 11px !important;
+    }
+
+    /* Order Card Mobile */
+    .orders-list-container {
+      gap: 14px !important;
+    }
+    .luxury-order-card {
+      border-radius: 10px !important;
+    }
+
+    /* Toggle Header Display */
+    .order-card-header-desktop {
+      display: none !important;
+    }
+    .order-card-header-mobile {
+      display: block !important;
+    }
+
+    /* Toggle Status Headline */
+    .order-card-status-headline-desktop {
+      display: none !important;
+    }
+
+    /* Card Body Mobile */
+    .order-card-body {
+      padding: 13px 14px 14px !important;
+    }
+
+    /* Product Item Mobile */
+    .order-product-item {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      padding: 6px 0 4px !important;
+      gap: 10px !important;
+    }
+    .order-product-main {
+      gap: 12px !important;
+      align-items: flex-start !important;
+      width: 100% !important;
+    }
+    .order-product-img {
+      width: 62px !important;
+      height: 78px !important;
+    }
+    .order-product-title {
+      font-size: 16px !important;
+      line-height: 1.25 !important;
+    }
+    .order-product-variant {
+      font-size: 11px !important;
+      margin-bottom: 2px !important;
+    }
+    .order-product-pricing {
+      font-size: 12.5px !important;
+      margin-top: 2px !important;
+    }
+
+    /* 2-Column Action Buttons Row */
+    .order-product-actions {
+      width: 100% !important;
+      min-width: 0 !important;
+      margin-top: 2px !important;
+      padding-top: 10px !important;
+      border-top: 1px dashed #EAE5DE !important;
+      gap: 6px !important;
+    }
+    .order-actions-buttons-row {
+      flex-direction: row !important;
+      gap: 8px !important;
+      width: 100% !important;
+    }
+    .order-actions-buttons-row > * {
+      flex: 1 1 0 !important;
+      margin: 0 !important;
+      text-align: center !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 5px !important;
+      height: 35px !important;
+      box-sizing: border-box !important;
+      border-radius: 6px !important;
+      font-size: 10px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.04em !important;
+      padding: 0 4px !important;
+      white-space: nowrap !important;
+    }
+    .order-wa-link {
+      padding: 4px 0 !important;
+      font-size: 11px !important;
+      color: #15803D !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 5px !important;
+    }
+
+    /* Tracking Panel Mobile */
+    .order-tracking-panel {
+      margin-top: 14px !important;
+      padding: 14px 16px !important;
+    }
+    .order-tracking-panel-header {
+      margin-bottom: 12px !important;
+      padding-bottom: 10px !important;
+      gap: 6px !important;
+    }
+    .tracking-panel-title {
+      font-size: 18px !important;
+    }
+    .my-orders-page-section .shipment-timeline {
+      margin: 12px 0 16px !important;
+      padding-left: 20px !important;
+      gap: 12px !important;
+    }
+    .my-orders-page-section .shipment-timeline::before {
+      left: 5px !important;
+    }
+    .my-orders-page-section .timeline-step::before {
+      left: -20px !important;
+    }
+    .timeline-title {
+      font-size: 12px !important;
+    }
+    .timeline-desc {
+      font-size: 11px !important;
+    }
+    .tracking-panel-actions {
+      flex-direction: column !important;
+      gap: 8px !important;
+    }
+    .tracking-panel-btn {
+      width: 100% !important;
+      justify-content: center !important;
+      padding: 9px 14px !important;
+      font-size: 10.5px !important;
+    }
+
+    /* Guest Gate Mobile */
+    .orders-guest-gate {
+      padding: 36px 18px !important;
+    }
+    .guest-gate-title {
+      font-size: 24px !important;
+    }
+
+    /* Care Banner Mobile */
+    .orders-care-banner {
+      padding: 18px 16px !important;
+      margin-top: 24px !important;
+      border-radius: 10px !important;
+    }
+    .orders-care-title {
+      font-size: 18px !important;
+    }
+    .orders-care-wa-btn {
+      width: 100% !important;
+      justify-content: center !important;
+      padding: 10px 16px !important;
+      font-size: 10.5px !important;
+    }
+
+    /* Cancel Modal Mobile */
+    #cancelOrderModal > div {
+      padding: 20px 16px !important;
+      max-height: 90vh !important;
+      overflow-y: auto !important;
+    }
+    #cancelOrderModal h2 {
+      font-size: 22px !important;
+    }
   }
 </style>
 
+<!-- SCRIPTS -->
 <script>
   function toggleOrderTrackingPanel(orderId) {
     var panel = document.getElementById('trackingPanel_' + orderId);
@@ -517,12 +1666,19 @@
         card.setAttribute('data-status', 'canceled');
         
         // 1. Update top status headline
-        var headingSpan = card.querySelector('div[style*="padding: 24px;"] span[style*="font-size: 13.5px;"]');
+        var headingSpan = card.querySelector('.status-text');
         if (headingSpan) {
-          headingSpan.style.color = '#991B1B';
+          headingSpan.className = 'status-text red';
           headingSpan.innerText = 'Canceled on ' + dateFormatted + ' (' + reasonText + ')';
           var dot = headingSpan.previousElementSibling;
-          if (dot) dot.style.background = '#DC2626';
+          if (dot) dot.className = 'status-dot red';
+        }
+
+        // Mobile status pill
+        var mobPill = card.querySelector('.order-mob-status-pill');
+        if (mobPill) {
+          mobPill.className = 'order-mob-status-pill status-pill-canceled';
+          mobPill.innerHTML = '<span class="status-dot-mini red"></span> Canceled';
         }
 
         // 2. Hide cancel button
@@ -545,52 +1701,51 @@
         // 4. Transform tracking panel into authentic CANCELLATION DETAILS PANEL
         var panel = card.querySelector('#trackingPanel_' + orderId);
         if (panel) {
-          panel.style.background = '#FFF5F5';
-          panel.style.border = '1px solid #FED7D7';
+          panel.className = 'order-tracking-panel canceled-panel';
           panel.style.display = 'block';
 
-          var placedDate = card.querySelector('div[style*="ORDER PLACED"] + div');
+          var placedDate = card.querySelector('.order-meta-val');
           var placedDateText = placedDate ? placedDate.innerText.trim() : 'November 12, 2026';
-          var numText = orderNum || (card.querySelector('div[style*="ORDER NUMBER"] + div') ? card.querySelector('div[style*="ORDER NUMBER"] + div').innerText.trim() : '');
+          var numText = orderNum || (card.querySelector('.order-number-title') ? card.querySelector('.order-number-title').innerText.trim() : '');
 
-          panel.innerHTML = '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid #FEB2B2; padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">' +
+          panel.innerHTML = '<div class="order-tracking-panel-header canceled-header">' +
             '<div>' +
-              '<span style="font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #991B1B;">✕ CANCELLATION &amp; REFUND STATUS</span>' +
-              '<div style="font-family: \'Cormorant Garamond\', Georgia, serif; font-size: 20px; font-weight: 700; color: #1E1C19; margin-top: 2px;">' +
+              '<span class="tracking-panel-tag red">&#10005; CANCELLATION &amp; REFUND STATUS</span>' +
+              '<div class="tracking-panel-title">' +
                 'Order ' + numText + ' Details' +
               '</div>' +
             '</div>' +
-            '<span style="background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">' +
-              '✕ Order Canceled' +
+            '<span class="tracking-panel-status-pill red">' +
+              '&#10005; Order Canceled' +
             '</span>' +
           '</div>' +
-          '<div style="background: #FFFFFF; border: 1px solid #FCA5A5; border-radius: 6px; padding: 12px 16px; margin-bottom: 16px; font-size: 12.5px; color: #7F1D1D; line-height: 1.5;">' +
+          '<div class="cancellation-notice-box">' +
             '<strong>Order Notice:</strong> This order was canceled on ' + dateFormatted + ' (' + reasonText + '). Studio crafting and courier dispatch have been halted. No courier shipment was dispatched.' +
           '</div>' +
-          '<div class="shipment-timeline" style="margin: 16px 0 20px; padding-left: 26px;">' +
+          '<div class="shipment-timeline">' +
             '<div class="timeline-step completed">' +
-              '<div class="timeline-title" style="color: #1E1C19;">Order Placed &amp; Confirmed</div>' +
-              '<div class="timeline-desc" style="color: #6E6459;">' + placedDateText + '</div>' +
+              '<div class="timeline-title">Order Placed &amp; Confirmed</div>' +
+              '<div class="timeline-desc">' + placedDateText + '</div>' +
             '</div>' +
             '<div class="timeline-step canceled-step">' +
-              '<div class="timeline-title" style="color: #991B1B; font-weight: 700;">Order Canceled &amp; Dispatch Halted</div>' +
-              '<div class="timeline-desc" style="color: #7F1D1D;">Canceled on ' + dateFormatted + ' &bull; Reason: ' + reasonText + '</div>' +
+              '<div class="timeline-title red">Order Canceled &amp; Dispatch Halted</div>' +
+              '<div class="timeline-desc red">Canceled on ' + dateFormatted + ' &bull; Reason: ' + reasonText + '</div>' +
             '</div>' +
             '<div class="timeline-step completed">' +
-              '<div class="timeline-title" style="color: #1E1C19;">Payment &amp; Refund Status</div>' +
-              '<div class="timeline-desc" style="color: #2E6B38; font-weight: 600;">' +
+              '<div class="timeline-title">Payment &amp; Refund Status</div>' +
+              '<div class="timeline-desc green">' +
                 '&#10003; 100% Refund Initiated to Original Payment Method / COD Halted' +
               '</div>' +
             '</div>' +
           '</div>' +
-          '<div style="display: flex; gap: 10px; flex-wrap: wrap;">' +
-            '<button type="button" onclick="openCancelOrderModal(\'' + orderId + '\', \'' + numText + '\', \'' + (currentCancelItemTitle || '') + '\', \'' + (currentCancelTotalAmount || '') + '\', \'' + (currentCancelOrderStatusUrl || '') + '\', \'' + (currentCancelCustomerUrl || '') + '\')" style="padding: 10px 18px; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; cursor: pointer;">' +
+          '<div class="tracking-panel-actions">' +
+            '<button type="button" onclick="openCancelOrderModal(\'' + orderId + '\', \'' + numText + '\', \'' + (currentCancelItemTitle || '') + '\', \'' + (currentCancelTotalAmount || '') + '\', \'' + (currentCancelOrderStatusUrl || '') + '\', \'' + (currentCancelCustomerUrl || '') + '\')" class="tracking-panel-btn cancel-light">' +
               '✕ RE-TEST CANCEL ORDER MODAL' +
             '</button>' +
-            '<a href="/collections/all" style="padding: 10px 18px; background: #1E1C19; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px;">' +
+            '<a href="/collections/all" class="tracking-panel-btn dark">' +
               'RE-ORDER SILHOUETTE &rarr;' +
             '</a>' +
-            '<a href="https://wa.me/918511616133?text=' + encodeURIComponent('Hi Meenu Label! I have canceled Order ' + numText + ' on the website. Please confirm dispatch halt and refund.') + '" target="_blank" style="padding: 10px 18px; background: #25D366; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">' +
+            '<a href="https://wa.me/918511616133?text=' + encodeURIComponent('Hi Meenu Label! I have canceled Order ' + numText + ' on the website. Please confirm dispatch halt and refund.') + '" target="_blank" class="tracking-panel-btn wa">' +
               '<span>&#128172;</span> Chat on WhatsApp Regarding Refund' +
             '</a>' +
           '</div>';
@@ -615,11 +1770,11 @@
 </script>
 
 <!-- ORDER CANCELLATION MODAL -->
-<div id="cancelOrderModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 28, 25, 0.65); backdrop-filter: blur(4px); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
-  <div style="background: #FFFFFF; border-radius: 12px; max-width: 520px; width: 100%; padding: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); border: 1px solid #EAE5DE; position: relative;">
+<div id="cancelOrderModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 28, 25, 0.65); backdrop-filter: blur(4px); z-index: 99999; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box;">
+  <div style="background: #FFFFFF; border-radius: 12px; max-width: 520px; width: 100%; padding: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); border: 1px solid #EAE5DE; position: relative; box-sizing: border-box;">
     
     <!-- Close Button -->
-    <button type="button" onclick="closeCancelOrderModal()" style="position: absolute; top: 18px; right: 20px; background: none; border: none; font-size: 24px; color: #8C8275; cursor: pointer;">&times;</button>
+    <button type="button" onclick="closeCancelOrderModal()" style="position: absolute; top: 16px; right: 18px; background: none; border: none; font-size: 24px; color: #8C8275; cursor: pointer; line-height: 1;">&times;</button>
 
     <!-- Modal Header -->
     <div style="margin-bottom: 20px;">
@@ -640,7 +1795,7 @@
     <!-- Item Detail Box -->
     <div style="background: #FAF8F5; border: 1px solid #EAE5DE; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
       <div>
-        <div style="font-size: 13px; font-weight: 700; color: #1E1C19;" id="modalItemTitle">Handcrafted Atelier Silhouette</div>
+        <div style="font-size: 13px; font-weight: 700; color: #1E1C19;" id="modalItemTitle">Handcrafted Atelier Ensemble</div>
         <div style="font-size: 11.5px; color: #8C8275; margin-top: 2px;">Chandigarh Atelier Dispatch</div>
       </div>
       <div style="font-size: 14px; font-weight: 800; color: #1E1C19;" id="modalOrderAmount"></div>
