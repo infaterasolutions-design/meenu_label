@@ -417,11 +417,20 @@ function handleAtelierLogout(e) {
 
   var logoutUrl = (target && target.getAttribute('href')) || '/account/logout';
 
-  // 1. Wipe customer identifier flags from local and session storage
+  // 1. Archive patron wishlist and wipe customer identifier flags & wishlist
   try {
+    var activePatronId = localStorage.getItem('meenu_active_patron');
+    var currentWishlist = localStorage.getItem('meenu_saved_wishlist');
+    if (activePatronId && currentWishlist) {
+      localStorage.setItem('meenu_wishlist_archive_' + activePatronId, currentWishlist);
+    }
+    localStorage.removeItem('meenu_saved_wishlist');
     localStorage.removeItem('meenu_customer_email');
     localStorage.removeItem('meenu_active_patron');
     sessionStorage.clear();
+    if (typeof updateWishlistUI === 'function') {
+      updateWishlistUI();
+    }
   } catch(err) {}
 
   var navigated = false;

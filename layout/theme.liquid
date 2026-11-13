@@ -162,20 +162,38 @@
       setTimeout(function() { clearInterval(_cardSyncTimer); }, 4000);
     </script>
 
-        <script>
-      // Post-logout safety net: if a patron was logged in but is now a guest, clear residual cart
+    <script>
+      // Post-logout & login safety net: sync and clear residual cart & wishlist
       (function() {
         {% if customer %}
           try {
-            localStorage.setItem('meenu_active_patron', '{{ customer.id }}');
+            var customerId = '{{ customer.id }}';
+            localStorage.setItem('meenu_active_patron', customerId);
+            // Restore archived wishlist for this patron if currently empty
+            var archivedWishlist = localStorage.getItem('meenu_wishlist_archive_' + customerId);
+            var currentWishlist = localStorage.getItem('meenu_saved_wishlist');
+            if (archivedWishlist && (!currentWishlist || currentWishlist === '{}' || currentWishlist === '[]')) {
+              localStorage.setItem('meenu_saved_wishlist', archivedWishlist);
+              if (typeof updateWishlistUI === 'function') updateWishlistUI();
+            }
           } catch(e) {}
         {% else %}
           try {
             var prevPatron = localStorage.getItem('meenu_active_patron');
             if (prevPatron) {
+              // Archive patron wishlist before clearing
+              var currentWishlist = localStorage.getItem('meenu_saved_wishlist');
+              if (currentWishlist) {
+                localStorage.setItem('meenu_wishlist_archive_' + prevPatron, currentWishlist);
+              }
+              // Wipe guest wishlist & tokens
+              localStorage.removeItem('meenu_saved_wishlist');
               localStorage.removeItem('meenu_active_patron');
               localStorage.removeItem('meenu_customer_email');
               sessionStorage.clear();
+              if (typeof updateWishlistUI === 'function') updateWishlistUI();
+
+              // Clear cart on backend & refresh
               fetch('/cart/clear.js', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
                 .then(function() {
                   if (window.location.pathname.indexOf('/cart') !== -1) {
