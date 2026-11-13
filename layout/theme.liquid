@@ -162,6 +162,38 @@
       setTimeout(function() { clearInterval(_cardSyncTimer); }, 4000);
     </script>
 
+        <script>
+      // Post-logout safety net: if a patron was logged in but is now a guest, clear residual cart
+      (function() {
+        {% if customer %}
+          try {
+            localStorage.setItem('meenu_active_patron', '{{ customer.id }}');
+          } catch(e) {}
+        {% else %}
+          try {
+            var prevPatron = localStorage.getItem('meenu_active_patron');
+            if (prevPatron) {
+              localStorage.removeItem('meenu_active_patron');
+              localStorage.removeItem('meenu_customer_email');
+              sessionStorage.clear();
+              fetch('/cart/clear.js', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+                .then(function() {
+                  if (window.location.pathname.indexOf('/cart') !== -1) {
+                    window.location.reload();
+                  } else {
+                    var headerBadge = document.getElementById('headerCartCount');
+                    if (headerBadge) { headerBadge.textContent = '0'; headerBadge.style.display = 'none'; }
+                    var navBadges = document.querySelectorAll('.nav-drawer-cart-count');
+                    navBadges.forEach(function(b) { b.textContent = '0'; b.style.display = 'none'; });
+                  }
+                })
+                .catch(function(err) { console.log('Cart logout clear notice:', err); });
+            }
+          } catch(e) {}
+        {% endif %}
+      })();
+    </script>
+
     {{ content_for_header }}
   </head>
 

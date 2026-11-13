@@ -401,6 +401,63 @@ function addToCartAjax(variantId, quantity) {
 }
 
 /* =========================================================================
+   3.5 ATELIER LOGOUT & CART AUTO-CLEAR CONTROLLER
+   Ensures that when a patron logs out, previous cart items are wiped clean
+   so that guest / subsequent users see an empty bag without leftovers.
+   ========================================================================= */
+function handleAtelierLogout(e) {
+  var target = (e && e.currentTarget) || (e && e.target && e.target.closest('a[href*="/account/logout"]'));
+  if (target && target.getAttribute('data-logging-out') === 'true') return;
+  if (target) {
+    target.setAttribute('data-logging-out', 'true');
+    target.style.opacity = '0.6';
+    target.style.pointerEvents = 'none';
+  }
+  if (e && typeof e.preventDefault === 'function') e.preventDefault();
+
+  var logoutUrl = (target && target.getAttribute('href')) || '/account/logout';
+
+  // 1. Wipe customer identifier flags from local and session storage
+  try {
+    localStorage.removeItem('meenu_customer_email');
+    localStorage.removeItem('meenu_active_patron');
+    sessionStorage.clear();
+  } catch(err) {}
+
+  var navigated = false;
+  function proceedToLogout() {
+    if (!navigated) {
+      navigated = true;
+      window.location.href = logoutUrl;
+    }
+  }
+
+  // Safety fallback after 1000ms
+  setTimeout(proceedToLogout, 1000);
+
+  // 2. Clear cart via Shopify Ajax Cart API before logout redirect
+  fetch('/cart/clear.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(function() {
+    proceedToLogout();
+  })
+  .catch(function() {
+    proceedToLogout();
+  });
+}
+
+// Global click delegation for all logout links
+document.addEventListener('click', function(e) {
+  var link = e.target && e.target.closest && e.target.closest('a[href*="/account/logout"]');
+  if (link) {
+    handleAtelierLogout(e);
+  }
+});
+
+
+/* =========================================================================
    4. NAVIGATION DRAWER & MODAL CONTROLS
    ========================================================================= */
 function openNavDrawer() {
