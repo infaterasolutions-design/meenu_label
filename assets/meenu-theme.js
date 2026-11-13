@@ -676,9 +676,11 @@ function updateStickyHeaderHeight() {
     }
   }
 }
+updateStickyHeaderHeight();
 window.addEventListener('DOMContentLoaded', updateStickyHeaderHeight);
 window.addEventListener('resize', updateStickyHeaderHeight);
 window.addEventListener('load', updateStickyHeaderHeight);
+window.addEventListener('scroll', updateStickyHeaderHeight, { passive: true });
 
 
 /* =========================================================================

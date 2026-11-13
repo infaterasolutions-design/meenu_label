@@ -31,7 +31,7 @@
       scroll-behavior: smooth;
       width: 100% !important;
       max-width: 100vw !important;
-      overflow-x: hidden !important;
+      overflow-x: clip !important;
     }
 
     body {
@@ -54,9 +54,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: relative;
+      min-height: 35px;
+      box-sizing: border-box;
     }
     .announcement-bar a { color: #E8D3B9; text-decoration: none; margin-left: 14px; }
 
@@ -65,7 +65,7 @@
       background: #FFFFFF;
       border-bottom: 1px solid var(--border-color);
       position: sticky;
-      top: 34px;
+      top: 0;
       z-index: 90;
       transition: all 0.3s ease;
     }
@@ -711,9 +711,10 @@
     
     /* Sticky Category Selection Header */
     .sticky-catalog-header {
-      position: sticky;
-      top: 108px;
-      z-index: 85;
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: 74px !important;
+      z-index: 85 !important;
       background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
