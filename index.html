@@ -5386,6 +5386,54 @@
         </div>
       </div>
     </div>
+
+    <!-- Mobile Sticky Action Bar (Flipkart Style: Cart & Buy Now) -->
+    <div class="pdp-mobile-sticky-bar" id="pdpMobileStickyBar">
+      <div class="pdp-sticky-bar-inner">
+        
+        <!-- Left Mini Cart Icon Button with Live Counter Badge -->
+        <a href="javascript:void(0)" onclick="toggleCart()" class="pdp-sticky-cart-icon-btn" title="View Shopping Bag" aria-label="View Shopping Bag">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="pdp-sticky-cart-badge cart-count-badge" id="pdpStickyCartBadge" style="display:none;">0</span>
+        </a>
+
+        <!-- 1. Add to Bag / Cart Button -->
+        <button type="button" 
+                class="pdp-sticky-btn-add" 
+                id="pdpStickyAddBtn"
+                onclick="triggerPdpStickyAddToCart(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span>ADD TO BAG</span>
+        </button>
+
+        <!-- 2. Buy Now Button (Flipkart Signature Amber-Gold Highlight with Price) -->
+        <button type="button" 
+                class="pdp-sticky-btn-buy" 
+                id="pdpStickyBuyBtn"
+                onclick="buyPdpProductNow()">
+          <span class="sticky-buy-text-main">BUY NOW</span>
+          <span class="sticky-buy-text-price" id="pdpStickyPriceText">at ₹2,799</span>
+        </button>
+
+        <!-- Sold Out WhatsApp Notify Button (Fallback when piece is sold out) -->
+        <a id="pdpStickyNotifyWaBtn" 
+           class="pdp-sticky-btn-notify" 
+           href="https://wa.me/918511616133" 
+           target="_blank" 
+           style="display:none;">
+          <span>💬 NOTIFY ON WHATSAPP</span>
+        </a>
+
+      </div>
+    </div>
   </div>
 
   <!-- Footer -->
@@ -6079,6 +6127,15 @@
         discEl.textContent = discount + '% OFF';
       }
 
+      var stickyPrice = document.getElementById('pdpStickyPriceText');
+      if (stickyPrice) stickyPrice.textContent = 'at ₹' + p.price.toLocaleString('en-IN');
+      var stickyBadge = document.getElementById('pdpStickyCartBadge');
+      if (stickyBadge) {
+        var cartTot = cart.reduce(function(acc, item) { return acc + item.qty; }, 0);
+        stickyBadge.textContent = cartTot;
+        stickyBadge.style.display = cartTot > 0 ? 'block' : 'none';
+      }
+
       // Meta highlights
       var metaFabric = document.getElementById('pdpMetaFabric');
       if (metaFabric) metaFabric.textContent = p.fabric || 'Pure Artisanal Fabric';
@@ -6214,9 +6271,21 @@
         var waitlistBtn = document.getElementById('pdpNotifyWaitlistBtn');
         var regularWaBtn = document.getElementById('pdpWhatsAppBtn');
 
+        // Sync mobile bottom sticky action bar
+        var stickyAddBtn = document.getElementById('pdpStickyAddBtn');
+        var stickyBuyBtn = document.getElementById('pdpStickyBuyBtn');
+        var stickyNotifyWaBtn = document.getElementById('pdpStickyNotifyWaBtn');
+
         if (isSoldOut) {
           if (addBtn) addBtn.style.display = 'none';
           if (buyBtn) buyBtn.style.display = 'none';
+          if (stickyAddBtn) stickyAddBtn.style.display = 'none';
+          if (stickyBuyBtn) stickyBuyBtn.style.display = 'none';
+          if (stickyNotifyWaBtn) {
+            stickyNotifyWaBtn.style.display = 'flex';
+            var msg = 'Hi Meenu Label! Please notify me when "' + p.name + '" (Style #' + p.code + ') in Size ' + size + ' is back in stock.';
+            stickyNotifyWaBtn.href = 'https://wa.me/918511616133?text=' + encodeURIComponent(msg);
+          }
           if (regularWaBtn) regularWaBtn.style.display = 'none';
           if (waNotifyBtn) {
             waNotifyBtn.style.display = 'flex';
@@ -6227,11 +6296,26 @@
         } else {
           if (addBtn) addBtn.style.display = 'block';
           if (buyBtn) buyBtn.style.display = 'block';
+          if (stickyAddBtn) stickyAddBtn.style.display = 'flex';
+          if (stickyBuyBtn) stickyBuyBtn.style.display = 'flex';
+          if (stickyNotifyWaBtn) stickyNotifyWaBtn.style.display = 'none';
           if (regularWaBtn) regularWaBtn.style.display = 'flex';
           if (waNotifyBtn) waNotifyBtn.style.display = 'none';
           if (waitlistBtn) waitlistBtn.style.display = 'none';
         }
       }
+    }
+
+    function triggerPdpStickyAddToCart(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      if (!activePdpProductId) return false;
+      if (!pdpSelectedSize) {
+        showPdpSizeRequired();
+        return false;
+      }
+      quickAddCart(activePdpProductId, pdpSelectedSize);
+      toggleCart();
+      return false;
     }
 
     function triggerPdpNotifyMe() {
@@ -7055,6 +7139,182 @@ function executeOrderTracking() {
   .snitch-size-row {
     width: 100% !important;
     padding: 0 16px !important;
+  }
+}
+
+  /* Mobile Sticky Bottom Bar (Flipkart Style: Cart & Buy Now) */
+  @media (max-width: 768px) {
+    .pdp-mobile-sticky-bar {
+      display: block !important;
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      background: #FFFFFF !important;
+      border-top: 1px solid #EAE5DE !important;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08) !important;
+      z-index: 200 !important;
+      padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)) 12px !important;
+      box-sizing: border-box !important;
+    }
+
+    .pdp-sticky-bar-inner {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      width: 100% !important;
+      max-width: 500px !important;
+      margin: 0 auto !important;
+      box-sizing: border-box !important;
+    }
+
+    .pdp-sticky-cart-icon-btn {
+      position: relative !important;
+      flex: 0 0 44px !important;
+      width: 44px !important;
+      height: 46px !important;
+      background: #FAF8F5 !important;
+      border: 1.5px solid #D6CEC3 !important;
+      border-radius: 8px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: #1E1C19 !important;
+      cursor: pointer !important;
+      padding: 0 !important;
+      text-decoration: none !important;
+      touch-action: manipulation !important;
+      box-sizing: border-box !important;
+    }
+
+    .pdp-sticky-cart-icon-btn svg {
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    .pdp-sticky-cart-badge {
+      position: absolute !important;
+      top: -4px !important;
+      right: -4px !important;
+      background: #DC2626 !important;
+      color: #FFFFFF !important;
+      font-size: 10px !important;
+      font-weight: 800 !important;
+      min-width: 18px !important;
+      height: 18px !important;
+      line-height: 18px !important;
+      border-radius: 9px !important;
+      text-align: center !important;
+      padding: 0 4px !important;
+      box-sizing: border-box !important;
+      box-shadow: 0 2px 5px rgba(220, 38, 38, 0.4) !important;
+    }
+
+    .pdp-sticky-btn-add {
+      flex: 1 !important;
+      height: 46px !important;
+      background: #FFFFFF !important;
+      border: 1.5px solid #1E1C19 !important;
+      border-radius: 8px !important;
+      color: #1E1C19 !important;
+      font-family: inherit !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.04em !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 6px !important;
+      cursor: pointer !important;
+      touch-action: manipulation !important;
+      padding: 0 6px !important;
+      white-space: nowrap !important;
+      box-sizing: border-box !important;
+      transition: background 0.15s, transform 0.1s !important;
+    }
+
+    .pdp-sticky-btn-add:active {
+      background: #F4EFEB !important;
+      transform: scale(0.98) !important;
+    }
+
+    .pdp-sticky-btn-add svg {
+      width: 15px !important;
+      height: 15px !important;
+      flex-shrink: 0 !important;
+    }
+
+    .pdp-sticky-btn-buy {
+      flex: 1.25 !important;
+      height: 46px !important;
+      background: #FFC200 !important;
+      border: none !important;
+      border-radius: 8px !important;
+      color: #1E1C19 !important;
+      font-family: inherit !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      touch-action: manipulation !important;
+      padding: 2px 6px !important;
+      box-shadow: 0 3px 12px rgba(255, 194, 0, 0.4) !important;
+      box-sizing: border-box !important;
+      transition: background 0.15s, transform 0.1s !important;
+    }
+
+    .pdp-sticky-btn-buy:active {
+      background: #E5AD00 !important;
+      transform: scale(0.98) !important;
+    }
+
+    .sticky-buy-text-main {
+      font-size: 12.5px !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.05em !important;
+      line-height: 1.15 !important;
+    }
+
+    .sticky-buy-text-price {
+      font-size: 10.5px !important;
+      font-weight: 700 !important;
+      opacity: 0.88 !important;
+      line-height: 1.15 !important;
+    }
+
+    .pdp-sticky-btn-notify {
+      display: none;
+      flex: 1 !important;
+      height: 46px !important;
+      background: #25D366 !important;
+      color: #FFFFFF !important;
+      border-radius: 8px !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-decoration: none !important;
+      letter-spacing: 0.05em !important;
+      box-sizing: border-box !important;
+    }
+
+    .pdp-section {
+      padding-bottom: 80px !important;
+    }
+
+    .floating-wa-concierge {
+      bottom: 75px !important;
+    }
+
+    .wa-popup-card {
+      bottom: 135px !important;
+    }
+  }
+
+  .pdp-mobile-sticky-bar {
+    display: none;
   }
 }
   </style>
