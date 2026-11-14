@@ -225,6 +225,36 @@
         </div>
       {% endform %}
 
+      <!-- Atelier Offers & Coupon Code Box (Instant Checkout Auto-Discount) -->
+      <div class="pdp-coupon-card" style="background:#FAF8F5; border:1px dashed #D4AF37; border-radius:8px; padding:12px 14px; margin-top:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; color:#1A1A1A; display:flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+              <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </svg>
+            <span>Atelier Offers & Promo Code</span>
+          </div>
+          <span style="background:#EBF7EE; color:#15803D; font-size:10px; font-weight:700; padding:2px 8px; border-radius:12px; letter-spacing:0.04em;">LIVE OFFER</span>
+        </div>
+
+        <!-- Featured Instant Offer -->
+        <div style="display:flex; align-items:center; justify-content:space-between; background:#FFF; border:1px solid rgba(212,175,55,0.35); border-radius:6px; padding:8px 10px; margin-bottom:8px; font-size:12px;">
+          <div>
+            <span style="font-weight:700; color:#1A1A1A; letter-spacing:0.04em;">UPI100</span>
+            <span style="color:#666; font-size:11px; margin-left:6px;">Save flat &#8377;100 on Prepaid / UPI</span>
+          </div>
+          <button type="button" onclick="applyPdpCouponCode('UPI100')" style="background:none; border:none; color:#B48A28; font-weight:700; font-size:11px; cursor:pointer; text-transform:uppercase; letter-spacing:0.05em; padding:4px 6px;">APPLY</button>
+        </div>
+
+        <!-- Coupon Input Box -->
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="pdpCouponInput" placeholder="Enter coupon code" style="flex:1; padding:9px 12px; border:1px solid #D1D5DB; border-radius:4px; font-size:13px; text-transform:uppercase; letter-spacing:0.05em; background:#FFF; outline:none; color:#1A1A1A;">
+          <button type="button" id="pdpApplyCouponBtn" onclick="applyPdpCouponInput()" style="padding:9px 14px; background:#1A1A1A; color:#FFF; border:none; border-radius:4px; font-size:11px; font-weight:700; letter-spacing:0.06em; cursor:pointer; text-transform:uppercase;">APPLY</button>
+        </div>
+        <div id="pdpCouponStatus" style="font-size:11.5px; font-weight:600; margin-top:6px; display:none;"></div>
+      </div>
+
       <!-- Pincode Checker -->
       <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:14px 16px; margin-top:14px;">
         <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; color:var(--text-muted); margin-bottom:8px;">Check Express Dispatch to Your Pincode</div>
@@ -1270,6 +1300,7 @@
   window.addEventListener('pageshow', function() {
     resetPdpButtons();
     restoreCartBackupIfNeeded();
+    initPdpCouponState();
   });
 
   function handlePdpAddToCartSuccess() {
@@ -1477,6 +1508,69 @@
     } catch(e) {}
   }
 
+  function applyPdpCouponCode(code) {
+    var input = document.getElementById('pdpCouponInput');
+    if (input) input.value = code;
+    applyPdpCouponInput(code);
+  }
+
+  function applyPdpCouponInput(forcedCode) {
+    var input = document.getElementById('pdpCouponInput');
+    var code = (forcedCode || (input ? input.value : '')).trim().toUpperCase();
+    var status = document.getElementById('pdpCouponStatus');
+    if (!code) {
+      if (status) {
+        status.style.display = 'block';
+        status.style.color = '#B91C1C';
+        status.textContent = 'Please enter a coupon code';
+      }
+      return;
+    }
+
+    try {
+      sessionStorage.setItem('meenu_applied_coupon', code);
+    } catch(e) {}
+
+    if (input) input.value = code;
+    if (status) {
+      status.style.display = 'block';
+      status.style.color = '#15803D';
+      status.innerHTML = '&#10003; Coupon <strong>' + code + '</strong> applied! Will auto-apply on Buy Now & Cart. <a href="javascript:void(0)" onclick="removePdpCoupon()" style="color:#B91C1C;margin-left:8px;text-decoration:underline;font-size:11px;">Remove</a>';
+    }
+    showPdpToastNotification('&#10003; Coupon ' + code + ' applied!');
+  }
+
+  function removePdpCoupon() {
+    try {
+      sessionStorage.removeItem('meenu_applied_coupon');
+    } catch(e) {}
+    var input = document.getElementById('pdpCouponInput');
+    if (input) input.value = '';
+    var status = document.getElementById('pdpCouponStatus');
+    if (status) {
+      status.style.display = 'none';
+      status.innerHTML = '';
+    }
+    showPdpToastNotification('Coupon removed');
+  }
+
+  function initPdpCouponState() {
+    try {
+      var saved = sessionStorage.getItem('meenu_applied_coupon');
+      if (saved) {
+        var input = document.getElementById('pdpCouponInput');
+        if (input) input.value = saved;
+        var status = document.getElementById('pdpCouponStatus');
+        if (status) {
+          status.style.display = 'block';
+          status.style.color = '#15803D';
+          status.innerHTML = '&#10003; Coupon <strong>' + saved + '</strong> applied! Will auto-apply on Buy Now & Cart. <a href="javascript:void(0)" onclick="removePdpCoupon()" style="color:#B91C1C;margin-left:8px;text-decoration:underline;font-size:11px;">Remove</a>';
+        }
+      }
+    } catch(e) {}
+  }
+  document.addEventListener('DOMContentLoaded', initPdpCouponState);
+
   function buyShopifyProductNow() {
     if (!currentSelectedVariantId) {
       validateShopifyForm();
@@ -1493,7 +1587,22 @@
       stickyBuyBtn.innerHTML = '<span class="sticky-buy-text-main">CHECKOUT...</span>';
     }
 
+    // Check for applied coupon code
+    var appliedCoupon = '';
+    try {
+      appliedCoupon = sessionStorage.getItem('meenu_applied_coupon') || '';
+    } catch(e) {}
+    if (!appliedCoupon) {
+      var couponInp = document.getElementById('pdpCouponInput');
+      if (couponInp && couponInp.value.trim()) {
+        appliedCoupon = couponInp.value.trim().toUpperCase();
+      }
+    }
+
     var targetCheckoutUrl = '/cart/' + currentSelectedVariantId + ':1';
+    if (appliedCoupon) {
+      targetCheckoutUrl += '?discount=' + encodeURIComponent(appliedCoupon);
+    }
 
     // Flipkart & Amazon style: Buy Now isolates ONLY this single item for checkout
     // Backup existing multi-item cart so previous items are preserved if customer returns

@@ -1634,3 +1634,39 @@ function restoreGlobalCartBackupIfNeeded() {
 }
 window.addEventListener('DOMContentLoaded', restoreGlobalCartBackupIfNeeded);
 window.addEventListener('pageshow', restoreGlobalCartBackupIfNeeded);
+
+/* =========================================================================
+   GLOBAL PROMO CODE / COUPON MANAGER (AUTO-APPLIED TO BUY NOW & CART)
+   ========================================================================= */
+function applyGlobalCoupon(code) {
+  if (!code) return;
+  code = code.trim().toUpperCase();
+  try {
+    sessionStorage.setItem('meenu_applied_coupon', code);
+    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).catch(function() {});
+    }
+  } catch(e) {}
+
+  if (typeof showMeenuToast === 'function') {
+    showMeenuToast('✓ Code "' + code + '" applied! Auto-discounted at checkout.');
+  } else if (typeof showToast === 'function') {
+    showToast('✓ Code "' + code + '" applied! Auto-discounted at checkout.');
+  } else {
+    alert('✓ Code "' + code + '" applied! Auto-discounted at checkout.');
+  }
+
+  // Sync PDP if present
+  var pdpInput = document.getElementById('pdpCouponInput');
+  if (pdpInput) pdpInput.value = code;
+  var pdpStatus = document.getElementById('pdpCouponStatus');
+  if (pdpStatus) {
+    pdpStatus.style.display = 'block';
+    pdpStatus.style.color = '#15803D';
+    pdpStatus.innerHTML = '&#10003; Coupon <strong>' + code + '</strong> applied! Will auto-apply on Buy Now & Cart. <a href="javascript:void(0)" onclick="removePdpCoupon()" style="color:#B91C1C;margin-left:8px;text-decoration:underline;font-size:11px;">Remove</a>';
+  }
+
+  // Sync Cart Drawer discount input if present
+  var cartDiscountInput = document.querySelector('input[name="discount"]');
+  if (cartDiscountInput) cartDiscountInput.value = code;
+}
