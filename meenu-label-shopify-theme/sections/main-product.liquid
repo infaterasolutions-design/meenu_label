@@ -43,7 +43,8 @@
                      src="{{ image | image_url: width: 900, format: 'webp' }}" 
                      alt="{{ image.alt | default: product.title | escape }}" 
                      class="pdp-main-image"
-                     loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                     loading="eager"
+                     decoding="async"
                      {% if forloop.first %}fetchpriority="high"{% endif %}
                      onclick="openShopifyLightbox('{{ image | image_url: width: 1400 }}')"
                      title="Click to view full screen">
@@ -319,6 +320,56 @@
     </div>
   </div>
 
+</div>
+
+<!-- Mobile Sticky Action Bar (Flipkart Style: Cart & Buy Now) -->
+<div class="pdp-mobile-sticky-bar" id="pdpMobileStickyBar">
+  <div class="pdp-sticky-bar-inner">
+    
+    <!-- Left Mini Cart Icon Button with Live Counter Badge -->
+    <a href="/cart" class="pdp-sticky-cart-icon-btn" title="View Shopping Bag" aria-label="View Shopping Bag">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span class="pdp-sticky-cart-badge cart-count-badge" id="pdpStickyCartBadge" {% if cart.item_count == 0 %}style="display:none;"{% endif %}>{{ cart.item_count }}</span>
+    </a>
+
+    <!-- 1. Add to Bag / Cart Button -->
+    <button type="button" 
+            class="pdp-sticky-btn-add" 
+            id="pdpStickyAddBtn"
+            onclick="triggerStickyAddToCart(event)"
+            {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <span>ADD TO BAG</span>
+    </button>
+
+    <!-- 2. Buy Now Button (Flipkart Signature Amber-Gold Highlight with Price) -->
+    <button type="button" 
+            class="pdp-sticky-btn-buy" 
+            id="pdpStickyBuyBtn"
+            onclick="buyShopifyProductNow()"
+            {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>
+      <span class="sticky-buy-text-main">BUY NOW</span>
+      <span class="sticky-buy-text-price" id="pdpStickyPriceText">at &#8377;{{ product.price | money_without_trailing_zeros }}</span>
+    </button>
+
+    <!-- Sold Out WhatsApp Notify Button (Fallback when piece is sold out) -->
+    <a id="pdpStickyNotifyWaBtn" 
+       class="pdp-sticky-btn-notify" 
+       href="https://wa.me/{{ settings.whatsapp_number | default: '918511616133' }}?text={{ 'Hi Meenu Label! Please notify me when "' | append: product.title | append: '" in Size ' | append: product.selected_or_first_available_variant.title | append: ' is back in stock.' | url_encode }}" 
+       target="_blank" 
+       {% if product.selected_or_first_available_variant.available %}style="display:none;"{% endif %}>
+      <span>&#128172; NOTIFY ON WHATSAPP</span>
+    </a>
+
+  </div>
 </div>
 
 <!-- High-Resolution Lightbox Zoom Modal -->
@@ -672,6 +723,184 @@
     .pdp-size-stock {
       font-size: 9px !important;
     }
+
+    /* Mobile Sticky Bottom Bar (Flipkart Style: Cart & Buy Now) */
+    .pdp-mobile-sticky-bar {
+      display: block !important;
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      background: #FFFFFF !important;
+      border-top: 1px solid #EAE5DE !important;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08) !important;
+      z-index: 200 !important;
+      padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)) 12px !important;
+      box-sizing: border-box !important;
+    }
+
+    .pdp-sticky-bar-inner {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      width: 100% !important;
+      max-width: 500px !important;
+      margin: 0 auto !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Left Cart Icon Button */
+    .pdp-sticky-cart-icon-btn {
+      position: relative !important;
+      flex: 0 0 44px !important;
+      width: 44px !important;
+      height: 46px !important;
+      background: #FAF8F5 !important;
+      border: 1.5px solid #D6CEC3 !important;
+      border-radius: 8px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: #1E1C19 !important;
+      cursor: pointer !important;
+      padding: 0 !important;
+      text-decoration: none !important;
+      touch-action: manipulation !important;
+      box-sizing: border-box !important;
+    }
+
+    .pdp-sticky-cart-icon-btn svg {
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    .pdp-sticky-cart-badge {
+      position: absolute !important;
+      top: -4px !important;
+      right: -4px !important;
+      background: #DC2626 !important;
+      color: #FFFFFF !important;
+      font-size: 10px !important;
+      font-weight: 800 !important;
+      min-width: 18px !important;
+      height: 18px !important;
+      line-height: 18px !important;
+      border-radius: 9px !important;
+      text-align: center !important;
+      padding: 0 4px !important;
+      box-sizing: border-box !important;
+      box-shadow: 0 2px 5px rgba(220, 38, 38, 0.4) !important;
+    }
+
+    /* Add to Bag Button */
+    .pdp-sticky-btn-add {
+      flex: 1 !important;
+      height: 46px !important;
+      background: #FFFFFF !important;
+      border: 1.5px solid #1E1C19 !important;
+      border-radius: 8px !important;
+      color: #1E1C19 !important;
+      font-family: inherit !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.04em !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 6px !important;
+      cursor: pointer !important;
+      touch-action: manipulation !important;
+      padding: 0 6px !important;
+      white-space: nowrap !important;
+      box-sizing: border-box !important;
+      transition: background 0.15s, transform 0.1s !important;
+    }
+
+    .pdp-sticky-btn-add:active {
+      background: #F4EFEB !important;
+      transform: scale(0.98) !important;
+    }
+
+    .pdp-sticky-btn-add svg {
+      width: 15px !important;
+      height: 15px !important;
+      flex-shrink: 0 !important;
+    }
+
+    /* Buy Now Button (Flipkart Gold Highlight with Price) */
+    .pdp-sticky-btn-buy {
+      flex: 1.25 !important;
+      height: 46px !important;
+      background: #FFC200 !important;
+      border: none !important;
+      border-radius: 8px !important;
+      color: #1E1C19 !important;
+      font-family: inherit !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      touch-action: manipulation !important;
+      padding: 2px 6px !important;
+      box-shadow: 0 3px 12px rgba(255, 194, 0, 0.4) !important;
+      box-sizing: border-box !important;
+      transition: background 0.15s, transform 0.1s !important;
+    }
+
+    .pdp-sticky-btn-buy:active {
+      background: #E5AD00 !important;
+      transform: scale(0.98) !important;
+    }
+
+    .sticky-buy-text-main {
+      font-size: 12.5px !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.05em !important;
+      line-height: 1.15 !important;
+    }
+
+    .sticky-buy-text-price {
+      font-size: 10.5px !important;
+      font-weight: 700 !important;
+      opacity: 0.88 !important;
+      line-height: 1.15 !important;
+    }
+
+    /* Sold Out State on Sticky Bar */
+    .pdp-sticky-btn-notify {
+      flex: 1 !important;
+      height: 46px !important;
+      background: #25D366 !important;
+      color: #FFFFFF !important;
+      border-radius: 8px !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-decoration: none !important;
+      letter-spacing: 0.05em !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Safe Spacing for Bottom of Page & Floating WhatsApp */
+    .pdp-container {
+      padding-bottom: 80px !important;
+    }
+
+    .floating-wa-concierge {
+      bottom: 75px !important;
+    }
+
+    .wa-popup-card {
+      bottom: 135px !important;
+    }
+  }
+
+  .pdp-mobile-sticky-bar {
+    display: none;
   }
 
 
@@ -710,17 +939,11 @@
 
   // Ultra-Fast Background Preloader: Preloads slides 2, 3, 4 into browser memory cache immediately
   (function preloadGalleryImages() {
-    if (shopifyGalleryImages.length <= 1) return;
-    function doPreload() {
-      for (var i = 1; i < shopifyGalleryImages.length; i++) {
-        var preImg = new Image();
-        preImg.src = shopifyGalleryImages[i];
-      }
-    }
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(doPreload, { timeout: 800 });
-    } else {
-      setTimeout(doPreload, 150);
+    if (!shopifyGalleryImages || shopifyGalleryImages.length <= 1) return;
+    for (var i = 1; i < shopifyGalleryImages.length; i++) {
+      var preImg = new Image();
+      preImg.decoding = 'async';
+      preImg.src = shopifyGalleryImages[i];
     }
   })();
 
@@ -892,10 +1115,21 @@
     var waitlistBtn = document.getElementById('pdpNotifyWaitlistBtn');
     var regularWaBtn = document.getElementById('pdpWhatsAppBtn');
 
+    // Sync mobile bottom sticky action bar
+    var stickyAddBtn = document.getElementById('pdpStickyAddBtn');
+    var stickyBuyBtn = document.getElementById('pdpStickyBuyBtn');
+    var stickyNotifyWaBtn = document.getElementById('pdpStickyNotifyWaBtn');
+
     if (isAvailable === false) {
       if (addBtn) addBtn.style.display = 'none';
       if (buyBtn) buyBtn.style.display = 'none';
       if (regularWaBtn) regularWaBtn.style.display = 'none';
+      if (stickyAddBtn) stickyAddBtn.style.display = 'none';
+      if (stickyBuyBtn) stickyBuyBtn.style.display = 'none';
+      if (stickyNotifyWaBtn) {
+        stickyNotifyWaBtn.style.display = 'flex';
+        stickyNotifyWaBtn.href = "https://wa.me/{{ settings.whatsapp_number | default: '918511616133' }}?text=" + encodeURIComponent("Hi Meenu Label! Please notify me when '{{ product.title | escape }}' in Size " + sizeTitle + " is back in stock. Please share restock timeline.");
+      }
       if (waNotifyBtn) {
         waNotifyBtn.style.display = 'flex';
         waNotifyBtn.href = "https://wa.me/{{ settings.whatsapp_number | default: '918511616133' }}?text=" + encodeURIComponent("Hi Meenu Label! Please notify me when '{{ product.title | escape }}' in Size " + sizeTitle + " is back in stock. Please share restock timeline.");
@@ -904,6 +1138,9 @@
     } else {
       if (addBtn) addBtn.style.display = 'block';
       if (buyBtn) buyBtn.style.display = 'block';
+      if (stickyAddBtn) stickyAddBtn.style.display = 'flex';
+      if (stickyBuyBtn) stickyBuyBtn.style.display = 'flex';
+      if (stickyNotifyWaBtn) stickyNotifyWaBtn.style.display = 'none';
       if (regularWaBtn) {
         regularWaBtn.style.display = 'flex';
         regularWaBtn.href = "https://wa.me/{{ settings.whatsapp_number | default: '918511616133' }}?text=" + encodeURIComponent("Hi Meenu Label! I would like to order '{{ product.title | escape }}' in Size " + sizeTitle + " from Drop 01.");
@@ -989,11 +1226,65 @@
     return false;
   }
 
+  function triggerStickyAddToCart(e) {
+    if (!currentSelectedVariantId) {
+      validateShopifyForm(e);
+      return false;
+    }
+    if (e) e.preventDefault();
+    var stickyAddBtn = document.getElementById('pdpStickyAddBtn');
+    if (stickyAddBtn) {
+      stickyAddBtn.disabled = true;
+      stickyAddBtn.innerHTML = '<span>ADDING...</span>';
+    }
+    var mainAddBtn = document.getElementById('pdpAddToCartBtn');
+    if (mainAddBtn) {
+      mainAddBtn.disabled = true;
+      mainAddBtn.innerHTML = 'ADDING TO BAG...';
+    }
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: [{
+          id: currentSelectedVariantId,
+          quantity: 1
+        }]
+      })
+    })
+    .then(function() {
+      window.location.href = '/cart';
+    })
+    .catch(function(err) {
+      console.warn('Sticky Cart add notice:', err);
+      var form = document.getElementById('shopifyProductForm');
+      if (form) {
+        form.submit();
+      } else {
+        window.location.href = '/cart';
+      }
+    });
+
+    return false;
+  }
+
   function buyShopifyProductNow() {
     if (!currentSelectedVariantId) {
       validateShopifyForm();
       return;
     }
+    var mainBuyBtn = document.getElementById('pdpBuyNowBtn');
+    if (mainBuyBtn) {
+      mainBuyBtn.disabled = true;
+      mainBuyBtn.innerHTML = 'PROCEEDING TO CHECKOUT...';
+    }
+    var stickyBuyBtn = document.getElementById('pdpStickyBuyBtn');
+    if (stickyBuyBtn) {
+      stickyBuyBtn.disabled = true;
+      stickyBuyBtn.innerHTML = '<span class="sticky-buy-text-main">CHECKOUT...</span>';
+    }
+
     fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
