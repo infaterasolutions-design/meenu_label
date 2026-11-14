@@ -6306,6 +6306,30 @@
       }
     }
 
+    function handlePdpAddedFeedback() {
+      var mainAddBtn = document.getElementById('pdpAddToCartBtn');
+      if (mainAddBtn) {
+        mainAddBtn.innerHTML = '&#10003; ADDED TO SHOPPING BAG!';
+      }
+      var stickyAddBtn = document.getElementById('pdpStickyAddBtn');
+      if (stickyAddBtn) {
+        stickyAddBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;"><polyline points="20 6 9 17 4 12"></polyline></svg><span style="color:#16A34A;font-weight:800;">ADDED!</span>';
+      }
+      var stickyCartBtn = document.querySelector('.pdp-sticky-cart-icon-btn');
+      if (stickyCartBtn) {
+        stickyCartBtn.classList.remove('cart-pulse-bounce');
+        void stickyCartBtn.offsetWidth;
+        stickyCartBtn.classList.add('cart-pulse-bounce');
+      }
+      if (typeof showToast === 'function') {
+        showToast('✓ Piece added to your shopping bag!');
+      }
+      setTimeout(function() {
+        if (mainAddBtn) mainAddBtn.innerHTML = 'ADD TO SHOPPING BAG';
+        if (stickyAddBtn) stickyAddBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;flex-shrink:0;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span>ADD TO BAG</span>';
+      }, 2200);
+    }
+
     function triggerPdpStickyAddToCart(e) {
       if (e && e.preventDefault) e.preventDefault();
       if (!activePdpProductId) return false;
@@ -6314,7 +6338,7 @@
         return false;
       }
       quickAddCart(activePdpProductId, pdpSelectedSize);
-      toggleCart();
+      handlePdpAddedFeedback();
       return false;
     }
 
@@ -6358,7 +6382,7 @@
         return;
       }
       quickAddCart(activePdpProductId, pdpSelectedSize);
-      toggleCart();
+      handlePdpAddedFeedback();
     }
 
     function buyPdpProductNow() {
@@ -6367,8 +6391,7 @@
         showPdpSizeRequired();
         return;
       }
-      quickAddCart(activePdpProductId, pdpSelectedSize);
-      toggleCart();
+      quickAddCart(activePdpProductId, pdpSelectedSize, true);
     }
 
     function togglePdpWishlist() {
@@ -6826,13 +6849,13 @@ function executeOrderTracking() {
     }
 
     /* Cart Operations */
-    function quickAddCart(id, size) {
+    function quickAddCart(id, size, shouldOpenCart) {
       var p = null;
       for (var i = 0; i < productsData.length; i++) {
         if (productsData[i].id === id) { p = productsData[i]; break; }
       }
       if (!p) return;
-      addToCart(p, size);
+      addToCart(p, size, shouldOpenCart);
     }
 
     function addCurrentProductToCart() {
@@ -6843,11 +6866,11 @@ function executeOrderTracking() {
         }
         return;
       }
-      addToCart(activeModalProduct, selectedSize);
+      addToCart(activeModalProduct, selectedSize, false);
       closeModal();
     }
 
-    function addToCart(product, size) {
+    function addToCart(product, size, shouldOpenCart) {
       var existing = null;
       for (var i = 0; i < cart.length; i++) {
         if (cart[i].id === product.id && cart[i].size === size) {
@@ -6868,8 +6891,10 @@ function executeOrderTracking() {
         });
       }
       updateCartUI();
-      openCart();
-      showToast('Added ' + product.name + ' (' + size + ') to Bag!');
+      if (shouldOpenCart) {
+        openCart();
+      }
+      showToast('✓ Added ' + product.name + ' (' + size + ') to Bag!');
     }
 
     function removeFromCart(id, size) {
@@ -6894,7 +6919,13 @@ function executeOrderTracking() {
         setTimeout(function() { headerBadge.style.transform = 'scale(1)'; }, 200);
       }
 
-      var allBadges = document.querySelectorAll('#headerCartCount, .header-cart-pill');
+      var stickyBadge = document.getElementById('pdpStickyCartBadge');
+      if (stickyBadge) {
+        stickyBadge.textContent = totalItems;
+        stickyBadge.style.display = totalItems > 0 ? 'block' : 'none';
+      }
+
+      var allBadges = document.querySelectorAll('#headerCartCount, .header-cart-pill, .cart-count-badge');
       allBadges.forEach(function(b) {
         b.textContent = totalItems;
         b.style.display = totalItems > 0 ? 'inline-flex' : 'none';
