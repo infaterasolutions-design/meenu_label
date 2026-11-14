@@ -1585,3 +1585,52 @@ function checkOrderHashTrigger() {
 }
 window.addEventListener('DOMContentLoaded', checkOrderHashTrigger);
 window.addEventListener('hashchange', checkOrderHashTrigger);
+
+/* =========================================================================
+   RESTORE CART BACKUP AFTER BUY NOW (AMAZON / FLIPKART ISOLATION FLOW)
+   ========================================================================= */
+function restoreGlobalCartBackupIfNeeded() {
+  try {
+    var backupStr = sessionStorage.getItem('meenu_cart_backup');
+    if (!backupStr) return;
+    var backup = JSON.parse(backupStr);
+    sessionStorage.removeItem('meenu_cart_backup');
+
+    if (!backup.timestamp || Date.now() - backup.timestamp > 7200000) {
+      return;
+    }
+
+    if (backup.items && backup.items.length > 0) {
+      fetch('/cart.js')
+        .then(function(res) { return res.json(); })
+        .then(function(cart) {
+          var currentIds = (cart.items || []).map(function(i) { return i.id; });
+          var itemsToAdd = backup.items.filter(function(bi) {
+            return currentIds.indexOf(bi.id) === -1;
+          });
+          if (itemsToAdd.length > 0) {
+            fetch('/cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ items: itemsToAdd })
+            })
+            .then(function() {
+              fetch('/cart.js')
+                .then(function(r) { return r.json(); })
+                .then(function(c) {
+                  var count = c.item_count || 0;
+                  var allBadges = document.querySelectorAll('.cart-count-badge, .header-cart-pill, .nav-drawer-cart-count, #headerCartCount');
+                  allBadges.forEach(function(b) {
+                    b.textContent = count;
+                    b.style.display = count > 0 ? 'inline-flex' : 'none';
+                  });
+                });
+            });
+          }
+        })
+        .catch(function() {});
+    }
+  } catch(e) {}
+}
+window.addEventListener('DOMContentLoaded', restoreGlobalCartBackupIfNeeded);
+window.addEventListener('pageshow', restoreGlobalCartBackupIfNeeded);

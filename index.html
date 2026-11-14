@@ -6391,7 +6391,37 @@
         showPdpSizeRequired();
         return;
       }
-      quickAddCart(activePdpProductId, pdpSelectedSize, true);
+      var p = null;
+      for (var i = 0; i < productsData.length; i++) {
+        if (productsData[i].id === activePdpProductId) { p = productsData[i]; break; }
+      }
+      if (!p) return;
+
+      // Flipkart & Amazon style: Buy Now isolates ONLY this single item for checkout
+      // We backup existing multi-item cart so nothing is lost if user returns
+      if (cart.length > 0) {
+        try {
+          sessionStorage.setItem('meenu_cart_backup', JSON.stringify({
+            timestamp: Date.now(),
+            cart: cart.slice()
+          }));
+        } catch(e) {}
+      }
+
+      // Checkout cart contains ONLY this item
+      cart = [{
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        size: pdpSelectedSize,
+        img: p.b64,
+        qty: 1
+      }];
+      updateCartUI();
+      openCart();
+      if (typeof showToast === 'function') {
+        showToast('⚡ Instant Checkout for ' + p.name + ' (' + pdpSelectedSize + ')');
+      }
     }
 
     function togglePdpWishlist() {
@@ -6966,8 +6996,26 @@ function executeOrderTracking() {
     }
 
     function toggleCart() {
-      document.getElementById('cartDrawer').classList.toggle('open');
-      document.getElementById('cartBackdrop').classList.toggle('open');
+      var drawer = document.getElementById('cartDrawer');
+      var backdrop = document.getElementById('cartBackdrop');
+      var isClosing = drawer.classList.contains('open');
+
+      drawer.classList.toggle('open');
+      backdrop.classList.toggle('open');
+
+      if (isClosing) {
+        try {
+          var backupStr = sessionStorage.getItem('meenu_cart_backup');
+          if (backupStr) {
+            var backup = JSON.parse(backupStr);
+            if (backup.cart && backup.cart.length > 0) {
+              cart = backup.cart;
+              updateCartUI();
+            }
+            sessionStorage.removeItem('meenu_cart_backup');
+          }
+        } catch(e) {}
+      }
     }
     function openCart() {
       document.getElementById('cartDrawer').classList.add('open');

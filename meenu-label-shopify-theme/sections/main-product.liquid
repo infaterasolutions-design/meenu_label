@@ -1269,6 +1269,7 @@
   // Handle browser back button (iOS Safari / Chrome bfcache so buttons are never stuck)
   window.addEventListener('pageshow', function() {
     resetPdpButtons();
+    restoreCartBackupIfNeeded();
   });
 
   function handlePdpAddToCartSuccess() {
@@ -1424,6 +1425,58 @@
     return false;
   }
 
+  function restoreCartBackupIfNeeded() {
+    try {
+      var backupStr = sessionStorage.getItem('meenu_cart_backup');
+      if (!backupStr) return;
+      var backup = JSON.parse(backupStr);
+      // Remove immediately to avoid duplicate runs
+      sessionStorage.removeItem('meenu_cart_backup');
+
+      // Valid within 2 hours
+      if (!backup.timestamp || Date.now() - backup.timestamp > 7200000) {
+        return;
+      }
+
+      if (backup.items && backup.items.length > 0) {
+        fetch('/cart.js')
+          .then(function(res) { return res.json(); })
+          .then(function(cart) {
+            var currentIds = (cart.items || []).map(function(i) { return i.id; });
+            var itemsToAdd = backup.items.filter(function(bi) {
+              return currentIds.indexOf(bi.id) === -1;
+            });
+            if (itemsToAdd.length > 0) {
+              fetch('/cart/add.js', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: itemsToAdd })
+              })
+              .then(function() {
+                // Refresh badges
+                fetch('/cart.js')
+                  .then(function(r) { return r.json(); })
+                  .then(function(c) {
+                    var count = c.item_count || 0;
+                    var stickyBadge = document.getElementById('pdpStickyCartBadge');
+                    if (stickyBadge) {
+                      stickyBadge.textContent = count;
+                      stickyBadge.style.display = count > 0 ? 'block' : 'none';
+                    }
+                    var allBadges = document.querySelectorAll('.cart-count-badge, .header-cart-pill, .nav-drawer-cart-count');
+                    allBadges.forEach(function(b) {
+                      b.textContent = count;
+                      b.style.display = count > 0 ? 'inline-flex' : 'none';
+                    });
+                  });
+              });
+            }
+          })
+          .catch(function() {});
+      }
+    } catch(e) {}
+  }
+
   function buyShopifyProductNow() {
     if (!currentSelectedVariantId) {
       validateShopifyForm();
@@ -1440,22 +1493,33 @@
       stickyBuyBtn.innerHTML = '<span class="sticky-buy-text-main">CHECKOUT...</span>';
     }
 
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        items: [{
-          id: currentSelectedVariantId,
-          quantity: 1
-        }]
+    var targetCheckoutUrl = '/cart/' + currentSelectedVariantId + ':1';
+
+    // Flipkart & Amazon style: Buy Now isolates ONLY this single item for checkout
+    // Backup existing multi-item cart so previous items are preserved if customer returns
+    fetch('/cart.js')
+      .then(function(res) { return res.json(); })
+      .then(function(cart) {
+        if (cart && cart.items && cart.items.length > 0) {
+          var otherItems = cart.items.filter(function(it) {
+            return it.id != currentSelectedVariantId;
+          });
+          if (otherItems.length > 0) {
+            try {
+              sessionStorage.setItem('meenu_cart_backup', JSON.stringify({
+                timestamp: Date.now(),
+                items: otherItems.map(function(it) {
+                  return { id: it.id, quantity: it.quantity };
+                })
+              }));
+            } catch(e) {}
+          }
+        }
+        window.location.href = targetCheckoutUrl;
       })
-    })
-    .then(function() {
-      window.location.href = '/checkout';
-    })
-    .catch(function() {
-      window.location.href = '/checkout';
-    });
+      .catch(function() {
+        window.location.href = targetCheckoutUrl;
+      });
   }
 
   function togglePdpAccordion(header) {
