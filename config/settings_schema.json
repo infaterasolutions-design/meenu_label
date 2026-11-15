@@ -1,5 +1,16 @@
 [
   {
+    "name": "Logo & Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "Upload a square PNG or ICO image (32x32px or 512x512px) to customize your browser tab icon."
+      }
+    ]
+  },
+  {
     "name": "Theme Colors",
     "settings": [
       {
