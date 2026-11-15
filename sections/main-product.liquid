@@ -220,7 +220,7 @@
 
         <div class="pdp-actions-row">
           <button type="submit" id="pdpAddToCartBtn" class="pdp-btn-primary" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>ADD TO SHOPPING BAG</button>
-          <button type="button" name="checkout" id="pdpBuyNowBtn" class="pdp-btn-buy shopify-payment-button__button--unbranded" onclick="buyShopifyProductNow()" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>BUY IT NOW &rarr;</button>
+          <button type="button" id="pdpBuyNowBtn" class="pdp-btn-buy" onclick="buyShopifyProductNow()" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>BUY IT NOW &rarr;</button>
 
           <!-- Direct WhatsApp Concierge Restock Button (Option A) -->
           <a id="pdpNotifyWhatsAppBtn" class="pdp-btn-notify-whatsapp" href="https://wa.me/{{ settings.whatsapp_number | default: '918511616133' }}?text={{ 'Hi Meenu Label! Please notify me when "' | append: product.title | append: '" in Size ' | append: product.selected_or_first_available_variant.title | append: ' is back in stock. Please share restock timeline.' | url_encode }}" target="_blank" {% if product.selected_or_first_available_variant.available %}style="display:none;"{% endif %}>
@@ -414,8 +414,7 @@
 
     <!-- 2. Buy Now Button (Flipkart Signature Amber-Gold Highlight with Price) -->
     <button type="button" 
-            name="checkout"
-            class="pdp-sticky-btn-buy shopify-payment-button__button--unbranded" 
+            class="pdp-sticky-btn-buy" 
             id="pdpStickyBuyBtn"
             onclick="buyShopifyProductNow()"
             {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>
@@ -1723,31 +1722,7 @@
       targetCheckoutUrl += '?discount=' + encodeURIComponent(appliedCoupon);
     }
 
-    // Flipkart & Amazon style: Buy Now isolates ONLY this single item for checkout
-    // Backup existing multi-item cart so previous items are preserved if customer returns
-    fetch('/cart.js')
-      .then(function(res) { return res.json(); })
-      .then(function(cart) {
-        if (cart && cart.items && cart.items.length > 0) {
-          var otherItems = cart.items.filter(function(it) {
-            return it.id != currentSelectedVariantId;
-          });
-          if (otherItems.length > 0) {
-            try {
-              sessionStorage.setItem('meenu_cart_backup', JSON.stringify({
-                timestamp: Date.now(),
-                items: otherItems.map(function(it) {
-                  return { id: it.id, quantity: it.quantity };
-                })
-              }));
-            } catch(e) {}
-          }
-        }
-        window.location.href = targetCheckoutUrl;
-      })
-      .catch(function() {
-        window.location.href = targetCheckoutUrl;
-      });
+    window.location.href = targetCheckoutUrl;
   }
 
   function togglePdpAccordion(header) {
