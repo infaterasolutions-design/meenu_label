@@ -41,10 +41,10 @@
       <span id="cartDrawerSubtotal">{{ cart.total_price | money }}</span>
     </div>
     <div style="font-size: 11px; color: var(--accent-green, #2B6E44); background: #EBF7EE; padding: 6px 10px; border-radius: 4px; margin-bottom: 14px; text-align: center; font-weight: 600;">
-      ⚡ Instant ₹100 Prepaid UPI Discount auto-applied at checkout
+      ⚡ Instant ₹100 Prepaid UPI Discount with USEUPI100 auto-applied at checkout
     </div>
     <form action="/cart" method="post" id="cartDrawerCheckoutForm" style="margin: 0; padding: 0;">
-      <input type="hidden" name="discount" id="cartDrawerDiscountInput" value="UPI100">
+      <input type="hidden" name="discount" id="cartDrawerDiscountInput" value="USEUPI100">
       <button type="submit" name="checkout" class="modal-btn-primary cart__checkout-button" style="width: 100%; text-align: center; display: block; box-sizing: border-box; text-decoration: none; border: none; cursor: pointer;">
         PROCEED TO CHECKOUT &rarr;
       </button>

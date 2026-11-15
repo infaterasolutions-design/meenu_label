@@ -309,17 +309,17 @@
               </div>
               <div class="summary-perk-title">Instant &#8377;100 Off via UPI &amp; Cards</div>
               <p class="summary-perk-note">
-                Auto-applied with promo code <strong>UPI100</strong> below. Cash on Delivery (COD) is also available at standard price at checkout.
+                Auto-applied with promo code <strong>USEUPI100</strong> below. Cash on Delivery (COD) is also available at standard price at checkout.
               </p>
             </div>
 
             <!-- Coupon Code Field -->
             <div class="summary-coupon-row">
-              <input type="text" id="pageCouponCode" placeholder="Promo code (e.g. UPI100)" class="summary-coupon-input" value="UPI100">
+              <input type="text" id="pageCouponCode" placeholder="Promo code (e.g. USEUPI100)" class="summary-coupon-input" value="USEUPI100">
               <button type="button" id="pageCouponBtn" onclick="applyPageCoupon()" class="summary-coupon-btn">APPLIED</button>
             </div>
             <div id="pageCouponFeedback" style="font-size: 11px; color: #2E6B38; font-weight: 600; margin-top: 6px; margin-bottom: 14px; display: block;">
-              &#10003; Code "UPI100" applied &bull; &#8377;100 Prepaid discount
+              &#10003; Code "USEUPI100" applied &bull; &#8377;100 Prepaid discount
             </div>
 
             <!-- Breakdown Lines -->
@@ -330,7 +330,7 @@
               </div>
               
               <div class="summary-line highlight-green" id="pageDiscountRow">
-                <span>&#9889; Prepaid UPI Discount (UPI100)</span>
+                <span>&#9889; Prepaid UPI Discount (USEUPI100)</span>
                 <span id="pageDiscountVal">-&#8377;100</span>
               </div>
 
@@ -365,7 +365,7 @@
 
             <!-- Checkout CTA Form & Button (Fully integrated with Shopify Checkout & Razorpay) -->
             <form action="/cart" method="post" id="cartPageCheckoutForm" style="margin: 0; padding: 0;">
-              <input type="hidden" name="discount" id="cartFormDiscount" value="UPI100">
+              <input type="hidden" name="discount" id="cartFormDiscount" value="USEUPI100">
               <button type="submit" name="checkout" id="pageCheckoutBtn" class="summary-checkout-btn cart__checkout-button" style="width: 100%; border: none; cursor: pointer;">
                 PROCEED TO SECURE CHECKOUT &rarr;
               </button>
@@ -408,7 +408,7 @@
     var formDiscount = document.getElementById('cartFormDiscount');
     var code = inp ? inp.value.trim().toUpperCase() : '';
 
-    if (code === 'UPI100' || code === 'SAVE100' || code === 'PREPAID100') {
+    if (code === 'USEUPI100' || code === 'UPI100' || code === 'SAVE100' || code === 'PREPAID100') {
       if (btn) btn.textContent = 'APPLIED';
       if (discountRow) discountRow.style.display = 'flex';
       var discounted = Math.max(0, cartTotalCents - 10000);
