@@ -30,11 +30,6 @@
     },
     "content_for_index": [],
     "blocks": {
-      "17844675666580048712": {
-        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/sso-script/c13c688d-5c45-4054-b95f-1edd63faa705",
-        "disabled": false,
-        "settings": {}
-      },
       "14578213307157327268": {
         "type": "shopify://apps/velocity-insights/blocks/velocity-app-embed/eb76ac2e-4f36-413e-b08f-4ccc7da0a12f",
         "disabled": true,
@@ -51,11 +46,6 @@
           "delivery_button_color": "#008060",
           "delivery_button_text_color": "#FFFFFF"
         }
-      },
-      "3557650678667880288": {
-        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/magicx-script/c13c688d-5c45-4054-b95f-1edd63faa705",
-        "disabled": false,
-        "settings": {}
       },
       "11320579242087869063": {
         "type": "shopify://apps/codify-order-cancel/blocks/cancel_button/f7f8a269-b6ea-461a-8e1b-d61167f44926",
@@ -87,9 +77,14 @@
         "disabled": false,
         "settings": {}
       },
+      "17844675666580048712": {
+        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/sso-script/c13c688d-5c45-4054-b95f-1edd63faa705",
+        "disabled": true,
+        "settings": {}
+      },
       "3557650678667880288": {
         "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/magicx-script/c13c688d-5c45-4054-b95f-1edd63faa705",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       }
     }
