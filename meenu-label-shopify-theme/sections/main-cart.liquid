@@ -39,53 +39,8 @@
       <!-- Active Cart Content Grid -->
       <div id="cartPageActiveGrid" class="cart-page-layout">
         
-        <!-- LEFT COLUMN: Items & Perks -->
+        <!-- LEFT COLUMN: Items & Ensemble -->
         <div class="cart-page-left">
-          
-          <!-- Wide Luxury Progress Bar Card -->
-          <div class="cart-page-progress-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #1E1C19;">
-                <span id="pageProgressIcon" style="font-size: 18px;">{% if current_total >= potli_threshold %}🎉{% else %}🎁{% endif %}</span>
-                <span id="pageProgressText">
-                  {% if current_total >= potli_threshold %}
-                    Congratulations! You unlocked a <strong>FREE Handcrafted Jaipur Silk Potli Bag</strong>!
-                  {% else %}
-                    Add <strong>{{ potli_diff | money }}</strong> more to unlock a <strong>FREE Handcrafted Silk Potli Bag</strong>!
-                  {% endif %}
-                </span>
-              </div>
-              <span class="page-progress-tag">DROP 01 PERK</span>
-            </div>
-            
-            <div class="page-progress-track">
-              <div class="page-progress-fill {% if current_total >= potli_threshold %}unlocked{% endif %}" style="width: {{ potli_percent }}%;"></div>
-            </div>
-            
-            <div class="page-progress-milestones">
-              <div class="page-milestone active">
-                <span class="page-ms-dot">&#10003;</span>
-                <span>Free Express Delivery (All-India)</span>
-              </div>
-              <div class="page-milestone {% if current_total >= potli_threshold %}active{% endif %}">
-                <span class="page-ms-dot">{% if current_total >= potli_threshold %}&#10003;{% else %}&#128274;{% endif %}</span>
-                <span>Complimentary Jaipur Silk Potli (₹2,999)</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Unlocked Silk Potli Card (if threshold reached) -->
-          {% if current_total >= potli_threshold %}
-            <div class="cart-page-gift-card">
-              <div class="cart-page-gift-thumb">🎁</div>
-              <div style="flex: 1;">
-                <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #2E6B38; margin-bottom: 2px;">ATELIER GIFT INCLUDED</div>
-                <div style="font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: #1E1C19;">Handcrafted Jaipur Silk Potli Bag (Worth ₹999)</div>
-                <div style="font-size: 11.5px; color: #6A7E68; margin-top: 2px;">Hand-stitched in pure brocade silk with metallic zari tassels &bull; Auto-packed with your parcel</div>
-              </div>
-              <span style="font-size: 13px; font-weight: 800; color: #2E6B38;">FREE</span>
-            </div>
-          {% endif %}
 
           <!-- Cart Items Container -->
           <div id="cartPageItemsList" class="cart-page-items">
@@ -301,37 +256,11 @@
             
             <h2 class="summary-card-title">Order Summary</h2>
 
-            <!-- Luxury Prepaid Privilege & Perks Banner -->
-            <div class="summary-perk-banner">
-              <div class="summary-perk-top">
-                <span class="summary-perk-tag">&#9889; PREPAID PRIVILEGE</span>
-                <span class="summary-perk-savings">SAVE &#8377;100</span>
-              </div>
-              <div class="summary-perk-title">Instant &#8377;100 Off via UPI &amp; Cards</div>
-              <p class="summary-perk-note">
-                Auto-applied with promo code <strong>USEUPI100</strong> below. Cash on Delivery (COD) is also available at standard price at checkout.
-              </p>
-            </div>
-
-            <!-- Coupon Code Field -->
-            <div class="summary-coupon-row">
-              <input type="text" id="pageCouponCode" placeholder="Promo code (e.g. USEUPI100)" class="summary-coupon-input" value="USEUPI100">
-              <button type="button" id="pageCouponBtn" onclick="applyPageCoupon()" class="summary-coupon-btn">APPLIED</button>
-            </div>
-            <div id="pageCouponFeedback" style="font-size: 11px; color: #2E6B38; font-weight: 600; margin-top: 6px; margin-bottom: 14px; display: block;">
-              &#10003; Code "USEUPI100" applied &bull; &#8377;100 Prepaid discount
-            </div>
-
             <!-- Breakdown Lines -->
             <div class="summary-breakdown">
               <div class="summary-line">
                 <span>Bag Subtotal</span>
                 <span id="pageSubtotal">{{ cart.total_price | money }}</span>
-              </div>
-              
-              <div class="summary-line highlight-green" id="pageDiscountRow">
-                <span>&#9889; Prepaid UPI Discount (USEUPI100)</span>
-                <span id="pageDiscountVal">-&#8377;100</span>
               </div>
 
               <div class="summary-line">
@@ -348,15 +277,16 @@
 
               <div class="summary-line total-line">
                 <span>Total Payable</span>
-                <span id="pageTotal">
-                  {% assign discounted_total = cart.total_price | minus: 10000 %}
-                  {% if discounted_total < 0 %}{% assign discounted_total = 0 %}{% endif %}
-                  {{ discounted_total | money }}
-                </span>
+                <span id="pageTotal">{{ cart.total_price | money }}</span>
               </div>
               
+              <!-- Clean Instant UPI Discount Reminder -->
+              <div style="font-size: 11.5px; color: #166534; background: #EBF7EE; border: 1px solid #BBF7D0; padding: 9px 12px; border-radius: 6px; margin: 12px 0 6px; text-align: center; font-weight: 600; line-height: 1.4;">
+                &#9889; Pay via <strong>UPI</strong> at checkout to get <strong>Flat &#8377;100 Instant Discount</strong>
+              </div>
+
               <div class="summary-methods-badge">
-                <span class="method-tag">UPI / QR</span>
+                <span class="method-tag">UPI / QR (&#8377;100 OFF)</span>
                 <span class="method-tag">Credit / Debit Cards</span>
                 <span class="method-tag">Netbanking</span>
                 <span class="method-tag">Cash on Delivery</span>
@@ -365,7 +295,6 @@
 
             <!-- Checkout CTA Form & Button (Fully integrated with Shopify Checkout & Razorpay) -->
             <form action="/cart" method="post" id="cartPageCheckoutForm" style="margin: 0; padding: 0;">
-              <input type="hidden" name="discount" id="cartFormDiscount" value="USEUPI100">
               <button type="submit" name="checkout" id="pageCheckoutBtn" class="summary-checkout-btn cart__checkout-button" style="width: 100%; border: none; cursor: pointer;">
                 PROCEED TO SECURE CHECKOUT &rarr;
               </button>
@@ -397,48 +326,6 @@
 </div>
 
 <script>
-  var cartTotalCents = {{ cart.total_price }};
-
-  function applyPageCoupon() {
-    var inp = document.getElementById('pageCouponCode');
-    var feedback = document.getElementById('pageCouponFeedback');
-    var btn = document.getElementById('pageCouponBtn');
-    var discountRow = document.getElementById('pageDiscountRow');
-    var totalEl = document.getElementById('pageTotal');
-    var formDiscount = document.getElementById('cartFormDiscount');
-    var code = inp ? inp.value.trim().toUpperCase() : '';
-
-    if (code === 'USEUPI100' || code === 'UPI100' || code === 'SAVE100' || code === 'PREPAID100') {
-      if (btn) btn.textContent = 'APPLIED';
-      if (discountRow) discountRow.style.display = 'flex';
-      var discounted = Math.max(0, cartTotalCents - 10000);
-      if (totalEl) totalEl.textContent = '₹' + Math.round(discounted / 100).toLocaleString('en-IN');
-      if (feedback) {
-        feedback.style.display = 'block';
-        feedback.style.color = '#2E6B38';
-        feedback.innerHTML = '✓ Code "' + code + '" applied &bull; ₹100 Prepaid discount';
-      }
-      if (formDiscount) formDiscount.value = code;
-    } else if (code.length > 0) {
-      if (btn) btn.textContent = 'APPLY';
-      if (feedback) {
-        feedback.style.display = 'block';
-        feedback.style.color = '#2E6B38';
-        feedback.innerHTML = '✓ Code "' + code + '" will be verified and applied at checkout';
-      }
-      if (formDiscount) formDiscount.value = code;
-    } else {
-      // Cleared code
-      if (btn) btn.textContent = 'APPLY';
-      if (discountRow) discountRow.style.display = 'none';
-      if (totalEl) totalEl.textContent = '₹' + Math.round(cartTotalCents / 100).toLocaleString('en-IN');
-      if (feedback) {
-        feedback.style.display = 'none';
-      }
-      if (formDiscount) formDiscount.value = '';
-    }
-  }
-
   function updateCartPageQuantity(lineKey, newQty) {
     fetch('/cart/change.js', {
       method: 'POST',

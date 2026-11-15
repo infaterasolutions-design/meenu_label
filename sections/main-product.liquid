@@ -193,6 +193,31 @@
       <!-- Actions (ADD TO SHOPPING BAG Button & Direct Ordering) -->
       {% form 'product', product, id: 'shopifyProductForm', onsubmit: 'return validateShopifyForm(event)' %}
         <input type="hidden" name="id" id="selectedVariantId" value="">
+
+        <!-- Flipkart / Amazon Inspired Instant UPI Offer Line (Above Add to Bag) -->
+        <div class="pdp-bank-upi-offer">
+          <div class="pdp-bank-upi-inner">
+            <div class="pdp-bank-upi-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                <line x1="2" y1="10" x2="22" y2="10"></line>
+              </svg>
+            </div>
+            <div class="pdp-bank-upi-body">
+              <div class="pdp-bank-upi-headline">
+                <span class="pdp-bank-upi-tag">&#9889; SPECIAL UPI OFFER</span>
+                <span class="pdp-bank-upi-save-badge">SAVE &#8377;100</span>
+              </div>
+              <div class="pdp-bank-upi-text">
+                Pay via <strong>UPI</strong> &amp; get <strong>Flat &#8377;100 Instant Discount</strong> at checkout (GPay, PhonePe, Paytm, QR).
+              </div>
+              <div class="pdp-bank-upi-note">
+                &#10003; Extra &#8377;100 auto-deducted at checkout &bull; Cash on Delivery available at standard price
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="pdp-actions-row">
           <button type="submit" id="pdpAddToCartBtn" class="pdp-btn-primary" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>ADD TO SHOPPING BAG</button>
           <button type="button" id="pdpBuyNowBtn" class="pdp-btn-buy" onclick="buyShopifyProductNow()" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>BUY IT NOW &rarr;</button>
@@ -224,36 +249,6 @@
           </div>
         </div>
       {% endform %}
-
-      <!-- Atelier Offers & Coupon Code Box (Instant Checkout Auto-Discount) -->
-      <div class="pdp-coupon-card" style="background:#FAF8F5; border:1px dashed #D4AF37; border-radius:8px; padding:12px 14px; margin-top:14px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; color:#1A1A1A; display:flex; align-items:center; gap:6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-              <line x1="7" y1="7" x2="7.01" y2="7"></line>
-            </svg>
-            <span>Atelier Offers & Promo Code</span>
-          </div>
-          <span style="background:#EBF7EE; color:#15803D; font-size:10px; font-weight:700; padding:2px 8px; border-radius:12px; letter-spacing:0.04em;">LIVE OFFER</span>
-        </div>
-
-        <!-- Featured Instant Offer -->
-        <div style="display:flex; align-items:center; justify-content:space-between; background:#FFF; border:1px solid rgba(212,175,55,0.35); border-radius:6px; padding:8px 10px; margin-bottom:8px; font-size:12px;">
-          <div>
-            <span style="font-weight:700; color:#1A1A1A; letter-spacing:0.04em;">USEUPI100</span>
-            <span style="color:#666; font-size:11px; margin-left:6px;">Save flat &#8377;100 on Prepaid / UPI</span>
-          </div>
-          <button type="button" onclick="applyPdpCouponCode('USEUPI100')" style="background:none; border:none; color:#B48A28; font-weight:700; font-size:11px; cursor:pointer; text-transform:uppercase; letter-spacing:0.05em; padding:4px 6px;">APPLY</button>
-        </div>
-
-        <!-- Coupon Input Box -->
-        <div style="display:flex; gap:8px;">
-          <input type="text" id="pdpCouponInput" placeholder="Enter coupon code" style="flex:1; padding:9px 12px; border:1px solid #D1D5DB; border-radius:4px; font-size:13px; text-transform:uppercase; letter-spacing:0.05em; background:#FFF; outline:none; color:#1A1A1A;">
-          <button type="button" id="pdpApplyCouponBtn" onclick="applyPdpCouponInput()" style="padding:9px 14px; background:#1A1A1A; color:#FFF; border:none; border-radius:4px; font-size:11px; font-weight:700; letter-spacing:0.06em; cursor:pointer; text-transform:uppercase;">APPLY</button>
-        </div>
-        <div id="pdpCouponStatus" style="font-size:11.5px; font-weight:600; margin-top:6px; display:none;"></div>
-      </div>
 
       <!-- Pincode Checker -->
       <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:14px 16px; margin-top:14px;">
@@ -354,6 +349,13 @@
 
 <!-- Mobile Sticky Action Bar (Flipkart Style: Cart & Buy Now) -->
 <div class="pdp-mobile-sticky-bar" id="pdpMobileStickyBar">
+  <!-- Slim UPI Offer Strip on Mobile Sticky Bar -->
+  <div class="pdp-sticky-offer-strip">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+    </svg>
+    <span>Pay via <strong>UPI</strong> &amp; Get <strong>Flat &#8377;100 OFF</strong> instantly at checkout</span>
+  </div>
   <div class="pdp-sticky-bar-inner">
     
     <!-- Left Mini Cart Icon Button with Live Counter Badge -->
@@ -409,6 +411,92 @@
 </div>
 
 <style>
+  /* Flipkart / Amazon Style Instant UPI Offer Badge */
+  .pdp-bank-upi-offer {
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 14px 0 12px;
+    box-shadow: 0 1px 3px rgba(22, 101, 52, 0.05);
+  }
+  .pdp-bank-upi-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .pdp-bank-upi-icon {
+    margin-top: 2px;
+    background: #DCFCE7;
+    color: #15803D;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .pdp-bank-upi-body {
+    flex: 1;
+  }
+  .pdp-bank-upi-headline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 3px;
+  }
+  .pdp-bank-upi-tag {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #166534;
+  }
+  .pdp-bank-upi-save-badge {
+    background: #15803D;
+    color: #FFFFFF;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 10px;
+    line-height: 1.2;
+  }
+  .pdp-bank-upi-text {
+    font-size: 13px;
+    color: #1E1C19;
+    line-height: 1.4;
+    margin-bottom: 2px;
+  }
+  .pdp-bank-upi-text strong {
+    color: #15803D;
+  }
+  .pdp-bank-upi-note {
+    font-size: 11px;
+    color: #4B5563;
+    line-height: 1.35;
+  }
+
+  /* Slim Mobile Sticky Offer Strip */
+  .pdp-sticky-offer-strip {
+    background: #EBF7EE;
+    color: #166534;
+    font-size: 10.5px;
+    font-weight: 600;
+    text-align: center;
+    padding: 4px 10px;
+    border-bottom: 1px solid #BBF7D0;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pdp-sticky-offer-strip strong {
+    color: #14532D;
+    font-weight: 800;
+  }
+
   /* Gallery Arrows & Counter */
   .pdp-gallery-arrow {
     position: absolute;

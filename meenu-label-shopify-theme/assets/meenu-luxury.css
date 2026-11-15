@@ -8224,3 +8224,90 @@ html, body {
     font-size: 30px !important;
   }
 }
+
+/* Flipkart / Amazon Style Instant UPI Offer Badge */
+.pdp-bank-upi-offer {
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 14px 0 12px;
+  box-shadow: 0 1px 3px rgba(22, 101, 52, 0.05);
+}
+.pdp-bank-upi-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.pdp-bank-upi-icon {
+  margin-top: 2px;
+  background: #DCFCE7;
+  color: #15803D;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pdp-bank-upi-body {
+  flex: 1;
+}
+.pdp-bank-upi-headline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+.pdp-bank-upi-tag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #166534;
+}
+.pdp-bank-upi-save-badge {
+  background: #15803D;
+  color: #FFFFFF;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 10px;
+  line-height: 1.2;
+}
+.pdp-bank-upi-text {
+  font-size: 13px;
+  color: #1E1C19;
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+.pdp-bank-upi-text strong {
+  color: #15803D;
+}
+.pdp-bank-upi-note {
+  font-size: 11px;
+  color: #4B5563;
+  line-height: 1.35;
+}
+
+/* Slim Mobile Sticky Offer Strip */
+.pdp-sticky-offer-strip {
+  background: #EBF7EE;
+  color: #166534;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-align: center;
+  padding: 4px 10px;
+  border-bottom: 1px solid #BBF7D0;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pdp-sticky-offer-strip strong {
+  color: #14532D;
+  font-weight: 800;
+}
+
