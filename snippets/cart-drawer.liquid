@@ -99,6 +99,10 @@
   document.addEventListener('DOMContentLoaded', function() {
     try {
       var saved = sessionStorage.getItem('meenu_applied_coupon');
+      if (saved === 'USEUPI100' || saved === 'UPI100') {
+        sessionStorage.removeItem('meenu_applied_coupon');
+        saved = null;
+      }
       if (saved) {
         var inp = document.getElementById('cartDrawerCouponInput');
         if (inp) inp.value = saved;
