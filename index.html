@@ -5630,9 +5630,13 @@
       <!-- Items dynamically populated -->
     </div>
     <div class="cart-footer">
-      <div style="display: flex; gap: 8px; margin-bottom: 14px;">
-        <input type="text" id="couponCode" placeholder="Promo code (e.g. DEBUT10)" style="flex: 1; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; text-transform: uppercase;">
+      <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+        <input type="text" id="couponCode" placeholder="Enter coupon code" style="flex: 1; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; text-transform: uppercase;">
         <button onclick="applyCoupon()" style="padding: 10px 16px; background: var(--text-main); color: #FFF; border: none; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase;">Apply</button>
+      </div>
+      <div id="couponFeedback" style="font-size: 11px; font-weight: 600; margin-bottom: 10px; display: none;"></div>
+      <div style="font-size: 11px; color: #166534; background: #EBF7EE; border: 1px solid #BBF7D0; padding: 6px 10px; border-radius: 4px; margin-bottom: 12px; text-align: center; font-weight: 600; line-height: 1.4;">
+        ⚡ Pay via <strong>UPI</strong> at checkout to get <strong>Flat &#8377;100 Instant Discount</strong>
       </div>
       <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; color: var(--text-muted);">
         <span>Subtotal</span>
