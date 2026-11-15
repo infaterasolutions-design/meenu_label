@@ -1694,6 +1694,9 @@
       validateShopifyForm();
       return;
     }
+    if (typeof window.showMeenuCheckoutTransition === 'function') {
+      window.showMeenuCheckoutTransition();
+    }
     var mainBuyBtn = document.getElementById('pdpBuyNowBtn');
     if (mainBuyBtn) {
       mainBuyBtn.disabled = true;

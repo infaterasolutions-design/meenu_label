@@ -310,7 +310,7 @@
             </div>
 
             <!-- Checkout CTA Form & Button (Fully integrated with Shopify Checkout & Razorpay) -->
-            <form action="/cart" method="post" id="cartPageCheckoutForm" style="margin: 0; padding: 0;">
+            <form action="/cart" method="post" id="cartPageCheckoutForm" onsubmit="if(typeof window.showMeenuCheckoutTransition==='function') window.showMeenuCheckoutTransition();" style="margin: 0; padding: 0;">
               <input type="hidden" name="discount" id="cartFormDiscount" value="">
               <button type="submit" name="checkout" id="pageCheckoutBtn" class="summary-checkout-btn cart__checkout-button" style="width: 100%; border: none; cursor: pointer;">
                 PROCEED TO SECURE CHECKOUT &rarr;

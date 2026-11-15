@@ -53,7 +53,7 @@
     <div style="font-size: 11px; color: #166534; background: #EBF7EE; border: 1px solid #BBF7D0; padding: 6px 10px; border-radius: 4px; margin-bottom: 12px; text-align: center; font-weight: 600; line-height: 1.4;">
       ⚡ Pay via <strong>UPI</strong> at checkout to get <strong>Flat &#8377;100 Instant Discount</strong>
     </div>
-    <form action="/cart" method="post" id="cartDrawerCheckoutForm" style="margin: 0; padding: 0;">
+    <form action="/cart" method="post" id="cartDrawerCheckoutForm" onsubmit="if(typeof window.showMeenuCheckoutTransition==='function') window.showMeenuCheckoutTransition();" style="margin: 0; padding: 0;">
       <input type="hidden" name="discount" id="cartDrawerDiscountInput" value="">
       <button type="submit" name="checkout" class="modal-btn-primary cart__checkout-button" style="width: 100%; text-align: center; display: block; box-sizing: border-box; text-decoration: none; border: none; cursor: pointer;">
         PROCEED TO CHECKOUT &rarr;

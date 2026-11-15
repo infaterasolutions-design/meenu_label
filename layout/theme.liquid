@@ -92,7 +92,61 @@
     {% render 'whatsapp-concierge' %}
     {% render 'snitch-login-modal' %}
 
+    <!-- Atelier Instant Checkout Transition Overlay & Double-Click Shield -->
+    <div id="meenuCheckoutTransition" style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(26,24,22,0.88); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center; flex-direction:column; text-align:center; color:#FAF8F5; font-family:'Plus Jakarta Sans',sans-serif; padding:24px;">
+      <div style="width:48px; height:48px; border:3px solid rgba(212,175,55,0.2); border-top-color:#D4AF37; border-radius:50%; animation:meenuSpin 0.75s cubic-bezier(0.68,-0.55,0.27,1.55) infinite; margin-bottom:18px;"></div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:600; letter-spacing:0.04em; margin-bottom:8px; color:#FFFFFF;">Securing Atelier Checkout</div>
+      <div style="font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:#D4AF37; font-weight:500;">Connecting Express 1-Page Gateway &bull; UPI &bull; COD</div>
+    </div>
+    <style>
+      @keyframes meenuSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+
     <script src="{{ 'meenu-theme.js' | asset_url }}" defer="defer"></script>
+
+    <script>
+      // Global Instant Checkout Transition Handler
+      window.showMeenuCheckoutTransition = function() {
+        var el = document.getElementById('meenuCheckoutTransition');
+        if (el) el.style.display = 'flex';
+      };
+
+      // Cross-Device Shopify 1-Page Checkout & Payment Bundle Preloader
+      (function() {
+        function prefetchCheckoutBundle() {
+          var coreCheckoutAssets = [
+            '/cdn/shopifycloud/checkout-web/assets/c1/polyfills.BmwiweTg.js',
+            '/cdn/shopifycloud/checkout-web/assets/c1/app.ARMkEK2u.js',
+            '/cdn/shopifycloud/checkout-web/assets/c1/630ba094.Cz6IQlUg.js',
+            '/cdn/shopifycloud/checkout-web/assets/c1/4509beb0.Mtk3A2Tn.js',
+            '/cdn/shopifycloud/checkout-web/assets/c1/6ec9a0fa.IGk8g30z.js',
+            '/cdn/shopifycloud/checkout-web/assets/c1/f025431a.BlsbPO0-.js',
+            '/cdn/shopifycloud/checkout-web/assets/c1/assets/app.CGRs8DQS.css',
+            '/cdn/shopifycloud/checkout-web/assets/c1/assets/OnePage.mSY95ESL.css',
+            '/cdn/shopifycloud/checkout-web/assets/c1/assets/deferred-boot.DGZtCWKG.css',
+            'https://cdn.shopify.com/s/files/1/0722/3325/4983/files/meenu_logo_official_x320.png',
+            'https://checkout.razorpay.com/v1/checkout.js',
+            'https://connect.facebook.net/en_US/fbevents.js'
+          ];
+          coreCheckoutAssets.forEach(function(src) {
+            var l = document.createElement('link');
+            l.rel = 'prefetch';
+            l.href = src;
+            l.as = src.endsWith('.css') ? 'style' : (src.endsWith('.png') ? 'image' : 'script');
+            l.crossOrigin = '';
+            document.head.appendChild(l);
+          });
+        }
+
+        if (window.requestIdleCallback) {
+          window.requestIdleCallback(function() { setTimeout(prefetchCheckoutBundle, 600); });
+        } else {
+          setTimeout(prefetchCheckoutBundle, 1000);
+        }
+      })();
 
     <script>
       // Non-blocking patron wishlist & cart cleanup on logout
