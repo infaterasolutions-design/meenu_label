@@ -192,7 +192,7 @@
 
       <!-- Actions (ADD TO SHOPPING BAG Button & Direct Ordering) -->
       {% form 'product', product, id: 'shopifyProductForm', onsubmit: 'return validateShopifyForm(event)' %}
-        <input type="hidden" name="id" id="selectedVariantId" value="">
+        <input type="hidden" name="id" id="selectedVariantId" value="{{ product.selected_or_first_available_variant.id }}">
 
         <!-- Flipkart / Amazon Inspired Instant UPI Offer Line (Above Add to Bag) -->
         <div class="pdp-bank-upi-offer">
@@ -220,7 +220,7 @@
 
         <div class="pdp-actions-row">
           <button type="submit" id="pdpAddToCartBtn" class="pdp-btn-primary" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>ADD TO SHOPPING BAG</button>
-          <button type="button" id="pdpBuyNowBtn" class="pdp-btn-buy" onclick="buyShopifyProductNow()" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>BUY IT NOW &rarr;</button>
+          <button type="button" name="checkout" id="pdpBuyNowBtn" class="pdp-btn-buy shopify-payment-button__button--unbranded" onclick="buyShopifyProductNow()" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>BUY IT NOW &rarr;</button>
 
           <!-- Direct WhatsApp Concierge Restock Button (Option A) -->
           <a id="pdpNotifyWhatsAppBtn" class="pdp-btn-notify-whatsapp" href="https://wa.me/{{ settings.whatsapp_number | default: '918511616133' }}?text={{ 'Hi Meenu Label! Please notify me when "' | append: product.title | append: '" in Size ' | append: product.selected_or_first_available_variant.title | append: ' is back in stock. Please share restock timeline.' | url_encode }}" target="_blank" {% if product.selected_or_first_available_variant.available %}style="display:none;"{% endif %}>
@@ -414,7 +414,8 @@
 
     <!-- 2. Buy Now Button (Flipkart Signature Amber-Gold Highlight with Price) -->
     <button type="button" 
-            class="pdp-sticky-btn-buy" 
+            name="checkout"
+            class="pdp-sticky-btn-buy shopify-payment-button__button--unbranded" 
             id="pdpStickyBuyBtn"
             onclick="buyShopifyProductNow()"
             {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>
