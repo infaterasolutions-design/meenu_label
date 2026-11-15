@@ -172,7 +172,7 @@
         <div class="pdp-size-pills" id="shopifySizeGrid">
           {% for variant in product.variants %}
             <button type="button" 
-                    class="pdp-size-btn {% unless variant.available %}sold-out{% endunless %}" 
+                    class="pdp-size-btn {% if variant.id == product.selected_or_first_available_variant.id %}selected{% endif %} {% unless variant.available %}sold-out{% endunless %}" 
                     id="pdpSizeBtn_{{ variant.title }}" 
                     data-variant-id="{{ variant.id }}" 
                     data-size-title="{{ variant.title }}" 
@@ -1122,8 +1122,8 @@
 </style>
 
 <script>
-  var currentSelectedVariantId = null;
-  var currentSelectedSizeTitle = null;
+  var currentSelectedVariantId = {{ product.selected_or_first_available_variant.id | default: 'null' }};
+  var currentSelectedSizeTitle = '{{ product.selected_or_first_available_variant.title | default: "M" }}';
 
   var shopifyGalleryImages = [
     {% for image in product.images %}
