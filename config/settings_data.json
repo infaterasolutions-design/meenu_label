@@ -52,11 +52,6 @@
           "delivery_button_text_color": "#FFFFFF"
         }
       },
-      "3557650678667880288": {
-        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/magicx-script/c13c688d-5c45-4054-b95f-1edd63faa705",
-        "disabled": true,
-        "settings": {}
-      },
       "11320579242087869063": {
         "type": "shopify://apps/codify-order-cancel/blocks/cancel_button/f7f8a269-b6ea-461a-8e1b-d61167f44926",
         "disabled": false,
@@ -84,6 +79,11 @@
       },
       "16959219897279344047": {
         "type": "shopify://apps/real-time-cart-sync/blocks/cart-sync/019db9d7-c4af-7951-b4f9-96362b302508",
+        "disabled": false,
+        "settings": {}
+      },
+      "3557650678667880288": {
+        "type": "shopify://apps/razorpay-cod-magic-checkout/blocks/magicx-script/c13c688d-5c45-4054-b95f-1edd63faa705",
         "disabled": false,
         "settings": {}
       }
