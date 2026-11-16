@@ -1123,10 +1123,11 @@ var activeNotifyProduct = {
   title: '',
   image: '',
   price: '',
-  channel: 'whatsapp'
+  channel: 'whatsapp',
+  isComingSoon: false
 };
 
-function openNotifyMeModal(productId, size, title, image, price) {
+function openNotifyMeModal(productId, size, title, image, price, isComingSoon) {
   var backdrop = document.getElementById('meenuNotifyBackdrop');
   if (!backdrop) return;
 
@@ -1136,6 +1137,7 @@ function openNotifyMeModal(productId, size, title, image, price) {
   activeNotifyProduct.image = image || '';
   activeNotifyProduct.price = price || '';
   activeNotifyProduct.channel = 'whatsapp';
+  activeNotifyProduct.isComingSoon = !!isComingSoon;
 
   // Set modal snapshot info
   var titleEl = document.getElementById('notifyProductTitle');
@@ -1148,6 +1150,32 @@ function openNotifyMeModal(productId, size, title, image, price) {
   if (imgEl && activeNotifyProduct.image) {
     imgEl.src = activeNotifyProduct.image;
     imgEl.alt = activeNotifyProduct.title;
+  }
+
+  // Adjust headings & tags for Coming Soon vs Restock
+  var atelierTag = document.querySelector('.notify-atelier-tag');
+  var modalTitle = document.getElementById('notifyModalTitle');
+  var subtitle = document.querySelector('.notify-subtitle');
+  var statusBadge = document.querySelector('.notify-stock-status');
+
+  if (activeNotifyProduct.isComingSoon) {
+    if (atelierTag) atelierTag.textContent = 'CHANDIGARH ATELIER VIP LAUNCH PREVIEW';
+    if (modalTitle) modalTitle.textContent = 'Notify Me When Launched';
+    if (subtitle) subtitle.textContent = 'Strictly limited drop. Join the VIP priority waitlist to be alerted first when this piece officially launches.';
+    if (statusBadge) {
+      statusBadge.textContent = 'COMING SOON';
+      statusBadge.style.background = '#8A6D3B';
+      statusBadge.style.color = '#FFFFFF';
+    }
+  } else {
+    if (atelierTag) atelierTag.textContent = 'CHANDIGARH ATELIER RESTOCK WAITLIST';
+    if (modalTitle) modalTitle.textContent = 'Notify Me When Available';
+    if (subtitle) subtitle.textContent = 'Strictly limited atelier runs. Join the priority waitlist to be alerted first when this silhouette is re-crafted.';
+    if (statusBadge) {
+      statusBadge.textContent = 'SOLD OUT';
+      statusBadge.style.background = '#8B2635';
+      statusBadge.style.color = '#FFFFFF';
+    }
   }
 
   // Update size pills
@@ -1181,7 +1209,9 @@ function openNotifyMeModal(productId, size, title, image, price) {
   if (submitBtn) {
     submitBtn.disabled = false;
     var submitText = document.getElementById('notifySubmitText');
-    if (submitText) submitText.innerHTML = 'NOTIFY ME WHEN RESTOCKED &rarr;';
+    if (submitText) {
+      submitText.innerHTML = activeNotifyProduct.isComingSoon ? 'NOTIFY ME ON LAUNCH &rarr;' : 'NOTIFY ME WHEN RESTOCKED &rarr;';
+    }
   }
 
   // Update concierge WhatsApp link
@@ -1235,13 +1265,16 @@ function switchNotifyTab(channel) {
 function updateNotifyConciergeLink() {
   var conciergeBtn = document.getElementById('notifyConciergeWhatsAppBtn');
   if (conciergeBtn) {
-    var msg = 'Hi Meenu Label! I would like to reserve or be notified when "' + (activeNotifyProduct.title || 'this ensemble') + '" in Size ' + (activeNotifyProduct.size || 'M') + ' is crafted again. Please share restock timeline.';
+    var msg = activeNotifyProduct.isComingSoon
+      ? 'Hi Meenu Label! I would like to reserve or be notified when Coming Soon piece "' + (activeNotifyProduct.title || 'this silhouette') + '" in Size ' + (activeNotifyProduct.size || 'M') + ' launches. Please share drop details.'
+      : 'Hi Meenu Label! I would like to reserve or be notified when "' + (activeNotifyProduct.title || 'this ensemble') + '" in Size ' + (activeNotifyProduct.size || 'M') + ' is crafted again. Please share restock timeline.';
     conciergeBtn.href = 'https://wa.me/918511616133?text=' + encodeURIComponent(msg);
   }
 }
 
 function submitNotifyMeRequest() {
   var channel = activeNotifyProduct.channel;
+  var isComing = !!activeNotifyProduct.isComingSoon;
   var contactValue = '';
 
   if (channel === 'whatsapp') {
@@ -1273,7 +1306,7 @@ function submitNotifyMeRequest() {
   var submitBtn = document.getElementById('notifySubmitBtn');
   var submitText = document.getElementById('notifySubmitText');
   if (submitBtn) submitBtn.disabled = true;
-  if (submitText) submitText.innerHTML = 'RESERVING WAITLIST...';
+  if (submitText) submitText.innerHTML = isComing ? 'RESERVING LAUNCH WAITLIST...' : 'RESERVING WAITLIST...';
 
   // Save to localStorage
   try {
@@ -1284,6 +1317,7 @@ function submitNotifyMeRequest() {
       size: activeNotifyProduct.size,
       channel: channel,
       contact: contactValue,
+      type: isComing ? 'coming_soon' : 'restock',
       timestamp: new Date().toISOString()
     });
     localStorage.setItem('meenu_restock_alerts', JSON.stringify(alerts));
@@ -1291,23 +1325,27 @@ function submitNotifyMeRequest() {
 
   // Direct WhatsApp Concierge (Option A): Open WhatsApp chat directly so the merchant receives phone number & request!
   if (channel === 'whatsapp') {
-    var waMsg = 'Hi Meenu Label! My contact number is ' + contactValue + '. Please notify me when "' + (activeNotifyProduct.title || 'this silhouette') + '" in Size ' + (activeNotifyProduct.size || 'M') + ' is back in stock. Please share restock timeline.';
+    var waMsg = isComing
+      ? 'Hi Meenu Label! My contact number is ' + contactValue + '. Please notify me when Coming Soon piece "' + (activeNotifyProduct.title || 'this silhouette') + '" in Size ' + (activeNotifyProduct.size || 'M') + ' officially drops. Please share launch details.'
+      : 'Hi Meenu Label! My contact number is ' + contactValue + '. Please notify me when "' + (activeNotifyProduct.title || 'this silhouette') + '" in Size ' + (activeNotifyProduct.size || 'M') + ' is back in stock. Please share restock timeline.';
     var waUrl = 'https://wa.me/918511616133?text=' + encodeURIComponent(waMsg);
     window.open(waUrl, '_blank');
   }
 
   // Also submit to Shopify native /contact endpoint in the background
   try {
+    var tagPrefix = isComing ? 'coming-soon-waitlist' : 'restock-waitlist';
+    var notePrefix = isComing ? 'Coming Soon VIP Waitlist for ' : 'Restock Alert Request for ';
     var formData = new FormData();
     formData.append('form_type', 'contact');
     formData.append('utf8', '✓');
-    formData.append('contact[tags]', 'restock-waitlist, ' + (activeNotifyProduct.title || '') + ', Size ' + (activeNotifyProduct.size || ''));
-    formData.append('contact[body]', 'Restock Alert Request for ' + (activeNotifyProduct.title || '') + ' (Size ' + (activeNotifyProduct.size || '') + '). Customer Contact: ' + contactValue);
+    formData.append('contact[tags]', tagPrefix + ', ' + (activeNotifyProduct.title || '') + ', Size ' + (activeNotifyProduct.size || ''));
+    formData.append('contact[body]', notePrefix + (activeNotifyProduct.title || '') + ' (Size ' + (activeNotifyProduct.size || '') + '). Customer Contact: ' + contactValue);
     if (channel === 'email') {
       formData.append('contact[email]', contactValue);
     } else {
       var safeDigits = contactValue.replace(/\D/g, '');
-      formData.append('contact[email]', 'restock-' + safeDigits + '@meenulabel.com');
+      formData.append('contact[email]', (isComing ? 'launch-' : 'restock-') + safeDigits + '@meenulabel.com');
       formData.append('contact[note][WhatsApp_Phone]', contactValue);
     }
     fetch('/contact', { method: 'POST', body: formData }).catch(function(){});
@@ -1317,22 +1355,34 @@ function submitNotifyMeRequest() {
     var formView = document.getElementById('notifyFormView');
     var successView = document.getElementById('notifySuccessView');
     var sizeDisplay = document.getElementById('notifySuccessSize');
+    var successTitle = document.querySelector('.notify-success-title');
 
     if (sizeDisplay) sizeDisplay.textContent = activeNotifyProduct.size;
     if (formView) formView.style.display = 'none';
     if (successView) successView.style.display = 'block';
 
-    if (channel === 'whatsapp') {
-      var successMsg = document.getElementById('notifySuccessMsg');
-      if (successMsg) {
-        successMsg.innerHTML = 'Connecting with our Chandigarh stylist via WhatsApp! We have recorded your request for Size <strong>' + activeNotifyProduct.size + '</strong> and will message you the moment it is ready.';
+    if (successTitle) {
+      successTitle.textContent = isComing ? "You're On The VIP Launch List!" : "You're On The Priority List!";
+    }
+
+    var successMsg = document.getElementById('notifySuccessMsg');
+    if (successMsg) {
+      if (channel === 'whatsapp') {
+        successMsg.innerHTML = isComing
+          ? 'Connecting with our Chandigarh stylist via WhatsApp! We have recorded your VIP Launch alert for Size <strong>' + activeNotifyProduct.size + '</strong> and will message you the moment it officially drops.'
+          : 'Connecting with our Chandigarh stylist via WhatsApp! We have recorded your request for Size <strong>' + activeNotifyProduct.size + '</strong> and will message you the moment it is ready.';
+      } else {
+        successMsg.innerHTML = isComing
+          ? 'We have recorded your VIP Launch alert for Size <strong>' + activeNotifyProduct.size + '</strong>. Our Chandigarh atelier will email you the moment early access opens.'
+          : 'We have registered your restock alert for Size <strong>' + activeNotifyProduct.size + '</strong>. Our Chandigarh atelier will notify you as soon as this piece is ready.';
       }
     }
 
+    var toastMsg = isComing ? 'VIP Launch list confirmed for Size ' + activeNotifyProduct.size + ' ✨' : 'Waitlist confirmed for Size ' + activeNotifyProduct.size + ' ✨';
     if (typeof showMeenuToast === 'function') {
-      showMeenuToast('Waitlist confirmed for Size ' + activeNotifyProduct.size + ' ✨');
+      showMeenuToast(toastMsg);
     } else if (typeof showToast === 'function') {
-      showToast('Waitlist confirmed for Size ' + activeNotifyProduct.size + ' ✨');
+      showToast(toastMsg);
     }
   }, 400);
 }
