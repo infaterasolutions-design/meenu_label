@@ -79,6 +79,13 @@
         <input type="text" id="cartDrawerCouponInput" placeholder="Enter coupon code" style="flex: 1; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; background: #FFF; outline: none; color: #1E1C19;">
         <button type="button" id="cartDrawerCouponBtn" onclick="applyCartDrawerCoupon()" style="padding: 8px 14px; background: #1E1C19; color: #FFF; border: none; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase;">APPLY</button>
       </div>
+      <div style="display:flex; align-items:center; gap:6px; margin-top:6px;">
+        <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Available Offer:</span>
+        <button type="button" onclick="quickApplyDrawerCoupon('FIRST500')" style="background:#FAF8F5; border:1px dashed #D4AF37; border-radius:12px; padding:2px 8px; font-size:10px; font-weight:700; color:#1E1C19; cursor:pointer; display:inline-flex; align-items:center; gap:3px;">
+          <span>✨ FIRST500</span>
+          <span style="color:#B48A28; font-size:9.5px;">(FLAT ₹500 OFF)</span>
+        </button>
+      </div>
       <div id="cartDrawerCouponFeedback" style="font-size: 11px; font-weight: 600; margin-top: 4px; display: none;"></div>
     </div>
 
@@ -98,6 +105,12 @@
 </div>
 
 <script>
+  function quickApplyDrawerCoupon(code) {
+    var inp = document.getElementById('cartDrawerCouponInput');
+    if (inp) inp.value = code;
+    applyCartDrawerCoupon();
+  }
+
   function applyCartDrawerCoupon() {
     var inp = document.getElementById('cartDrawerCouponInput');
     var feedback = document.getElementById('cartDrawerCouponFeedback');

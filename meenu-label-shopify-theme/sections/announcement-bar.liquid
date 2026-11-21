@@ -4,14 +4,25 @@
     <div class="ann-left">
       <span>&#9889; DEBUT DROP 01 LIVE &bull; CHANDIGARH ATELIER</span>
     </div>
-    <div class="ann-center">
-      <div class="upi-ann-badge" onclick="applyGlobalCoupon('USEUPI100')" style="cursor:pointer;" title="Click to auto-apply ₹100 discount">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:4px;">
-          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-          <line x1="1" y1="10" x2="23" y2="10"></line>
-        </svg>
-        <span>PAY VIA UPI &bull; GET INSTANT &#8377;100 OFF</span>
-        <span class="upi-code-pill">CODE: USEUPI100</span>
+    <div class="ann-center" id="annDesktopCenter" style="position:relative; height:24px; min-width:320px; display:flex; align-items:center; justify-content:center;">
+      <!-- Desktop Item 1: FIRST500 Hero Offer -->
+      <div class="ann-desk-item active" onclick="applyGlobalCoupon('FIRST500')" style="cursor:pointer;" title="Click to auto-apply ₹500 discount">
+        <div class="upi-ann-badge">
+          <span style="font-size:12px; margin-right:3px;">✨</span>
+          <span>FLAT &#8377;500 OFF ON FIRST ORDER</span>
+          <span class="upi-code-pill">CODE: FIRST500</span>
+        </div>
+      </div>
+      <!-- Desktop Item 2: UPI Extra Discount -->
+      <div class="ann-desk-item" onclick="applyGlobalCoupon('USEUPI100')" style="cursor:pointer;" title="Click to auto-apply ₹100 discount">
+        <div class="upi-ann-badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+          <span>PAY VIA UPI &bull; GET EXTRA &#8377;100 OFF</span>
+          <span class="upi-code-pill">CODE: USEUPI100</span>
+        </div>
       </div>
     </div>
     <div class="ann-right">
@@ -22,29 +33,38 @@
 
   <!-- Mobile Auto-Slider Ticker: Cycles smoothly between key updates -->
   <div class="ann-mobile-ticker" id="annMobileTicker">
-    <!-- Item 1: UPI Discount -->
-    <div class="ticker-item active" onclick="applyGlobalCoupon('USEUPI100')" style="cursor:pointer;" title="Click to auto-apply ₹100 discount">
+    <!-- Item 1: FIRST500 Hero Discount -->
+    <div class="ticker-item active" onclick="applyGlobalCoupon('FIRST500')" style="cursor:pointer;" title="Click to auto-apply ₹500 discount">
+      <div class="upi-ann-badge" style="margin: 0 auto;">
+        <span style="font-size:11px; margin-right:3px;">✨</span>
+        <span>FLAT &#8377;500 OFF &bull; USE CODE:</span>
+        <span class="upi-code-pill">FIRST500</span>
+      </div>
+    </div>
+
+    <!-- Item 2: UPI Extra Discount -->
+    <div class="ticker-item" onclick="applyGlobalCoupon('USEUPI100')" style="cursor:pointer;" title="Click to auto-apply ₹100 discount">
       <div class="upi-ann-badge" style="margin: 0 auto;">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;">
           <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
           <line x1="1" y1="10" x2="23" y2="10"></line>
         </svg>
-        <span>PAY VIA UPI &bull; GET INSTANT &#8377;100 OFF</span>
+        <span>PAY VIA UPI &bull; GET EXTRA &#8377;100 OFF</span>
         <span class="upi-code-pill">CODE: USEUPI100</span>
       </div>
     </div>
 
-    <!-- Item 2: Chandigarh Atelier -->
+    <!-- Item 3: Chandigarh Atelier -->
     <div class="ticker-item">
       <span>&#9889; DEBUT DROP 01 LIVE &bull; CHANDIGARH ATELIER</span>
     </div>
 
-    <!-- Item 3: Free Pan-India Shipping -->
+    <!-- Item 4: Free Pan-India Shipping -->
     <div class="ticker-item">
       <span>&#9992;&#65039; FREE PAN-INDIA EXPRESS DELIVERY &bull; NO MINIMUM</span>
     </div>
 
-    <!-- Item 4: Size & 7-Day Exchange -->
+    <!-- Item 5: Size & 7-Day Exchange -->
     <div class="ticker-item" onclick="openSizeGuideModal()" style="cursor: pointer;">
       <span>&#128207; TRUE TO SIZE &bull; 7-DAY EASY SIZE EXCHANGE</span>
     </div>
@@ -57,6 +77,25 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
+  }
+  .ann-desk-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+  }
+  .ann-desk-item.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
   }
   .ann-mobile-ticker {
     display: none;
@@ -106,7 +145,35 @@
 </style>
 
 <script>
+  window.applyGlobalCoupon = window.applyGlobalCoupon || function(code) {
+    if (!code) return;
+    code = code.trim().toUpperCase();
+    try {
+      sessionStorage.setItem('meenu_applied_coupon', code);
+      if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).catch(function() {});
+      }
+    } catch(e) {}
+    if (typeof showMeenuToast === 'function') {
+      showMeenuToast('✓ Code "' + code + '" applied! Auto-discounted at checkout.');
+    } else {
+      alert('✓ Code "' + code + '" applied! Auto-discounted at checkout.');
+    }
+  };
+
   document.addEventListener('DOMContentLoaded', function() {
+    // Desktop center ticker rotation
+    var deskItems = document.querySelectorAll('#annDesktopCenter .ann-desk-item');
+    if (deskItems && deskItems.length > 1) {
+      var deskIdx = 0;
+      setInterval(function() {
+        deskItems[deskIdx].classList.remove('active');
+        deskIdx = (deskIdx + 1) % deskItems.length;
+        deskItems[deskIdx].classList.add('active');
+      }, 3500);
+    }
+
+    // Mobile ticker rotation
     var items = document.querySelectorAll('#annMobileTicker .ticker-item');
     if (!items || items.length < 2) return;
     var currentIndex = 0;
