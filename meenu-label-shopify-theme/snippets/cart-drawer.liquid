@@ -5,6 +5,38 @@
     <button type="button" onclick="toggleCartDrawer()" style="background: none; border: none; font-size: 26px; cursor: pointer; color: var(--text-main); line-height: 1; padding: 4px;" aria-label="Close Bag">&times;</button>
   </div>
 
+  <!-- Cart Progress Bar / Tiered Goals -->
+  {% assign cart_total_rupees = cart.total_price | divided_by: 100.0 %}
+  {% assign tier_goal_rupees = 4999.0 %}
+  {% assign progress_pct = cart_total_rupees | times: 100.0 | divided_by: tier_goal_rupees %}
+  {% if progress_pct > 100 %}
+    {% assign progress_pct = 100 %}
+  {% endif %}
+  {% assign remaining_for_tier = tier_goal_rupees | minus: cart_total_rupees %}
+
+  <div class="cart-drawer-goal-wrap" id="cartDrawerGoalWrap" style="background: #FAF8F5; border-bottom: 1px solid var(--border-color); padding: 12px 18px;">
+    <div id="cartDrawerGoalText" style="font-size: 11.5px; font-weight: 600; color: #1C1B1A; line-height: 1.4; margin-bottom: 8px;">
+      {% if cart.item_count == 0 %}
+        🚚 <strong>Free Express Delivery</strong> unlocked on all orders across India!
+      {% elsif cart_total_rupees >= tier_goal_rupees %}
+        🎉 <strong>VIP Privilege Unlocked!</strong> Flat &#8377;800 OFF auto-applies on your order!
+      {% else %}
+        ✨ Add <strong>&#8377;{{ remaining_for_tier | round }}</strong> more (1 more suit) to unlock <strong>Flat &#8377;800 OFF</strong>!
+      {% endif %}
+    </div>
+    <!-- Progress Bar Track -->
+    <div style="background: #E8E4DE; height: 6px; border-radius: 999px; overflow: hidden; position: relative;">
+      <div id="cartDrawerProgressBar" style="background: linear-gradient(90deg, #D4AF37 0%, #15803D 100%); height: 100%; border-radius: 999px; width: {{ progress_pct }}%; transition: width 0.4s ease;"></div>
+    </div>
+    <!-- Milestones -->
+    <div style="display: flex; justify-content: space-between; font-size: 10px; color: #7A7269; margin-top: 6px; font-weight: 500;">
+      <span style="color: #15803D; font-weight: 700;">&#10003; Free Express Air (&#8377;0)</span>
+      <span id="cartDrawerMilestone800" style="{% if cart_total_rupees >= tier_goal_rupees %}color: #15803D; font-weight: 700;{% else %}color: #7A7269;{% endif %}">
+        {% if cart_total_rupees >= tier_goal_rupees %}&#10003; Flat &#8377;800 OFF Unlocked{% else %}&#8377;800 OFF at &#8377;4,999{% endif %}
+      </span>
+    </div>
+  </div>
+
   <div class="cart-body" id="cartDrawerBody">
     {% if cart.item_count > 0 %}
       {% for item in cart.items %}
@@ -53,7 +85,7 @@
     <div style="font-size: 11px; color: #166534; background: #EBF7EE; border: 1px solid #BBF7D0; padding: 6px 10px; border-radius: 4px; margin-bottom: 12px; text-align: center; font-weight: 600; line-height: 1.4;">
       ⚡ Pay via <strong>UPI</strong> at checkout to get <strong>Flat &#8377;100 Instant Discount</strong>
     </div>
-    <form action="/cart" method="post" id="cartDrawerCheckoutForm" style="margin: 0; padding: 0;">
+    <form action="/cart" method="post" id="cartDrawerCheckoutForm" onsubmit="if(typeof window.showMeenuCheckoutTransition==='function') window.showMeenuCheckoutTransition();" style="margin: 0; padding: 0;">
       <input type="hidden" name="discount" id="cartDrawerDiscountInput" value="">
       <button type="submit" name="checkout" class="modal-btn-primary cart__checkout-button" style="width: 100%; text-align: center; display: block; box-sizing: border-box; text-decoration: none; border: none; cursor: pointer;">
         PROCEED TO CHECKOUT &rarr;

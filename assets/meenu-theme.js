@@ -318,6 +318,38 @@ function updateCartUI(cart) {
   var subtotalEl = document.getElementById('cartDrawerSubtotal');
   if (subtotalEl) subtotalEl.textContent = formatMoney(cart.total_price);
 
+  // 4b. Tiered Goal Progress Bar in Cart Drawer
+  var goalText = document.getElementById('cartDrawerGoalText');
+  var progressBar = document.getElementById('cartDrawerProgressBar');
+  var milestone800 = document.getElementById('cartDrawerMilestone800');
+  if (goalText && progressBar) {
+    var totalRupees = (cart.total_price || 0) / 100;
+    var tierGoal = 4999;
+    var progressPct = Math.min(100, Math.round((totalRupees / tierGoal) * 100));
+    progressBar.style.width = progressPct + '%';
+    if ((cart.item_count || 0) === 0) {
+      goalText.innerHTML = '🚚 <strong>Free Express Delivery</strong> unlocked on all orders across India!';
+      if (milestone800) {
+        milestone800.style.color = '#7A7269';
+        milestone800.innerHTML = '&#8377;800 OFF at &#8377;4,999';
+      }
+    } else if (totalRupees >= tierGoal) {
+      goalText.innerHTML = '🎉 <strong>VIP Privilege Unlocked!</strong> Flat &#8377;800 OFF auto-applies on your order!';
+      if (milestone800) {
+        milestone800.style.color = '#15803D';
+        milestone800.style.fontWeight = '700';
+        milestone800.innerHTML = '&#10003; Flat &#8377;800 OFF Unlocked';
+      }
+    } else {
+      var remaining = Math.round(tierGoal - totalRupees);
+      goalText.innerHTML = '✨ Add <strong>&#8377;' + remaining.toLocaleString('en-IN') + '</strong> more (1 more suit) to unlock <strong>Flat &#8377;800 OFF</strong>!';
+      if (milestone800) {
+        milestone800.style.color = '#7A7269';
+        milestone800.innerHTML = '&#8377;800 OFF at &#8377;4,999';
+      }
+    }
+  }
+
   // 5. Cart line items body
   var bodyEl = document.getElementById('cartDrawerBody');
   var footerEl = document.getElementById('cartDrawerFooter');

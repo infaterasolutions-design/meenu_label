@@ -17,9 +17,29 @@
     <!-- Left: Visual Gallery -->
     <div class="pdp-gallery-col">
       <div class="pdp-main-image-wrap" id="pdpMainImageWrap">
+        {% assign is_coming_soon = false %}
+        {% if product.tags contains 'coming-soon' or product.tags contains 'coming soon' or product.tags contains 'Coming Soon' or product.tags contains 'Coming-Soon' %}
+          {% assign is_coming_soon = true %}
+        {% endif %}
         <div class="pdp-gallery-badges">
-          <span class="pdp-badge-pill" id="pdpBadgePill">{% if product.tags contains 'festive' %}FLAGSHIP HERO{% else %}DROP 01 STAR{% endif %}</span>
-          <span class="pdp-badge-pill pdp-badge-gold" id="pdpCounterPill">{% if product.images.size > 1 %}1 / {{ product.images.size }}{% else %}STRICTLY 3 PIECES CRAFTED{% endif %}</span>
+          <span class="pdp-badge-pill" id="pdpBadgePill">
+            {% if is_coming_soon %}
+              COMING SOON &bull; ATELIER PREVIEW
+            {% elsif product.tags contains 'festive' %}
+              FLAGSHIP HERO
+            {% else %}
+              DROP 01 STAR
+            {% endif %}
+          </span>
+          <span class="pdp-badge-pill pdp-badge-gold" id="pdpCounterPill">
+            {% if is_coming_soon %}
+              DROPPING SOON
+            {% elsif product.images.size > 1 %}
+              1 / {{ product.images.size }}
+            {% else %}
+              STRICTLY 3 PIECES CRAFTED
+            {% endif %}
+          </span>
         </div>
         <button type="button" class="pdp-wishlist-toggle" id="pdpWishlistBtn" 
                 data-wishlist-id="{{ product.id }}" 
@@ -99,8 +119,8 @@
         </div>
         <div class="pdp-trust-pill">
           <span class="pdp-trust-pill-icon">&#128666;</span>
-          <span>Free 24-Hr Express</span>
-          <span style="font-size:10px; color:var(--text-muted); font-weight:400;">Tricity Priority Courier</span>
+          <span>Free Express Delivery</span>
+          <span style="font-size:10px; color:var(--text-muted); font-weight:400;">All-India Air Courier (2–4 Days)</span>
         </div>
         <div class="pdp-trust-pill">
           <span class="pdp-trust-pill-icon">&#128207;</span>
@@ -172,7 +192,7 @@
         <div class="pdp-size-pills" id="shopifySizeGrid">
           {% for variant in product.variants %}
             <button type="button" 
-                    class="pdp-size-btn {% unless variant.available %}sold-out{% endunless %}" 
+                    class="pdp-size-btn {% if variant.id == product.selected_or_first_available_variant.id %}selected{% endif %} {% unless variant.available %}sold-out{% endunless %}" 
                     id="pdpSizeBtn_{{ variant.title }}" 
                     data-variant-id="{{ variant.id }}" 
                     data-size-title="{{ variant.title }}" 
@@ -219,34 +239,59 @@
         </div>
 
         <div class="pdp-actions-row">
-          <button type="submit" id="pdpAddToCartBtn" class="pdp-btn-primary" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>ADD TO SHOPPING BAG</button>
-          <button type="button" id="pdpBuyNowBtn" class="pdp-btn-buy" onclick="buyShopifyProductNow()" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>BUY IT NOW &rarr;</button>
+          {% if is_coming_soon %}
+            <!-- Coming Soon Dedicated Luxury Actions -->
+            <a id="pdpComingSoonWhatsAppBtn" class="pdp-btn-notify-whatsapp pdp-btn-coming-soon" href="https://wa.me/{{ settings.whatsapp_number | default: '918511616133' }}?text={{ 'Hi Meenu Label! Please notify me when Coming Soon piece "' | append: product.title | append: '" launches. I would like to reserve early access.' | url_encode }}" target="_blank">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.98-.276-.1-.477-.15-.678.15-.2.301-.778.98-.953 1.18-.175.2-.351.226-.652.075-.301-.15-1.272-.469-2.423-1.496-.896-.799-1.501-1.786-1.677-2.087-.175-.301-.019-.464.132-.614.135-.135.301-.351.451-.527.151-.176.201-.301.301-.502.101-.201.05-.376-.025-.527-.075-.15-.678-1.634-.929-2.237-.245-.588-.493-.508-.678-.518-.175-.01-.376-.01-.577-.01-.201 0-.527.075-.803.376s-1.054 1.029-1.054 2.511c0 1.482 1.079 2.913 1.23 3.114.15.201 2.122 3.24 5.14 4.544.718.31 1.279.496 1.716.635.722.23 1.379.197 1.9.119.58-.088 1.78-.727 2.03-1.43.251-.703.251-1.305.176-1.43-.075-.126-.276-.201-.577-.351z"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.05 21.95l4.908-1.353C8.414 21.49 10.15 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.61 0-3.13-.45-4.43-1.23l-.317-.189-2.906.801.815-2.833-.207-.328A8.152 8.152 0 0 1 3.8 12c0-4.52 3.68-8.2 8.2-8.2 4.52 0 8.2 3.68 8.2 8.2 0 4.52-3.68 8.2-8.2 8.2z"/>
+              </svg>
+              <span>NOTIFY ME ON WHATSAPP WHEN LAUNCHED</span>
+            </a>
 
-          <!-- Direct WhatsApp Concierge Restock Button (Option A) -->
-          <a id="pdpNotifyWhatsAppBtn" class="pdp-btn-notify-whatsapp" href="https://wa.me/{{ settings.whatsapp_number | default: '918511616133' }}?text={{ 'Hi Meenu Label! Please notify me when "' | append: product.title | append: '" in Size ' | append: product.selected_or_first_available_variant.title | append: ' is back in stock. Please share restock timeline.' | url_encode }}" target="_blank" {% if product.selected_or_first_available_variant.available %}style="display:none;"{% endif %}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.98-.276-.1-.477-.15-.678.15-.2.301-.778.98-.953 1.18-.175.2-.351.226-.652.075-.301-.15-1.272-.469-2.423-1.496-.896-.799-1.501-1.786-1.677-2.087-.175-.301-.019-.464.132-.614.135-.135.301-.351.451-.527.151-.176.201-.301.301-.502.101-.201.05-.376-.025-.527-.075-.15-.678-1.634-.929-2.237-.245-.588-.493-.508-.678-.518-.175-.01-.376-.01-.577-.01-.201 0-.527.075-.803.376s-1.054 1.029-1.054 2.511c0 1.482 1.079 2.913 1.23 3.114.15.201 2.122 3.24 5.14 4.544.718.31 1.279.496 1.716.635.722.23 1.379.197 1.9.119.58-.088 1.78-.727 2.03-1.43.251-.703.251-1.305.176-1.43-.075-.126-.276-.201-.577-.351z"/>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.05 21.95l4.908-1.353C8.414 21.49 10.15 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.61 0-3.13-.45-4.43-1.23l-.317-.189-2.906.801.815-2.833-.207-.328A8.152 8.152 0 0 1 3.8 12c0-4.52 3.68-8.2 8.2-8.2 4.52 0 8.2 3.68 8.2 8.2 0 4.52-3.68 8.2-8.2 8.2z"/>
-            </svg>
-            <span>NOTIFY ME ON WHATSAPP WHEN RESTOCKED</span>
-          </a>
+            <!-- Secondary Waitlist Trigger Button on PDP -->
+            <button type="button" id="pdpComingSoonWaitlistBtn" class="pdp-btn-notify-waitlist pdp-btn-coming-soon-waitlist" onclick="openNotifyMeModal('{{ product.id }}', currentSelectedSizeTitle || 'M', '{{ product.title | escape }}', '{{ product.featured_image | default: product.images.first | image_url: width: 400 }}', '{{ product.price | money | escape }}', true)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <span>JOIN VIP LAUNCH WAITLIST (EMAIL / SMS)</span>
+            </button>
 
-          <!-- Secondary Waitlist Trigger Button on PDP -->
-          <button type="button" id="pdpNotifyWaitlistBtn" class="pdp-btn-notify-waitlist" onclick="openNotifyMeModal('{{ product.id }}', currentSelectedSizeTitle || 'M', '{{ product.title | escape }}', '{{ product.featured_image | default: product.images.first | image_url: width: 400 }}', '{{ product.price | money | escape }}')" {% if product.selected_or_first_available_variant.available %}style="display:none;"{% endif %}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-            <span>OR JOIN WAITLIST VIA EMAIL / SMS</span>
-          </button>
-
-          <a id="pdpWhatsAppBtn" class="pdp-btn-whatsapp" href="https://wa.me/{{ settings.whatsapp_number | default: '918511616133' }}?text=Hi%20Meenu%20Label!%20I%20would%20like%20to%20order%20{{ product.title | url_encode }}%20from%20Drop%2001." target="_blank" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>
-            <span style="font-size:20px;">&#128172;</span> ORDER VIA WHATSAPP ATELIER CONCIERGE
-          </a>
-          <div class="whatsapp-benefit-box">
-            <span class="wa-icon">&#128172;</span>
-            <div>
-              <strong>Shoppers with size doubts, customization questions, or first-time hesitation:</strong>
-              Chat directly with our Chandigarh atelier stylist to verify exact measurements, request custom sleeve/kurta length, or view unedited daylight fabric videos before ordering.
+            <div class="whatsapp-benefit-box" style="border-color:#D4AF37; background:#FAF8F5;">
+              <span class="wa-icon">&#10024;</span>
+              <div>
+                <strong>Atelier Preview &bull; Strictly Limited Crafting:</strong>
+                This silhouette is in final tailoring at our Chandigarh studio. Register your desired size to receive priority early-bird access the moment it officially drops.
+              </div>
             </div>
-          </div>
+          {% else %}
+            <button type="submit" id="pdpAddToCartBtn" class="pdp-btn-primary" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>ADD TO SHOPPING BAG</button>
+            <button type="button" id="pdpBuyNowBtn" class="pdp-btn-buy" onclick="buyShopifyProductNow()" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>BUY IT NOW &rarr;</button>
+
+            <!-- Direct WhatsApp Concierge Restock Button (Option A) -->
+            <a id="pdpNotifyWhatsAppBtn" class="pdp-btn-notify-whatsapp" href="https://wa.me/{{ settings.whatsapp_number | default: '918511616133' }}?text={{ 'Hi Meenu Label! Please notify me when "' | append: product.title | append: '" in Size ' | append: product.selected_or_first_available_variant.title | append: ' is back in stock. Please share restock timeline.' | url_encode }}" target="_blank" {% if product.selected_or_first_available_variant.available %}style="display:none;"{% endif %}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.98-.276-.1-.477-.15-.678.15-.2.301-.778.98-.953 1.18-.175.2-.351.226-.652.075-.301-.15-1.272-.469-2.423-1.496-.896-.799-1.501-1.786-1.677-2.087-.175-.301-.019-.464.132-.614.135-.135.301-.351.451-.527.151-.176.201-.301.301-.502.101-.201.05-.376-.025-.527-.075-.15-.678-1.634-.929-2.237-.245-.588-.493-.508-.678-.518-.175-.01-.376-.01-.577-.01-.201 0-.527.075-.803.376s-1.054 1.029-1.054 2.511c0 1.482 1.079 2.913 1.23 3.114.15.201 2.122 3.24 5.14 4.544.718.31 1.279.496 1.716.635.722.23 1.379.197 1.9.119.58-.088 1.78-.727 2.03-1.43.251-.703.251-1.305.176-1.43-.075-.126-.276-.201-.577-.351z"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.05 21.95l4.908-1.353C8.414 21.49 10.15 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.61 0-3.13-.45-4.43-1.23l-.317-.189-2.906.801.815-2.833-.207-.328A8.152 8.152 0 0 1 3.8 12c0-4.52 3.68-8.2 8.2-8.2 4.52 0 8.2 3.68 8.2 8.2 0 4.52-3.68 8.2-8.2 8.2z"/>
+              </svg>
+              <span>NOTIFY ME ON WHATSAPP WHEN RESTOCKED</span>
+            </a>
+
+            <!-- Secondary Waitlist Trigger Button on PDP -->
+            <button type="button" id="pdpNotifyWaitlistBtn" class="pdp-btn-notify-waitlist" onclick="openNotifyMeModal('{{ product.id }}', currentSelectedSizeTitle || 'M', '{{ product.title | escape }}', '{{ product.featured_image | default: product.images.first | image_url: width: 400 }}', '{{ product.price | money | escape }}')" {% if product.selected_or_first_available_variant.available %}style="display:none;"{% endif %}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <span>OR JOIN WAITLIST VIA EMAIL / SMS</span>
+            </button>
+
+            <a id="pdpWhatsAppBtn" class="pdp-btn-whatsapp" href="https://wa.me/{{ settings.whatsapp_number | default: '918511616133' }}?text=Hi%20Meenu%20Label!%20I%20would%20like%20to%20order%20{{ product.title | url_encode }}%20from%20Drop%2001." target="_blank" {% unless product.selected_or_first_available_variant.available %}style="display:none;"{% endunless %}>
+              <span style="font-size:20px;">&#128172;</span> ORDER VIA WHATSAPP ATELIER CONCIERGE
+            </a>
+            <div class="whatsapp-benefit-box">
+              <span class="wa-icon">&#128172;</span>
+              <div>
+                <strong>Shoppers with size doubts, customization questions, or first-time hesitation:</strong>
+                Chat directly with our Chandigarh atelier stylist to verify exact measurements, request custom sleeve/kurta length, or view unedited daylight fabric videos before ordering.
+              </div>
+            </div>
+          {% endif %}
         </div>
       {% endform %}
 
@@ -278,6 +323,56 @@
           <button type="button" id="pdpApplyCouponBtn" onclick="applyPdpCouponInput()" style="padding:9px 14px; background:#1A1A1A; color:#FFF; border:none; border-radius:4px; font-size:11px; font-weight:700; letter-spacing:0.06em; cursor:pointer; text-transform:uppercase;">APPLY</button>
         </div>
         <div id="pdpCouponStatus" style="font-size:11.5px; font-weight:600; margin-top:6px; display:none;"></div>
+      </div>
+
+      <!-- Atelier Promise & Trust Assurance Box -->
+      <div class="atelier-trust-box" style="background:#FAF9F6; border:1px solid #E8E4DE; border-radius:12px; padding:16px 20px; margin-top:16px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #EFECE6;">
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(212,175,55,0.18); border-radius:50%; color:#B48A28; font-size:11px; font-weight:700;">&#10003;</span>
+          <span style="font-family:'Plus Jakarta Sans', sans-serif; font-size:11.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#1C1B1A;">Atelier Promise &amp; Trust Assurance</span>
+        </div>
+        <div class="atelier-trust-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px 16px;">
+          <!-- 1. COD -->
+          <div class="atelier-trust-item" style="display:flex; align-items:flex-start; gap:10px;">
+            <div style="font-size:17px; line-height:1; flex-shrink:0; margin-top:1px;">&#128181;</div>
+            <div>
+              <div style="font-family:'Plus Jakarta Sans', sans-serif; font-size:12.5px; font-weight:700; color:#1C1B1A; line-height:1.35; margin-bottom:2px;">Cash on Delivery (COD) Available Across India</div>
+              <div style="font-size:11.5px; color:#5A5550; line-height:1.4;">Pay securely at your doorstep.</div>
+            </div>
+          </div>
+          <!-- 2. Dispatch -->
+          <div class="atelier-trust-item" style="display:flex; align-items:flex-start; gap:10px;">
+            <div style="font-size:17px; line-height:1; flex-shrink:0; margin-top:1px;">&#128666;</div>
+            <div>
+              <div style="font-family:'Plus Jakarta Sans', sans-serif; font-size:12.5px; font-weight:700; color:#1C1B1A; line-height:1.35; margin-bottom:2px;">Dispatches in 24 Hours from Mohali Atelier</div>
+              <div style="font-size:11.5px; color:#5A5550; line-height:1.4;">Fast, fully tracked delivery via Bluedart / Delhivery Air in 2–4 business days.</div>
+            </div>
+          </div>
+          <!-- 3. Exchange -->
+          <div class="atelier-trust-item" style="display:flex; align-items:flex-start; gap:10px;">
+            <div style="font-size:17px; line-height:1; flex-shrink:0; margin-top:1px;">&#128260;</div>
+            <div>
+              <div style="font-family:'Plus Jakarta Sans', sans-serif; font-size:12.5px; font-weight:700; color:#1C1B1A; line-height:1.35; margin-bottom:2px;">7-Day Hassle-Free Doorstep Exchange</div>
+              <div style="font-size:11.5px; color:#5A5550; line-height:1.4;">Size or fit hesitation? Easy exchange with free doorstep reverse pickup.</div>
+            </div>
+          </div>
+          <!-- 4. Chanderi Silk -->
+          <div class="atelier-trust-item" style="display:flex; align-items:flex-start; gap:10px;">
+            <div style="font-size:17px; line-height:1; flex-shrink:0; margin-top:1px;">&#10024;</div>
+            <div>
+              <div style="font-family:'Plus Jakarta Sans', sans-serif; font-size:12.5px; font-weight:700; color:#1C1B1A; line-height:1.35; margin-bottom:2px;">100% Authentic Handcrafted Chanderi Silk</div>
+              <div style="font-size:11.5px; color:#5A5550; line-height:1.4;">Pre-washed with premium pure cotton mulmul lining for all-day skin comfort.</div>
+            </div>
+          </div>
+          <!-- 5. 2-Inch Margin -->
+          <div class="atelier-trust-item" style="display:flex; align-items:flex-start; gap:10px; grid-column:1 / -1;">
+            <div style="font-size:17px; line-height:1; flex-shrink:0; margin-top:1px;">&#128161;</div>
+            <div>
+              <div style="font-family:'Plus Jakarta Sans', sans-serif; font-size:12.5px; font-weight:700; color:#1C1B1A; line-height:1.35; margin-bottom:2px;">Tailored with 2-Inch Inner Margin</div>
+              <div style="font-size:11.5px; color:#5A5550; line-height:1.4;">Features generous inner margins on both sides for effortless local alteration if ever needed.</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Pincode Checker -->
@@ -1122,8 +1217,8 @@
 </style>
 
 <script>
-  var currentSelectedVariantId = null;
-  var currentSelectedSizeTitle = null;
+  var currentSelectedVariantId = {{ product.selected_or_first_available_variant.id | default: 'null' }};
+  var currentSelectedSizeTitle = '{{ product.selected_or_first_available_variant.title | default: "M" }}';
 
   var shopifyGalleryImages = [
     {% for image in product.images %}
@@ -1693,6 +1788,9 @@
     if (!currentSelectedVariantId) {
       validateShopifyForm();
       return;
+    }
+    if (typeof window.showMeenuCheckoutTransition === 'function') {
+      window.showMeenuCheckoutTransition();
     }
     var mainBuyBtn = document.getElementById('pdpBuyNowBtn');
     if (mainBuyBtn) {
