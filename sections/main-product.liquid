@@ -199,8 +199,34 @@
                     data-available="{{ variant.available }}"
                     {% if variant.featured_image %}data-variant-image="{{ variant.featured_image | image_url: width: 900, format: 'webp' }}"{% elsif variant.image %}data-variant-image="{{ variant.image | image_url: width: 900, format: 'webp' }}"{% endif %}
                     onclick="selectShopifyPdpSize('{{ variant.id }}', '{{ variant.title }}', this, {{ variant.available }})">
-              <span class="pdp-size-name">{{ variant.title }}{% if variant.title == 'M' %} (38){% elsif variant.title == 'L' %} (40){% elsif variant.title == 'XL' %} (42){% endif %}</span>
-              <span class="pdp-size-sub">{% if variant.title contains 'M' %}Bust 38" | Waist 34"{% elsif variant.title contains 'L' %}Bust 40" | Waist 36"{% elsif variant.title contains 'XL' %}Bust 42" | Waist 38"{% else %}Standard Pret Fit{% endif %}</span>
+              {% assign v_clean = variant.title | upcase | strip %}
+              <span class="pdp-size-name">
+                {{ variant.title }}
+                {%- if v_clean == 'XS' -%} (34)
+                {%- elsif v_clean == 'S' -%} (36)
+                {%- elsif v_clean == 'M' -%} (38)
+                {%- elsif v_clean == 'L' -%} (40)
+                {%- elsif v_clean == 'XL' -%} (42)
+                {%- elsif v_clean == 'XXL' or v_clean == '2XL' -%} (44)
+                {%- endif -%}
+              </span>
+              <span class="pdp-size-sub">
+                {%- if v_clean == 'XXL' or v_clean == '2XL' or v_clean contains 'XXL' -%}
+                  Bust 44" | Waist 40"
+                {%- elsif v_clean == 'XL' or v_clean contains 'XL' -%}
+                  Bust 42" | Waist 38"
+                {%- elsif v_clean == 'L' or v_clean contains 'L' -%}
+                  Bust 40" | Waist 36"
+                {%- elsif v_clean == 'M' or v_clean contains 'M' -%}
+                  Bust 38" | Waist 34"
+                {%- elsif v_clean == 'S' or v_clean contains 'S' -%}
+                  Bust 36" | Waist 32"
+                {%- elsif v_clean == 'XS' or v_clean contains 'XS' -%}
+                  Bust 34" | Waist 30"
+                {%- else -%}
+                  Standard Pret Fit
+                {%- endif -%}
+              </span>
               <span class="pdp-size-stock">{% if variant.available %}Only 1 Left{% else %}Sold Out{% endif %}</span>
             </button>
           {% endfor %}
