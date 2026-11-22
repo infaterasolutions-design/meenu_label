@@ -276,31 +276,13 @@ function formatMoney(cents) {
 }
 
 function openCartDrawer() {
-  var drawer = document.getElementById('CartDrawer');
-  var backdrop = document.getElementById('CartBackdrop');
-  if (drawer) drawer.classList.add('open');
-  if (backdrop) backdrop.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  refreshCartDrawer();
+  window.location.href = '/cart';
 }
 
-function closeCartDrawer() {
-  var drawer = document.getElementById('CartDrawer');
-  var backdrop = document.getElementById('CartBackdrop');
-  if (drawer) drawer.classList.remove('open');
-  if (backdrop) backdrop.classList.remove('open');
-  document.body.style.overflow = '';
-}
+function closeCartDrawer() {}
 
 function toggleCartDrawer() {
-  var drawer = document.getElementById('CartDrawer');
-  if (drawer && drawer.classList.contains('open')) {
-    closeCartDrawer();
-  } else if (drawer) {
-    openCartDrawer();
-  } else {
-    window.location.href = '/cart';
-  }
+  window.location.href = '/cart';
 }
 
 function refreshCartDrawer() {

@@ -424,7 +424,7 @@
   <div class="pdp-sticky-bar-inner">
     
     <!-- Left Mini Cart Icon Button with Live Counter Badge -->
-    <a href="/cart" onclick="if(document.getElementById('CartDrawer')){event.preventDefault();toggleCartDrawer();}" class="pdp-sticky-cart-icon-btn" title="View Shopping Bag" aria-label="View Shopping Bag">
+    <a href="/cart" class="pdp-sticky-cart-icon-btn" title="View Shopping Bag" aria-label="View Shopping Bag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
         <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -1457,66 +1457,7 @@
   });
 
   function handlePdpAddToCartSuccess() {
-    // 1. Fetch live cart items count & update all badges
-    fetch('/cart.js')
-      .then(function(res) { return res.json(); })
-      .then(function(cart) {
-        var count = cart.item_count || 1;
-        var stickyBadge = document.getElementById('pdpStickyCartBadge');
-        if (stickyBadge) {
-          stickyBadge.textContent = count;
-          stickyBadge.style.display = 'block';
-        }
-        var headerBadge = document.getElementById('headerCartCount');
-        if (headerBadge) {
-          headerBadge.textContent = count;
-          headerBadge.style.display = 'inline-flex';
-        }
-        var allBadges = document.querySelectorAll('.cart-count-badge, .header-cart-pill, .nav-drawer-cart-count');
-        allBadges.forEach(function(b) {
-          b.textContent = count;
-          b.style.display = 'inline-flex';
-        });
-
-        // Pulse animation on the sticky mini cart button
-        var stickyCartBtn = document.querySelector('.pdp-sticky-cart-icon-btn');
-        if (stickyCartBtn) {
-          stickyCartBtn.classList.remove('cart-pulse-bounce');
-          void stickyCartBtn.offsetWidth;
-          stickyCartBtn.classList.add('cart-pulse-bounce');
-        }
-
-        // Open cart drawer and refresh contents with tiered progress bar
-        if (typeof updateCartUI === 'function') {
-          updateCartUI(cart);
-        }
-        if (typeof openCartDrawer === 'function') {
-          setTimeout(function() {
-            openCartDrawer();
-          }, 200);
-        }
-      })
-      .catch(function() {});
-
-    // 2. Visual Success Feedback on Buttons
-    var mainAddBtn = document.getElementById('pdpAddToCartBtn');
-    if (mainAddBtn) {
-      mainAddBtn.disabled = false;
-      mainAddBtn.innerHTML = '&#10003; ADDED TO SHOPPING BAG!';
-    }
-    var stickyAddBtn = document.getElementById('pdpStickyAddBtn');
-    if (stickyAddBtn) {
-      stickyAddBtn.disabled = false;
-      stickyAddBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;"><polyline points="20 6 9 17 4 12"></polyline></svg><span style="color:#16A34A;font-weight:800;">ADDED!</span>';
-    }
-
-    // 3. Floating feedback notification (Stay on product page, do NOT redirect to /cart)
-    showPdpToastNotification('&#10003; Piece added to your shopping bag!');
-
-    // 4. Return buttons to normal state after 2.2 seconds
-    setTimeout(function() {
-      resetPdpButtons();
-    }, 2200);
+    window.location.href = '/cart';
   }
 
   function validateShopifyForm(e) {
