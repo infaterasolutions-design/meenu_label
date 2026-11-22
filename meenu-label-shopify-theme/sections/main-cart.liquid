@@ -319,12 +319,15 @@
 
             <!-- Coupon Code Field (Apply System) -->
             <div class="summary-coupon-box" style="display: block; width: 100%; margin: 18px 0 16px; box-sizing: border-box;">
-              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: #1E1C19; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8C6A28" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
-                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
-                </svg>
-                <span>HAVE A COUPON CODE?</span>
+              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: #1E1C19; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8C6A28" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                    <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                  </svg>
+                  <span>HAVE A COUPON CODE?</span>
+                </div>
+                <button type="button" onclick="document.getElementById('pageCouponCode').value='FIRST500'; applyPageCoupon();" style="border:1px dashed #D97706; background:#FFFBEB; color:#8C6212; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:4px; cursor:pointer;" title="Tap to apply Flat ₹500 OFF">APPLY FIRST500</button>
               </div>
               <div style="display: flex; gap: 8px; width: 100%;">
                 <input type="text" id="pageCouponCode" placeholder="Enter coupon code" value="" style="flex: 1; min-width: 0; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; outline: none; background: #FFF; color: #1E1C19; box-sizing: border-box;">
@@ -334,7 +337,7 @@
             </div>
 
             <!-- Checkout CTA Form & Button (Fully integrated with Shopify Checkout & Razorpay) -->
-            <form action="/cart" method="post" id="cartPageCheckoutForm" style="margin: 0; padding: 0;">
+            <form action="/cart" method="post" id="cartPageCheckoutForm" onsubmit="var d=document.getElementById('cartFormDiscount'); if(d && !d.value && {{ cart.total_price }} < 499900){ d.value='FIRST500'; } if(typeof window.showMeenuCheckoutTransition==='function') window.showMeenuCheckoutTransition();" style="margin: 0; padding: 0;">
               <input type="hidden" name="discount" id="cartFormDiscount" value="">
               <button type="submit" name="checkout" id="pageCheckoutBtn" class="summary-checkout-btn cart__checkout-button" style="width: 100%; border: none; cursor: pointer;">
                 PROCEED TO SECURE CHECKOUT &rarr;

@@ -23,6 +23,28 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    <!-- Google tag (gtag.js) - Google Analytics 4 -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2WG6R9VLDQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-2WG6R9VLDQ');
+    </script>
+
+    <!-- High-Speed CDN & Payment Gateway Preconnections -->
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.shopify.com">
+    <link rel="preconnect" href="https://api.razorpay.com" crossorigin>
+    <link rel="preconnect" href="https://checkout.razorpay.com" crossorigin>
+    <link rel="dns-prefetch" href="https://api.razorpay.com">
+    <link rel="dns-prefetch" href="https://checkout.razorpay.com">
+    <link rel="dns-prefetch" href="https://connect.facebook.net">
+    <!-- Background Prefetch of Razorpay Core Bundle for Instant Checkout -->
+    <link rel="prefetch" href="https://checkout.razorpay.com/v1/checkout.js" as="script">
+
     {% if template.name == 'index' %}
       <!-- LCP Hero Image Preload (High-Priority Mobile & Desktop) -->
       <link rel="preload" as="image" href="{{ 'banner_modern_ethnic_mob.jpg' | asset_url }}" media="(max-width: 768px)" fetchpriority="high">
@@ -56,56 +78,6 @@
       }
     </script>
 
-    <script>
-      // Post-logout & login safety net: sync and clear residual cart & wishlist
-      (function() {
-        {% if customer %}
-          try {
-            var customerId = '{{ customer.id }}';
-            localStorage.setItem('meenu_active_patron', customerId);
-            // Restore archived wishlist for this patron if currently empty
-            var archivedWishlist = localStorage.getItem('meenu_wishlist_archive_' + customerId);
-            var currentWishlist = localStorage.getItem('meenu_saved_wishlist');
-            if (archivedWishlist && (!currentWishlist || currentWishlist === '{}' || currentWishlist === '[]')) {
-              localStorage.setItem('meenu_saved_wishlist', archivedWishlist);
-              if (typeof updateWishlistUI === 'function') updateWishlistUI();
-            }
-          } catch(e) {}
-        {% else %}
-          try {
-            var prevPatron = localStorage.getItem('meenu_active_patron');
-            if (prevPatron) {
-              // Archive patron wishlist before clearing
-              var currentWishlist = localStorage.getItem('meenu_saved_wishlist');
-              if (currentWishlist) {
-                localStorage.setItem('meenu_wishlist_archive_' + prevPatron, currentWishlist);
-              }
-              // Wipe guest wishlist & tokens
-              localStorage.removeItem('meenu_saved_wishlist');
-              localStorage.removeItem('meenu_active_patron');
-              localStorage.removeItem('meenu_customer_email');
-              sessionStorage.clear();
-              if (typeof updateWishlistUI === 'function') updateWishlistUI();
-
-              // Clear cart on backend & refresh
-              fetch('/cart/clear.js', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
-                .then(function() {
-                  if (window.location.pathname.indexOf('/cart') !== -1) {
-                    window.location.reload();
-                  } else {
-                    var headerBadge = document.getElementById('headerCartCount');
-                    if (headerBadge) { headerBadge.textContent = '0'; headerBadge.style.display = 'none'; }
-                    var navBadges = document.querySelectorAll('.nav-drawer-cart-count');
-                    navBadges.forEach(function(b) { b.textContent = '0'; b.style.display = 'none'; });
-                  }
-                })
-                .catch(function(err) { console.log('Cart logout clear notice:', err); });
-            }
-          } catch(e) {}
-        {% endif %}
-      })();
-    </script>
-
     {{ content_for_header }}
   </head>
 
@@ -131,6 +103,125 @@
     {% render 'whatsapp-concierge' %}
     {% render 'snitch-login-modal' %}
 
+    <!-- Atelier Instant Checkout Transition Overlay & Double-Click Shield -->
+    <div id="meenuCheckoutTransition" style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(26,24,22,0.88); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center; flex-direction:column; text-align:center; color:#FAF8F5; font-family:'Plus Jakarta Sans',sans-serif; padding:24px;">
+      <div style="width:48px; height:48px; border:3px solid rgba(212,175,55,0.2); border-top-color:#D4AF37; border-radius:50%; animation:meenuSpin 0.75s cubic-bezier(0.68,-0.55,0.27,1.55) infinite; margin-bottom:18px;"></div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:600; letter-spacing:0.04em; margin-bottom:8px; color:#FFFFFF;">Securing Atelier Checkout</div>
+      <div style="font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:#D4AF37; font-weight:500;">Connecting Express 1-Page Gateway &bull; UPI &bull; COD</div>
+    </div>
+    <style>
+      @keyframes meenuSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+
     <script src="{{ 'meenu-theme.js' | asset_url }}" defer="defer"></script>
+
+    <script>
+      // Global Instant Checkout Transition Handler
+      window.showMeenuCheckoutTransition = function() {
+        var el = document.getElementById('meenuCheckoutTransition');
+        if (el) el.style.display = 'flex';
+      };
+
+      // Cross-Device Shopify 1-Page Checkout & Payment Bundle Preloader
+      (function() {
+        function prefetchCheckoutBundle() {
+          var coreCheckoutAssets = [
+            '/cdn/shopifycloud/checkout-web/assets/c1/polyfills.BmwiweTg.js',
+            '/cdn/shopifycloud/checkout-web/assets/c1/app.ARMkEK2u.js',
+            '/cdn/shopifycloud/checkout-web/assets/c1/630ba094.Cz6IQlUg.js',
+            '/cdn/shopifycloud/checkout-web/assets/c1/4509beb0.Mtk3A2Tn.js',
+            '/cdn/shopifycloud/checkout-web/assets/c1/6ec9a0fa.IGk8g30z.js',
+            '/cdn/shopifycloud/checkout-web/assets/c1/f025431a.BlsbPO0-.js',
+            '/cdn/shopifycloud/checkout-web/assets/c1/assets/app.CGRs8DQS.css',
+            '/cdn/shopifycloud/checkout-web/assets/c1/assets/OnePage.mSY95ESL.css',
+            '/cdn/shopifycloud/checkout-web/assets/c1/assets/deferred-boot.DGZtCWKG.css',
+            'https://cdn.shopify.com/s/files/1/0722/3325/4983/files/meenu_logo_official_x320.png',
+            'https://checkout.razorpay.com/v1/checkout.js',
+            'https://connect.facebook.net/en_US/fbevents.js'
+          ];
+          coreCheckoutAssets.forEach(function(src) {
+            var l = document.createElement('link');
+            l.rel = 'prefetch';
+            l.href = src;
+            l.as = src.endsWith('.css') ? 'style' : (src.endsWith('.png') ? 'image' : 'script');
+            l.crossOrigin = '';
+            document.head.appendChild(l);
+          });
+        }
+
+        if (window.requestIdleCallback) {
+          window.requestIdleCallback(function() { setTimeout(prefetchCheckoutBundle, 600); });
+        } else {
+          setTimeout(prefetchCheckoutBundle, 1000);
+        }
+      })();
+    </script>
+
+    <script>
+      // Non-blocking patron wishlist & cart cleanup on logout
+      document.addEventListener('DOMContentLoaded', function() {
+        {% if customer %}
+          try {
+            var customerId = '{{ customer.id }}';
+            localStorage.setItem('meenu_active_patron', customerId);
+            var archivedWishlist = localStorage.getItem('meenu_wishlist_archive_' + customerId);
+            var currentWishlist = localStorage.getItem('meenu_saved_wishlist');
+            if (archivedWishlist && (!currentWishlist || currentWishlist === '{}' || currentWishlist === '[]')) {
+              localStorage.setItem('meenu_saved_wishlist', archivedWishlist);
+              if (typeof updateWishlistUI === 'function') updateWishlistUI();
+            }
+          } catch(e) {}
+        {% else %}
+          try {
+            var prevPatron = localStorage.getItem('meenu_active_patron');
+            if (prevPatron) {
+              var currentWishlist = localStorage.getItem('meenu_saved_wishlist');
+              if (currentWishlist) {
+                localStorage.setItem('meenu_wishlist_archive_' + prevPatron, currentWishlist);
+              }
+              localStorage.removeItem('meenu_saved_wishlist');
+              localStorage.removeItem('meenu_active_patron');
+              localStorage.removeItem('meenu_customer_email');
+              sessionStorage.clear();
+              if (typeof updateWishlistUI === 'function') updateWishlistUI();
+
+              fetch('/cart/clear.js', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+                .then(function() {
+                  if (window.location.pathname.indexOf('/cart') !== -1) {
+                    window.location.reload();
+                  } else {
+                    var headerBadge = document.getElementById('headerCartCount');
+                    if (headerBadge) { headerBadge.textContent = '0'; headerBadge.style.display = 'none'; }
+                    var navBadges = document.querySelectorAll('.nav-drawer-cart-count');
+                    navBadges.forEach(function(b) { b.textContent = '0'; b.style.display = 'none'; });
+                  }
+                })
+                .catch(function(err) { console.log('Cart logout clear notice:', err); });
+            }
+          } catch(e) {}
+        {% endif %}
+      });
+
+      // Ultra-fast mobile link prefetcher on touchstart
+      (function() {
+        var prefetched = {};
+        document.addEventListener('touchstart', function(e) {
+          var a = e.target.closest('a');
+          if (a && a.href && a.origin === window.location.origin) {
+            var url = a.pathname;
+            if (!prefetched[url] && !url.startsWith('/account') && !url.startsWith('/cart/clear')) {
+              prefetched[url] = true;
+              var link = document.createElement('link');
+              link.rel = 'prefetch';
+              link.href = a.href;
+              document.head.appendChild(link);
+            }
+          }
+        }, { passive: true });
+      })();
+    </script>
   </body>
 </html>

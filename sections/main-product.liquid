@@ -190,25 +190,25 @@
       {% form 'product', product, id: 'shopifyProductForm', onsubmit: 'return validateShopifyForm(event)' %}
         <input type="hidden" name="id" id="selectedVariantId" value="{{ product.selected_or_first_available_variant.id }}">
 
-        <!-- Flipkart / Amazon Inspired Instant UPI Offer Line (Above Add to Bag) -->
-        <div class="pdp-bank-upi-offer">
+        <!-- Atelier Welcome Offer Badge: Flat ₹500 OFF -->
+        <div class="pdp-bank-upi-offer" onclick="applyGlobalCoupon('FIRST500')" style="cursor:pointer; background:#FEFBF6; border:1px solid #F3E8D8; box-shadow:0 2px 8px rgba(180,130,50,0.06);" title="Click to auto-apply ₹500 discount">
           <div class="pdp-bank-upi-inner">
-            <div class="pdp-bank-upi-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                <line x1="2" y1="10" x2="22" y2="10"></line>
-              </svg>
+            <div class="pdp-bank-upi-icon" style="background:#FDF3E3; color:#B48A28;">
+              <span style="font-size:16px; line-height:1;">✨</span>
             </div>
             <div class="pdp-bank-upi-body">
-              <div class="pdp-bank-upi-headline">
-                <span class="pdp-bank-upi-tag">&#9889; SPECIAL UPI OFFER</span>
-                <span class="pdp-bank-upi-save-badge">SAVE &#8377;100</span>
+              <div class="pdp-bank-upi-headline" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span class="pdp-bank-upi-tag" style="color:#8C6212; font-weight:800; letter-spacing:0.08em;">&#10024; ATELIER WELCOME OFFER</span>
+                  <span class="pdp-bank-upi-save-badge" style="background:#8C6212; font-weight:800; font-size:10px; padding:2px 8px; border-radius:12px;">SAVE &#8377;500</span>
+                </div>
+                <span style="font-size:10px; font-weight:700; color:#8C6212; background:#FFF7ED; border:1px dashed #D97706; padding:2px 8px; border-radius:4px; letter-spacing:0.05em;">CODE: FIRST500</span>
               </div>
-              <div class="pdp-bank-upi-text">
-                Pay via <strong>UPI</strong> &amp; get <strong>Flat &#8377;100 Instant Discount</strong> at checkout (GPay, PhonePe, Paytm, QR).
+              <div class="pdp-bank-upi-text" style="font-size:13px; color:#1C1B1A; margin:3px 0 2px;">
+                Use code <strong style="color:#8C6212; letter-spacing:0.04em;">FIRST500</strong> for <strong>Flat &#8377;500 OFF</strong> on your order!
               </div>
-              <div class="pdp-bank-upi-note">
-                &#10003; Extra &#8377;100 auto-deducted at checkout &bull; Cash on Delivery available at standard price
+              <div class="pdp-bank-upi-note" style="font-size:11px; color:#6B7280;">
+                &#10003; Auto-applied on <strong>BUY IT NOW</strong> &bull; Cash on Delivery &amp; UPI Available
               </div>
             </div>
           </div>
@@ -414,12 +414,10 @@
 
 <!-- Mobile Sticky Action Bar (Flipkart Style: Cart & Buy Now) -->
 <div class="pdp-mobile-sticky-bar" id="pdpMobileStickyBar">
-  <!-- Slim UPI Offer Strip on Mobile Sticky Bar -->
-  <div class="pdp-sticky-offer-strip">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;">
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-    </svg>
-    <span>Pay via <strong>UPI</strong> &amp; Get <strong>Flat &#8377;100 OFF</strong> instantly at checkout</span>
+  <!-- Slim Offer Strip on Mobile Sticky Bar -->
+  <div class="pdp-sticky-offer-strip" onclick="applyGlobalCoupon('FIRST500')" style="background:#FEFBF6; color:#8C6212; border-bottom:1px solid #F3E8D8; cursor:pointer;" title="Click to apply FIRST500">
+    <span style="margin-right:4px;">✨</span>
+    <span>Use Code <strong>FIRST500</strong> for <strong>Flat &#8377;500 OFF</strong> &bull; Auto-applied on Buy Now</span>
   </div>
   <div class="pdp-sticky-bar-inner">
     
@@ -1694,7 +1692,7 @@
       stickyBuyBtn.innerHTML = '<span class="sticky-buy-text-main">CHECKOUT...</span>';
     }
 
-    // Check for applied coupon code
+    // Check for applied coupon code (Default to FIRST500 for instant checkout discount)
     var appliedCoupon = '';
     try {
       appliedCoupon = sessionStorage.getItem('meenu_applied_coupon') || '';
@@ -1704,6 +1702,9 @@
       if (couponInp && couponInp.value.trim()) {
         appliedCoupon = couponInp.value.trim().toUpperCase();
       }
+    }
+    if (!appliedCoupon) {
+      appliedCoupon = 'FIRST500';
     }
 
     var targetCheckoutUrl = '/cart/' + currentSelectedVariantId + ':1';
