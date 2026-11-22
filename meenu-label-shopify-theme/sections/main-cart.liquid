@@ -30,11 +30,35 @@
         <a href="/collections/all" class="btn-primary" style="display: inline-block; padding: 14px 32px; font-size: 12px; letter-spacing: 0.1em; text-decoration: none;">EXPLORE DROP 01 COLLECTION</a>
       </div>
     {% else %}
-      {% assign potli_threshold = 299900 %}
-      {% assign current_total = cart.total_price %}
-      {% assign potli_diff = potli_threshold | minus: current_total %}
-      {% assign potli_percent = current_total | times: 100 | divided_by: potli_threshold %}
-      {% if potli_percent > 100 %}{% assign potli_percent = 100 %}{% endif %}
+      {% assign cart_total = cart.total_price %}
+      {% assign goal_threshold = 499900 %}
+      {% assign is_goal_unlocked = false %}
+      {% if cart_total >= goal_threshold %}
+        {% assign is_goal_unlocked = true %}
+      {% endif %}
+      {% assign remaining_cents = goal_threshold | minus: cart_total %}
+      {% if remaining_cents < 0 %}
+        {% assign remaining_cents = 0 %}
+      {% endif %}
+      {% assign progress_pct = cart_total | times: 100.0 | divided_by: goal_threshold %}
+      {% if progress_pct > 100 %}
+        {% assign progress_pct = 100 %}
+      {% endif %}
+
+      <!-- Tiered Cart Goal Progress Bar (Flat ₹700 OFF at ₹4,999) -->
+      <div class="cart-page-goal-card" id="cartPageGoalWrap" style="background: #FAF9F6; border: 1px solid #E8E4DE; border-radius: 10px; padding: 14px 20px; margin-bottom: 24px; box-sizing: border-box;">
+        <div id="cartPageGoalText" style="font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; color: #1C1B1A; text-align: center; line-height: 1.45; margin-bottom: 10px; font-weight: 500;">
+          {% if is_goal_unlocked %}
+            🎉 Congratulations! You have unlocked <strong>Flat &#8377;700 OFF</strong> on your order!
+          {% else %}
+            Add {{ remaining_cents | money }} more to unlock <strong>Flat &#8377;700 OFF</strong> on your order!
+          {% endif %}
+        </div>
+        <!-- Progress Bar Track -->
+        <div style="background: #EFECE6; height: 8px; border-radius: 10px; overflow: hidden; position: relative; width: 100%;">
+          <div id="cartPageProgressBar" style="height: 100%; border-radius: 10px; width: {{ progress_pct }}%; transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease, box-shadow 0.35s ease; {% if is_goal_unlocked %}background: #2E7D32; box-shadow: 0 0 10px rgba(46, 125, 50, 0.4);{% else %}background: linear-gradient(90deg, #D4AF37, #E5C158); box-shadow: none;{% endif %}"></div>
+        </div>
+      </div>
 
       <!-- Active Cart Content Grid -->
       <div id="cartPageActiveGrid" class="cart-page-layout">

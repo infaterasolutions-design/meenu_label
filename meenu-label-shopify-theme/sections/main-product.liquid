@@ -424,7 +424,7 @@
   <div class="pdp-sticky-bar-inner">
     
     <!-- Left Mini Cart Icon Button with Live Counter Badge -->
-    <a href="/cart" class="pdp-sticky-cart-icon-btn" title="View Shopping Bag" aria-label="View Shopping Bag">
+    <a href="/cart" onclick="if(document.getElementById('CartDrawer')){event.preventDefault();toggleCartDrawer();}" class="pdp-sticky-cart-icon-btn" title="View Shopping Bag" aria-label="View Shopping Bag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
         <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -1484,6 +1484,16 @@
           stickyCartBtn.classList.remove('cart-pulse-bounce');
           void stickyCartBtn.offsetWidth;
           stickyCartBtn.classList.add('cart-pulse-bounce');
+        }
+
+        // Open cart drawer and refresh contents with tiered progress bar
+        if (typeof updateCartUI === 'function') {
+          updateCartUI(cart);
+        }
+        if (typeof openCartDrawer === 'function') {
+          setTimeout(function() {
+            openCartDrawer();
+          }, 200);
         }
       })
       .catch(function() {});
