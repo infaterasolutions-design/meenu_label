@@ -592,26 +592,35 @@ function checkTricityPincode(pin) {
 }
 
 /* =========================================================================
-   5. SNITCH CINEMATIC HERO CAROUSEL CONTROLLER
+   5. SNITCH CINEMATIC HERO CAROUSEL CONTROLLER (FLIPKART-STYLE SLIDER COMPAT)
    ========================================================================= */
-var currentSlide = 0;
+window.currentSlide = window.currentSlide || 0;
 var totalSlides = 4;
-var slideInterval = 6000;
+var slideInterval = 5000;
 var slideTimer = null;
 
-function updateSlider() {
+function updateSlider(animate) {
+  if (typeof window.updateSlider === 'function' && window.updateSlider !== updateSlider) {
+    window.updateSlider(animate);
+    return;
+  }
   if (typeof loadDeferredHeroSlides === 'function') {
     loadDeferredHeroSlides();
   }
   var track = document.getElementById('sliderTrack');
   var dotsContainer = document.getElementById('sliderDots');
   if (track) {
-    track.style.transform = 'translateX(-' + (currentSlide * 25) + '%)';
+    if (animate !== false) {
+      track.style.transition = 'transform 0.38s cubic-bezier(0.25, 1, 0.5, 1)';
+    } else {
+      track.style.transition = 'none';
+    }
+    track.style.transform = 'translate3d(-' + (window.currentSlide * 25) + '%, 0, 0)';
   }
   if (dotsContainer) {
     var dots = dotsContainer.querySelectorAll('.slider-dot');
     dots.forEach(function(dot, idx) {
-      if (idx === currentSlide) {
+      if (idx === window.currentSlide) {
         dot.classList.add('active');
       } else {
         dot.classList.remove('active');
@@ -621,18 +630,30 @@ function updateSlider() {
 }
 
 function nextSlide() {
-  currentSlide = (currentSlide + 1) % totalSlides;
-  updateSlider();
+  if (typeof window.nextSlide === 'function' && window.nextSlide !== nextSlide) {
+    window.nextSlide();
+    return;
+  }
+  window.currentSlide = (window.currentSlide + 1) % totalSlides;
+  updateSlider(true);
 }
 
 function prevSlide() {
-  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-  updateSlider();
+  if (typeof window.prevSlide === 'function' && window.prevSlide !== prevSlide) {
+    window.prevSlide();
+    return;
+  }
+  window.currentSlide = (window.currentSlide - 1 + totalSlides) % totalSlides;
+  updateSlider(true);
 }
 
 function goToSlide(idx) {
-  currentSlide = idx;
-  updateSlider();
+  if (typeof window.goToSlide === 'function' && window.goToSlide !== goToSlide) {
+    window.goToSlide(idx);
+    return;
+  }
+  window.currentSlide = idx;
+  updateSlider(true);
   resetAutoSlide();
 }
 
@@ -651,6 +672,19 @@ function stopAutoSlide() {
 function resetAutoSlide() {
   stopAutoSlide();
   startAutoSlide();
+}
+
+function handleHeroSlideClick(el, e) {
+  if (typeof window.handleHeroSlideClick === 'function' && window.handleHeroSlideClick !== handleHeroSlideClick) {
+    return window.handleHeroSlideClick(el, e);
+  }
+  if (window.heroSliderDragged) {
+    window.heroSliderDragged = false;
+    if (e && e.preventDefault) e.preventDefault();
+    return;
+  }
+  var url = el.getAttribute('data-href');
+  if (url) window.location.href = url;
 }
 
 /* =========================================================================

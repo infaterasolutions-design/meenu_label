@@ -1,4 +1,26 @@
 <style>
+.snitch-hero-viewport {
+  touch-action: pan-y pinch-zoom !important;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+.snitch-hero-viewport.is-dragging {
+  cursor: grabbing !important;
+}
+.snitch-track {
+  display: flex !important;
+  width: 400% !important;
+  height: 100% !important;
+  transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+.snitch-slide {
+  user-select: none !important;
+  -webkit-user-drag: none !important;
+}
 @media (max-width: 768px) {
   .snitch-hero-viewport {
     height: calc(100vw * 1.25) !important;
@@ -19,19 +41,19 @@
     <div class="snitch-track" id="sliderTrack">
       
       <!-- Slide 1: Modern Ethnic Elegance (LCP Preloaded Hero Banner) -->
-      <div class="snitch-slide snitch-slide-hero1" style="background-image: url('{{ 'banner_modern_ethnic.jpg' | asset_url }}'); cursor: pointer;" onclick="window.location.href='/collections/all'" title="Shop Modern Ethnic Elegance">
+      <div class="snitch-slide snitch-slide-hero1" data-href="/collections/all" onclick="handleHeroSlideClick(this, event)" style="background-image: url('{{ 'banner_modern_ethnic.jpg' | asset_url }}'); cursor: pointer;" title="Shop Modern Ethnic Elegance">
       </div>
 
       <!-- Slide 2: Grace in Every Drape (Deferred Lazy Background) -->
-      <div class="snitch-slide snitch-slide-hero2" data-bg-desktop="{{ 'banner_grace_in_every_drape.jpg' | asset_url }}" data-bg-mobile="{{ 'banner_grace_in_every_drape_mob.jpg' | asset_url }}" style="cursor: pointer;" onclick="window.location.href='/collections/all'" title="Shop Grace in Every Drape">
+      <div class="snitch-slide snitch-slide-hero2" data-href="/collections/all" onclick="handleHeroSlideClick(this, event)" data-bg-desktop="{{ 'banner_grace_in_every_drape.jpg' | asset_url }}" data-bg-mobile="{{ 'banner_grace_in_every_drape_mob.jpg' | asset_url }}" style="cursor: pointer;" title="Shop Grace in Every Drape">
       </div>
 
       <!-- Slide 3: Everyday Dresses (Deferred Lazy Background) -->
-      <div class="snitch-slide snitch-slide-hero3" data-bg-desktop="{{ 'banner_everyday_dresses.jpg' | asset_url }}" data-bg-mobile="{{ 'banner_everyday_dresses_mob.jpg' | asset_url }}" style="cursor: pointer;" onclick="window.location.href='/collections/dresses'" title="Shop Everyday Dresses Collection">
+      <div class="snitch-slide snitch-slide-hero3" data-href="/collections/dresses" onclick="handleHeroSlideClick(this, event)" data-bg-desktop="{{ 'banner_everyday_dresses.jpg' | asset_url }}" data-bg-mobile="{{ 'banner_everyday_dresses_mob.jpg' | asset_url }}" style="cursor: pointer;" title="Shop Everyday Dresses Collection">
       </div>
 
       <!-- Slide 4: Chic Yellow Co-Ord Sets (Deferred Lazy Background) -->
-      <div class="snitch-slide snitch-slide-hero4" data-bg-desktop="{{ 'banner_chic_yellow_coord.jpg' | asset_url }}" data-bg-mobile="{{ 'banner_chic_yellow_coord_mob.jpg' | asset_url }}" style="cursor: pointer;" onclick="window.location.href='/collections/co-ord-sets'" title="Shop Chic Yellow Co-Ord Collection">
+      <div class="snitch-slide snitch-slide-hero4" data-href="/collections/co-ord-sets" onclick="handleHeroSlideClick(this, event)" data-bg-desktop="{{ 'banner_chic_yellow_coord.jpg' | asset_url }}" data-bg-mobile="{{ 'banner_chic_yellow_coord_mob.jpg' | asset_url }}" style="cursor: pointer;" title="Shop Chic Yellow Co-Ord Collection">
       </div>
 
     </div>
@@ -42,10 +64,10 @@
 
     <!-- Bottom Center Progress Dots -->
     <div class="slider-dots-wrap" id="sliderDots">
-      <button class="slider-dot active" onclick="goToSlide(0)"></button>
-      <button class="slider-dot" onclick="goToSlide(1)"></button>
-      <button class="slider-dot" onclick="goToSlide(2)"></button>
-      <button class="slider-dot" onclick="goToSlide(3)"></button>
+      <button class="slider-dot active" onclick="goToSlide(0)" aria-label="Slide 1"></button>
+      <button class="slider-dot" onclick="goToSlide(1)" aria-label="Slide 2"></button>
+      <button class="slider-dot" onclick="goToSlide(2)" aria-label="Slide 3"></button>
+      <button class="slider-dot" onclick="goToSlide(3)" aria-label="Slide 4"></button>
     </div>
   </div>
 </section>
@@ -72,11 +94,251 @@
     setTimeout(loadDeferredHeroSlides, 1000);
   }
   window.addEventListener('load', loadDeferredHeroSlides);
-  var sliderEl = document.getElementById('heroSlider');
-  if (sliderEl) {
-    sliderEl.addEventListener('touchstart', loadDeferredHeroSlides, { passive: true, once: true });
-    sliderEl.addEventListener('mouseenter', loadDeferredHeroSlides, { once: true });
-  }
+
+  // Flipkart-Style Touch Swipe & Mouse Drag Controller
+  (function() {
+    window.currentSlide = window.currentSlide || 0;
+    var totalSlides = 4;
+    var slideInterval = 5000;
+    var slideTimer = null;
+    window.heroSliderDragged = false;
+
+    window.updateSlider = function(animated) {
+      if (typeof loadDeferredHeroSlides === 'function') {
+        loadDeferredHeroSlides();
+      }
+      var track = document.getElementById('sliderTrack');
+      var dotsContainer = document.getElementById('sliderDots');
+      if (track) {
+        if (animated !== false) {
+          track.style.transition = 'transform 0.38s cubic-bezier(0.25, 1, 0.5, 1)';
+        } else {
+          track.style.transition = 'none';
+        }
+        track.style.transform = 'translate3d(-' + (window.currentSlide * 25) + '%, 0, 0)';
+      }
+      if (dotsContainer) {
+        var dots = dotsContainer.querySelectorAll('.slider-dot');
+        dots.forEach(function(dot, idx) {
+          if (idx === window.currentSlide) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+    };
+
+    window.nextSlide = function() {
+      window.currentSlide = (window.currentSlide + 1) % totalSlides;
+      window.updateSlider(true);
+    };
+
+    window.prevSlide = function() {
+      window.currentSlide = (window.currentSlide - 1 + totalSlides) % totalSlides;
+      window.updateSlider(true);
+    };
+
+    window.goToSlide = function(idx) {
+      window.currentSlide = idx;
+      window.updateSlider(true);
+      resetAuto();
+    };
+
+    function startAuto() {
+      stopAuto();
+      slideTimer = setInterval(window.nextSlide, slideInterval);
+    }
+
+    function stopAuto() {
+      if (slideTimer) {
+        clearInterval(slideTimer);
+        slideTimer = null;
+      }
+    }
+
+    function resetAuto() {
+      stopAuto();
+      startAuto();
+    }
+
+    window.handleHeroSlideClick = function(el, e) {
+      if (window.heroSliderDragged) {
+        window.heroSliderDragged = false;
+        if (e && e.preventDefault) e.preventDefault();
+        return;
+      }
+      var url = el.getAttribute('data-href');
+      if (url) window.location.href = url;
+    };
+
+    function initSwipe() {
+      var slider = document.getElementById('heroSlider');
+      var track = document.getElementById('sliderTrack');
+      if (!slider || !track) return;
+
+      var startX = 0;
+      var startY = 0;
+      var currentX = 0;
+      var currentY = 0;
+      var isSwiping = false;
+      var isHorizontal = null;
+      var startTime = 0;
+      var isMouseDown = false;
+
+      // Touch Events (Mobile)
+      slider.addEventListener('touchstart', function(e) {
+        if (!e.touches || e.touches.length > 1) return;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        currentX = startX;
+        currentY = startY;
+        startTime = Date.now();
+        isSwiping = true;
+        isHorizontal = null;
+        window.heroSliderDragged = false;
+        stopAuto();
+        if (typeof loadDeferredHeroSlides === 'function') loadDeferredHeroSlides();
+      }, { passive: true });
+
+      slider.addEventListener('touchmove', function(e) {
+        if (!isSwiping || !e.touches || e.touches.length > 1) return;
+        currentX = e.touches[0].clientX;
+        currentY = e.touches[0].clientY;
+        var diffX = currentX - startX;
+        var diffY = currentY - startY;
+
+        if (isHorizontal === null) {
+          if (Math.abs(diffX) > 6 || Math.abs(diffY) > 6) {
+            isHorizontal = Math.abs(diffX) > Math.abs(diffY);
+          }
+        }
+
+        if (isHorizontal) {
+          if (e.cancelable) e.preventDefault();
+          window.heroSliderDragged = true;
+          track.style.transition = 'none';
+          var sliderWidth = slider.offsetWidth || 1;
+          var percentMove = (diffX / sliderWidth) * 25;
+          if ((window.currentSlide === 0 && diffX > 0) || (window.currentSlide === totalSlides - 1 && diffX < 0)) {
+            percentMove *= 0.32;
+          }
+          var targetPercent = -(window.currentSlide * 25) + percentMove;
+          track.style.transform = 'translate3d(' + targetPercent + '%, 0, 0)';
+        }
+      }, { passive: false });
+
+      function endTouch() {
+        if (!isSwiping) return;
+        isSwiping = false;
+        track.style.transition = 'transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)';
+        
+        if (isHorizontal) {
+          var diffX = currentX - startX;
+          var elapsed = Date.now() - startTime;
+          var sliderWidth = slider.offsetWidth || 1;
+          var threshold = Math.min(sliderWidth * 0.15, 60);
+          var velocity = Math.abs(diffX) / (elapsed || 1);
+
+          if ((diffX < -threshold || (diffX < -25 && velocity > 0.3)) && window.currentSlide < totalSlides - 1) {
+            window.currentSlide++;
+          } else if ((diffX > threshold || (diffX > 25 && velocity > 0.3)) && window.currentSlide > 0) {
+            window.currentSlide--;
+          } else if (diffX < -threshold && window.currentSlide === totalSlides - 1) {
+            window.currentSlide = 0;
+          } else if (diffX > threshold && window.currentSlide === 0) {
+            window.currentSlide = totalSlides - 1;
+          }
+        }
+
+        window.updateSlider(true);
+        setTimeout(function() {
+          window.heroSliderDragged = false;
+        }, 120);
+        startAuto();
+      }
+
+      slider.addEventListener('touchend', endTouch, { passive: true });
+      slider.addEventListener('touchcancel', endTouch, { passive: true });
+
+      // Mouse Drag Events (Desktop)
+      slider.addEventListener('mousedown', function(e) {
+        if (e.button !== 0) return;
+        isMouseDown = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        currentX = startX;
+        currentY = startY;
+        startTime = Date.now();
+        window.heroSliderDragged = false;
+        stopAuto();
+        slider.classList.add('is-dragging');
+        if (typeof loadDeferredHeroSlides === 'function') loadDeferredHeroSlides();
+      });
+
+      window.addEventListener('mousemove', function(e) {
+        if (!isMouseDown) return;
+        currentX = e.clientX;
+        currentY = e.clientY;
+        var diffX = currentX - startX;
+
+        if (Math.abs(diffX) > 5) {
+          window.heroSliderDragged = true;
+          track.style.transition = 'none';
+          var sliderWidth = slider.offsetWidth || 1;
+          var percentMove = (diffX / sliderWidth) * 25;
+          if ((window.currentSlide === 0 && diffX > 0) || (window.currentSlide === totalSlides - 1 && diffX < 0)) {
+            percentMove *= 0.32;
+          }
+          var targetPercent = -(window.currentSlide * 25) + percentMove;
+          track.style.transform = 'translate3d(' + targetPercent + '%, 0, 0)';
+        }
+      });
+
+      window.addEventListener('mouseup', function(e) {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+        slider.classList.remove('is-dragging');
+        track.style.transition = 'transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)';
+
+        var diffX = currentX - startX;
+        var elapsed = Date.now() - startTime;
+        var sliderWidth = slider.offsetWidth || 1;
+        var threshold = Math.min(sliderWidth * 0.15, 70);
+        var velocity = Math.abs(diffX) / (elapsed || 1);
+
+        if (window.heroSliderDragged) {
+          if ((diffX < -threshold || (diffX < -30 && velocity > 0.3)) && window.currentSlide < totalSlides - 1) {
+            window.currentSlide++;
+          } else if ((diffX > threshold || (diffX > 30 && velocity > 0.3)) && window.currentSlide > 0) {
+            window.currentSlide--;
+          } else if (diffX < -threshold && window.currentSlide === totalSlides - 1) {
+            window.currentSlide = 0;
+          } else if (diffX > threshold && window.currentSlide === 0) {
+            window.currentSlide = totalSlides - 1;
+          }
+        }
+
+        window.updateSlider(true);
+        setTimeout(function() {
+          window.heroSliderDragged = false;
+        }, 150);
+        startAuto();
+      });
+
+      // Pause on hover
+      slider.addEventListener('mouseenter', stopAuto);
+      slider.addEventListener('mouseleave', startAuto);
+
+      startAuto();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSwipe);
+    } else {
+      initSwipe();
+    }
+  })();
 </script>
 
 {% schema %}
