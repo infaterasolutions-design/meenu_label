@@ -318,34 +318,35 @@ function updateCartUI(cart) {
   var subtotalEl = document.getElementById('cartDrawerSubtotal');
   if (subtotalEl) subtotalEl.textContent = formatMoney(cart.total_price);
 
-  // 4b. Tiered Goal Progress Bar in Cart Drawer
+  // 4b. Tiered Goal Progress Bar in Cart Drawer (Flat ₹700 OFF at ₹4,999)
+  var goalWrap = document.getElementById('cartDrawerGoalWrap');
   var goalText = document.getElementById('cartDrawerGoalText');
   var progressBar = document.getElementById('cartDrawerProgressBar');
-  var milestone800 = document.getElementById('cartDrawerMilestone800');
-  if (goalText && progressBar) {
-    var totalRupees = (cart.total_price || 0) / 100;
-    var tierGoal = 4999;
-    var progressPct = Math.min(100, Math.round((totalRupees / tierGoal) * 100));
-    progressBar.style.width = progressPct + '%';
-    if ((cart.item_count || 0) === 0) {
-      goalText.innerHTML = '🚚 <strong>Free Express Delivery</strong> unlocked on all orders across India!';
-      if (milestone800) {
-        milestone800.style.color = '#7A7269';
-        milestone800.innerHTML = '&#8377;800 OFF at &#8377;4,999';
-      }
-    } else if (totalRupees >= tierGoal) {
-      goalText.innerHTML = '🎉 <strong>VIP Privilege Unlocked!</strong> Flat &#8377;800 OFF auto-applies on your order!';
-      if (milestone800) {
-        milestone800.style.color = '#15803D';
-        milestone800.style.fontWeight = '700';
-        milestone800.innerHTML = '&#10003; Flat &#8377;800 OFF Unlocked';
-      }
+  if (goalWrap && goalText && progressBar) {
+    var totalCents = cart.total_price || 0;
+    var itemCount = cart.item_count || 0;
+    var goalThresholdCents = 499900;
+
+    if (itemCount === 0) {
+      goalWrap.style.display = 'none';
     } else {
-      var remaining = Math.round(tierGoal - totalRupees);
-      goalText.innerHTML = '✨ Add <strong>&#8377;' + remaining.toLocaleString('en-IN') + '</strong> more (1 more suit) to unlock <strong>Flat &#8377;800 OFF</strong>!';
-      if (milestone800) {
-        milestone800.style.color = '#7A7269';
-        milestone800.innerHTML = '&#8377;800 OFF at &#8377;4,999';
+      goalWrap.style.display = 'block';
+
+      if (totalCents >= goalThresholdCents) {
+        // Condition B: Goal unlocked!
+        progressBar.style.width = '100%';
+        progressBar.style.background = '#2E7D32';
+        progressBar.style.boxShadow = '0 0 10px rgba(46, 125, 50, 0.4)';
+        goalText.innerHTML = '🎉 Congratulations! You have unlocked <strong>Flat &#8377;700 OFF</strong> on your order!';
+      } else {
+        // Condition A: Goal in progress
+        var progressPct = Math.min(100, Math.max(0, (totalCents / goalThresholdCents) * 100));
+        var remainingCents = goalThresholdCents - totalCents;
+        progressBar.style.width = progressPct.toFixed(1) + '%';
+        progressBar.style.background = 'linear-gradient(90deg, #D4AF37, #E5C158)';
+        progressBar.style.boxShadow = 'none';
+        var remainingFormatted = formatMoney(remainingCents);
+        goalText.innerHTML = 'Add ' + remainingFormatted + ' more to unlock <strong>Flat &#8377;700 OFF</strong> on your order!';
       }
     }
   }
