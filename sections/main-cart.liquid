@@ -54,6 +54,23 @@
   {% assign gst_label = 'Estimated GST (5% included)' %}
 {% endif %}
 
+<style>
+  body.template-cart .wa-concierge-badge {
+    display: none !important;
+  }
+  body.template-cart .floating-wa-concierge {
+    padding: 10px !important;
+    border-radius: 50% !important;
+    bottom: 14px !important;
+    right: 14px !important;
+  }
+  @media (max-width: 768px) {
+    body.template-cart .cart-page-section {
+      padding-bottom: 100px !important;
+    }
+  }
+</style>
+
 <div class="cart-page-section" style="background: #FAF8F5; min-height: 85vh; padding: 36px 0 80px;">
   <div class="cart-page-container">
 
@@ -120,7 +137,7 @@
           <!-- Cart Items Container -->
           <div id="cartPageItemsList" class="cart-page-items">
             {% for item in cart.items %}
-              <div class="cart-page-item" data-line-key="{{ item.key }}" data-unit-original="{{ item.original_price }}">
+              <div class="cart-page-item" data-line-key="{{ item.key }}" data-variant-id="{{ item.variant_id }}" data-line-index="{{ forloop.index0 }}" data-unit-original="{{ item.original_price }}">
                 <a href="{{ item.url }}">
                   <img src="{{ item.image | image_url: width: 300 }}" alt="{{ item.title | escape }}" class="cart-page-item-img">
                 </a>
@@ -134,11 +151,11 @@
                   </div>
                   <div class="cart-page-item-actions">
                     <div class="qty-stepper" data-line-key="{{ item.key }}">
-                      <button type="button" class="qty-step-btn" onclick="stepCartPageItem('{{ item.key }}', -1)" aria-label="Decrease quantity">-</button>
+                      <button type="button" class="qty-step-btn" onclick="stepCartPageItem(this, -1)" aria-label="Decrease quantity">-</button>
                       <span class="qty-step-val" data-qty="{{ item.quantity }}">{{ item.quantity }}</span>
-                      <button type="button" class="qty-step-btn" onclick="stepCartPageItem('{{ item.key }}', 1)" aria-label="Increase quantity">+</button>
+                      <button type="button" class="qty-step-btn" onclick="stepCartPageItem(this, 1)" aria-label="Increase quantity">+</button>
                     </div>
-                    <button type="button" class="cart-remove-link" onclick="updateCartPageQuantity('{{ item.key }}', 0)">Remove Piece</button>
+                    <button type="button" class="cart-remove-link" onclick="removeCartPageLine(this)">Remove Piece</button>
                     <div class="cart-page-item-prices">
                       <span class="cart-page-price-mrp" {% unless item.original_line_price > item.final_line_price %}style="display:none;"{% endunless %}>{{ item.original_line_price | money }}</span>
                       <span class="cart-page-price-main">{{ item.final_line_price | money }}</span>
@@ -592,7 +609,7 @@
       return null;
     }
 
-    function computeEffectivePricing(cart, code) {
+    function computeEffectivePricing(cart, code, forceCleared) {
       var origSubtotal = Number(cart.original_total_price) || 0;
       if (!origSubtotal && Array.isArray(cart.items)) {
         cart.items.forEach(function(it) { origSubtotal += Number(it.original_line_price) || 0; });
@@ -600,14 +617,16 @@
 
       var nativeInfo = collectNativeDiscounts(cart);
       var normCode = (code || '').trim().toUpperCase();
-      var discountCents = nativeInfo.total;
+      var discountCents = forceCleared ? 0 : nativeInfo.total;
       var payableCents = Math.max(0, origSubtotal - discountCents);
       var appliedRuleLabel = '';
       var isApplied = false;
       var isNativeSynced = false;
       var rejectedByShopify = false;
 
-      if (normCode) {
+      if (forceCleared) {
+        normCode = '';
+      } else if (normCode) {
         var nativeMatch = findMatchingNativeCode(cart, normCode);
         if (nativeMatch && nativeMatch.amount > 0) {
           isApplied = true;
@@ -660,7 +679,9 @@
       if (Array.isArray(cart.items) && cart.items.length > 0) {
         cart.items.forEach(function(item) {
           var qty = Number(item.quantity) || 1;
-          var lineBase = Number(item.final_line_price) || Number(item.original_line_price) || 0;
+          var lineBase = forceCleared
+            ? (Number(item.original_line_price) || Number(item.final_line_price) || 0)
+            : (Number(item.final_line_price) || Number(item.original_line_price) || 0);
           var lineFinal = Math.round(lineBase * clientRatio);
           var perUnitFinal = lineFinal / qty;
           if (perUnitFinal <= 250000) {
@@ -695,7 +716,8 @@
         ruleLabel: appliedRuleLabel,
         isApplied: isApplied,
         rejectedByShopify: rejectedByShopify,
-        clientRatio: clientRatio
+        clientRatio: clientRatio,
+        forceCleared: !!forceCleared
       };
     }
 
@@ -720,8 +742,8 @@
       fb.innerHTML = htmlMessage;
     }
 
-    function renderCartPageSummary(cart, code, statusOverride) {
-      var pricing = computeEffectivePricing(cart, code);
+    function renderCartPageSummary(cart, code, statusOverride, forceCleared) {
+      var pricing = computeEffectivePricing(cart, code, forceCleared);
 
       // Header count & tier bar
       var countEl = document.getElementById('cartPageHeaderCount');
@@ -759,11 +781,15 @@
         }
       }
 
-      // Update line items quantities & prices cleanly
+      // Update line items quantities & prices cleanly (match by key, variant_id, or index)
+      var allItemRows = document.querySelectorAll('.cart-page-item');
       if (Array.isArray(cart.items)) {
-        cart.items.forEach(function(item) {
-          var row = document.querySelector('.cart-page-item[data-line-key="' + item.key + '"]');
+        cart.items.forEach(function(item, idx) {
+          var row = document.querySelector('.cart-page-item[data-line-key="' + item.key + '"]')
+            || (item.variant_id ? document.querySelector('.cart-page-item[data-variant-id="' + item.variant_id + '"]') : null)
+            || allItemRows[idx];
           if (!row) return;
+          row.setAttribute('data-line-key', item.key);
           var qtySpan = row.querySelector('.qty-step-val');
           if (qtySpan) {
             qtySpan.textContent = item.quantity;
@@ -773,7 +799,9 @@
           var mainEl = row.querySelector('.cart-page-price-main');
           var tagEl = row.querySelector('.cart-page-item-discount-tag');
           var origLine = Number(item.original_line_price) || 0;
-          var lineFinal = Math.round((Number(item.final_line_price) || origLine) * pricing.clientRatio);
+          var lineFinal = pricing.forceCleared
+            ? origLine
+            : Math.round((Number(item.final_line_price) || origLine) * pricing.clientRatio);
           var lineSaved = Math.max(0, origLine - lineFinal);
 
           if (mrpEl) {
@@ -882,6 +910,7 @@
           );
         }
       } else {
+        if (inp && document.activeElement !== inp) inp.value = '';
         if (btn) {
           btn.textContent = 'APPLY';
           btn.style.background = '#1E1C19';
@@ -1045,7 +1074,7 @@
         }
       } catch (e) {}
 
-      renderCartPageSummary(latestCartData, '');
+      renderCartPageSummary(latestCartData, '', null, true);
       var syncTask = syncDiscountWithShopify('');
       pendingSyncPromise = syncTask;
       var syncedCart = await syncTask;
@@ -1061,12 +1090,21 @@
       }
     };
 
-    window.stepCartPageItem = function(lineKey, delta) {
-      var row = document.querySelector('.cart-page-item[data-line-key="' + lineKey + '"]');
+    window.stepCartPageItem = function(elOrKey, delta) {
+      var row = (elOrKey && elOrKey.closest)
+        ? elOrKey.closest('.cart-page-item')
+        : document.querySelector('.cart-page-item[data-line-key="' + elOrKey + '"]');
+      var lineKey = row ? row.getAttribute('data-line-key') : elOrKey;
       var qtySpan = row ? row.querySelector('.qty-step-val') : null;
       var currentQty = qtySpan ? parseInt(qtySpan.getAttribute('data-qty') || qtySpan.textContent, 10) || 1 : 1;
       var nextQty = Math.max(0, currentQty + delta);
       return window.updateCartPageQuantity(lineKey, nextQty);
+    };
+
+    window.removeCartPageLine = function(el) {
+      var row = el && el.closest ? el.closest('.cart-page-item') : null;
+      var lineKey = row ? row.getAttribute('data-line-key') : '';
+      if (lineKey) return window.updateCartPageQuantity(lineKey, 0);
     };
 
     window.updateCartPageQuantity = async function(lineKey, newQty) {
