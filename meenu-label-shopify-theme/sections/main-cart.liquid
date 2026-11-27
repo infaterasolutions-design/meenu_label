@@ -1,11 +1,62 @@
 {% comment %}
   Meenu Label Dedicated Atelier Cart Page
-  Sections: Progress Bar, Line Items, Silk Potli Gift, Curated Pairings, Sticky Summary
+  Sections: Progress Bar, Line Items, Curated Pairings, Sticky Summary with Live Discount & GST Sync
 {% endcomment %}
+
+{% assign featured_code = settings.featured_coupon_code | default: 'BF25' | strip | upcase %}
+{% assign featured_pct = settings.featured_coupon_percent | default: 25 | plus: 0 %}
+{% assign featured_label = settings.featured_coupon_label | default: 'APPLY BF25 (25% OFF)' %}
+
+{% assign original_subtotal = cart.original_total_price %}
+{% assign native_discount = cart.total_discount %}
+{% assign final_total = cart.total_price %}
+
+{% assign active_shopify_code = '' %}
+{% assign active_shopify_pct = 0 %}
+{% for disc in cart.discount_applications %}
+  {% if active_shopify_code == blank and disc.title != blank %}
+    {% assign active_shopify_code = disc.title | strip | upcase %}
+    {% if disc.value_type == 'percentage' %}
+      {% assign active_shopify_pct = disc.value | round %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+{% if active_shopify_code == blank and cart.discount_codes.size > 0 %}
+  {% for dc in cart.discount_codes %}
+    {% if dc.applicable and active_shopify_code == blank %}
+      {% assign active_shopify_code = dc.code | strip | upcase %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% assign gst_total_cents = 0.0 %}
+{% assign has_5_gst = false %}
+{% assign has_18_gst = false %}
+{% for item in cart.items %}
+  {% if item.quantity > 0 %}
+    {% assign unit_final = item.final_line_price | times: 1.0 | divided_by: item.quantity %}
+    {% if unit_final <= 250000 %}
+      {% assign has_5_gst = true %}
+      {% assign line_gst = item.final_line_price | times: 5.0 | divided_by: 105.0 %}
+    {% else %}
+      {% assign has_18_gst = true %}
+      {% assign line_gst = item.final_line_price | times: 18.0 | divided_by: 118.0 %}
+    {% endif %}
+    {% assign gst_total_cents = gst_total_cents | plus: line_gst %}
+  {% endif %}
+{% endfor %}
+{% assign gst_rounded_cents = gst_total_cents | round %}
+{% if has_5_gst and has_18_gst %}
+  {% assign gst_label = 'Estimated GST (5% / 18% included)' %}
+{% elsif has_18_gst %}
+  {% assign gst_label = 'Estimated GST (18% included)' %}
+{% else %}
+  {% assign gst_label = 'Estimated GST (5% included)' %}
+{% endif %}
 
 <div class="cart-page-section" style="background: #FAF8F5; min-height: 85vh; padding: 36px 0 80px;">
   <div class="cart-page-container">
-    
+
     <!-- Top Breadcrumb & Header Row -->
     <div class="cart-page-breadcrumb">
       <a href="/">HOME</a> &nbsp;/&nbsp; <span>YOUR SHOPPING BAG</span>
@@ -30,17 +81,17 @@
         <a href="/collections/all" class="btn-primary" style="display: inline-block; padding: 14px 32px; font-size: 12px; letter-spacing: 0.1em; text-decoration: none;">EXPLORE DROP 01 COLLECTION</a>
       </div>
     {% else %}
-      {% assign cart_total = cart.total_price %}
+      {% assign cart_goal_basis = cart.original_total_price | default: cart.total_price %}
       {% assign goal_threshold = 499900 %}
       {% assign is_goal_unlocked = false %}
-      {% if cart_total >= goal_threshold %}
+      {% if cart_goal_basis >= goal_threshold or cart.total_price >= goal_threshold %}
         {% assign is_goal_unlocked = true %}
       {% endif %}
-      {% assign remaining_cents = goal_threshold | minus: cart_total %}
+      {% assign remaining_cents = goal_threshold | minus: cart_goal_basis %}
       {% if remaining_cents < 0 %}
         {% assign remaining_cents = 0 %}
       {% endif %}
-      {% assign progress_pct = cart_total | times: 100.0 | divided_by: goal_threshold %}
+      {% assign progress_pct = cart_goal_basis | times: 100.0 | divided_by: goal_threshold %}
       {% if progress_pct > 100 %}
         {% assign progress_pct = 100 %}
       {% endif %}
@@ -62,14 +113,14 @@
 
       <!-- Active Cart Content Grid -->
       <div id="cartPageActiveGrid" class="cart-page-layout">
-        
+
         <!-- LEFT COLUMN: Items & Ensemble -->
         <div class="cart-page-left">
 
           <!-- Cart Items Container -->
           <div id="cartPageItemsList" class="cart-page-items">
             {% for item in cart.items %}
-              <div class="cart-page-item" data-line-key="{{ item.key }}">
+              <div class="cart-page-item" data-line-key="{{ item.key }}" data-unit-original="{{ item.original_price }}">
                 <a href="{{ item.url }}">
                   <img src="{{ item.image | image_url: width: 300 }}" alt="{{ item.title | escape }}" class="cart-page-item-img">
                 </a>
@@ -79,17 +130,23 @@
                     <a href="{{ item.url }}" style="text-decoration:none; color:inherit;">{{ item.product.title }}</a>
                   </h3>
                   <div class="cart-page-item-meta">
-                    Size: <strong>{{ item.variant.title }}</strong> &bull; Pure Breathable Textile &bull; Handcrafted in Chandigarh
+                    Size: <strong>{{ item.variant.title }}</strong> &bull; Pure Breathable Textile &bull; Handcrafted in Mohali Atelier
                   </div>
                   <div class="cart-page-item-actions">
-                    <div class="qty-stepper">
-                      <button type="button" class="qty-step-btn" onclick="updateCartPageQuantity('{{ item.key }}', {{ item.quantity | minus: 1 }})">-</button>
-                      <span class="qty-step-val">{{ item.quantity }}</span>
-                      <button type="button" class="qty-step-btn" onclick="updateCartPageQuantity('{{ item.key }}', {{ item.quantity | plus: 1 }})">+</button>
+                    <div class="qty-stepper" data-line-key="{{ item.key }}">
+                      <button type="button" class="qty-step-btn" onclick="stepCartPageItem('{{ item.key }}', -1)" aria-label="Decrease quantity">-</button>
+                      <span class="qty-step-val" data-qty="{{ item.quantity }}">{{ item.quantity }}</span>
+                      <button type="button" class="qty-step-btn" onclick="stepCartPageItem('{{ item.key }}', 1)" aria-label="Increase quantity">+</button>
                     </div>
                     <button type="button" class="cart-remove-link" onclick="updateCartPageQuantity('{{ item.key }}', 0)">Remove Piece</button>
                     <div class="cart-page-item-prices">
+                      <span class="cart-page-price-mrp" {% unless item.original_line_price > item.final_line_price %}style="display:none;"{% endunless %}>{{ item.original_line_price | money }}</span>
                       <span class="cart-page-price-main">{{ item.final_line_price | money }}</span>
+                      <div class="cart-page-item-discount-tag" style="font-size:11px; color:#15803D; font-weight:600; margin-top:2px; {% unless item.original_line_price > item.final_line_price %}display:none;{% endunless %}">
+                        {% for alloc in item.line_level_discount_allocations %}
+                          <span>&#127991;&#65039; {{ alloc.discount_application.title }} (-&#8377;{{ alloc.amount | money_without_currency }})</span>
+                        {% endfor %}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -104,16 +161,13 @@
                 <span class="crosssell-eyebrow">CURATED PAIRINGS</span>
                 <h3 class="crosssell-title">Complete Your Drop 01 Ensemble</h3>
               </div>
-              <span class="crosssell-scarcity">Strict Scarcity &bull; Handcrafted in Chandigarh</span>
+              <span class="crosssell-scarcity">Strict Scarcity &bull; Handcrafted in Mohali Atelier</span>
             </div>
 
             {% assign cart_product_ids = cart.items | map: 'product_id' %}
             {% assign rendered_count = 0 %}
 
             <div class="crosssell-grid">
-              {% comment %}
-                1. Prioritize particular suits, co-ords, and sharara sets from Drop 01
-              {% endcomment %}
               {% assign curated_handles = "noor-chanderi-silk-straight-kurta-suit,mustard-crepe-angrakha-co-ord-set,roohani-chanderi-sharara-festive-set,lime-silk-v-neck-tunic-co-ord,the-royal-wine-chanderi-festive-suit,the-gulabi-organza-festive-suit,lime-halter-dobby-palazzo-set,white-porcelain-floral-wrap-dress" | split: "," %}
 
               {% for handle in curated_handles %}
@@ -176,10 +230,6 @@
                 {% endif %}
               {% endfor %}
 
-              {% comment %}
-                2. Fallback: If for any reason all_products wasn't accessible in this store context,
-                render verified Drop 01 suits and co-ords with high-res studio assets.
-              {% endcomment %}
               {% if rendered_count < 4 %}
                 {% if rendered_count < 1 %}
                   <a href="/products/noor-chanderi-silk-straight-kurta-suit" class="crosssell-card">
@@ -277,19 +327,30 @@
         <!-- RIGHT COLUMN: Sticky Order Summary -->
         <div class="cart-page-right">
           <div class="cart-summary-card">
-            
+
             <h2 class="summary-card-title">Order Summary</h2>
 
             <!-- Breakdown Lines -->
             <div class="summary-breakdown">
               <div class="summary-line">
                 <span>Bag Subtotal</span>
-                <span id="pageSubtotal">{{ cart.total_price | money }}</span>
+                <span id="pageSubtotal">{{ original_subtotal | money }}</span>
+              </div>
+
+              <div class="summary-line highlight-green" id="pageDiscountRow" {% unless native_discount > 0 %}style="display:none;"{% endunless %}>
+                <span id="pageDiscountLabel" style="display:inline-flex; align-items:center; gap:5px; font-weight:700; color:#15803D;">
+                  {% if active_shopify_code != blank %}
+                    Discount ({{ active_shopify_code }}{% if active_shopify_pct > 0 %} &bull; {{ active_shopify_pct }}% OFF{% endif %})
+                  {% else %}
+                    Discount
+                  {% endif %}
+                </span>
+                <span id="pageDiscountAmount" style="font-weight:700; color:#15803D;">- &#8377;{{ native_discount | money_without_currency }}</span>
               </div>
 
               <div class="summary-line">
-                <span>Estimated GST (5% Included)</span>
-                <span>&#8377;0</span>
+                <span id="pageGstLabel">{{ gst_label }}</span>
+                <span id="pageGstAmount">&#8377;{{ gst_rounded_cents | money_without_currency }}</span>
               </div>
 
               <div class="summary-line highlight-green">
@@ -301,25 +362,34 @@
 
               <div class="summary-line total-line">
                 <span>Total Payable</span>
-                <span id="pageTotal">{{ cart.total_price | money }}</span>
-              </div>
-              
-              <!-- Clean Instant UPI Discount Reminder -->
-              <div style="font-size: 11.5px; color: #166534; background: #EBF7EE; border: 1px solid #BBF7D0; padding: 9px 12px; border-radius: 6px; margin: 12px 0 6px; text-align: center; font-weight: 600; line-height: 1.4;">
-                &#9889; Pay via <strong>UPI</strong> at checkout to get <strong>Flat &#8377;100 Instant Discount</strong>
+                <span style="display:inline-flex; align-items:baseline; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+                  <span id="pageOriginalTotalStrike" style="font-size:13px; font-weight:500; color:#8A8178; text-decoration:line-through; {% unless native_discount > 0 %}display:none;{% endunless %}">{{ original_subtotal | money }}</span>
+                  <span id="pageTotal">{{ final_total | money }}</span>
+                </span>
               </div>
 
+              {% if settings.enable_upi_discount_banner %}
+                <!-- Optional Instant UPI Discount Reminder (controlled via Theme Settings) -->
+                <div id="cartUpiOfferBanner" style="font-size: 11.5px; color: #166534; background: #EBF7EE; border: 1px solid #BBF7D0; padding: 9px 12px; border-radius: 6px; margin: 12px 0 6px; text-align: center; font-weight: 600; line-height: 1.4;">
+                  &#9889; Pay via <strong>UPI</strong> at checkout to get <strong>Flat {{ settings.upi_discount_amount | default: '&#8377;100' }} Instant Discount</strong>
+                </div>
+              {% endif %}
+
               <div class="summary-methods-badge">
-                <span class="method-tag">UPI / QR (&#8377;100 OFF)</span>
+                {% if settings.enable_upi_discount_banner %}
+                  <span class="method-tag">UPI / QR ({{ settings.upi_discount_amount | default: '&#8377;100' }} OFF)</span>
+                {% else %}
+                  <span class="method-tag">UPI / GPay / PhonePe</span>
+                {% endif %}
                 <span class="method-tag">Credit / Debit Cards</span>
                 <span class="method-tag">Netbanking</span>
                 <span class="method-tag">Cash on Delivery</span>
               </div>
             </div>
 
-            <!-- Coupon Code Field (Apply System) -->
+            <!-- Coupon Code Field (Live Shopify Sync + Instant Calculation) -->
             <div class="summary-coupon-box" style="display: block; width: 100%; margin: 18px 0 16px; box-sizing: border-box;">
-              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: #1E1C19; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: #1E1C19; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
                 <div style="display:flex; align-items:center; gap:6px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8C6A28" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
                     <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
@@ -327,19 +397,26 @@
                   </svg>
                   <span>HAVE A COUPON CODE?</span>
                 </div>
-                <button type="button" onclick="document.getElementById('pageCouponCode').value='FIRST500'; applyPageCoupon();" style="border:1px dashed #D97706; background:#FFFBEB; color:#8C6212; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:4px; cursor:pointer;" title="Tap to apply Flat ₹500 OFF">APPLY FIRST500</button>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <button type="button" id="pageQuickApplyBtn" onclick="quickApplyPageCoupon()" style="border:1px dashed #D97706; background:#FFFBEB; color:#8C6212; font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:4px; cursor:pointer; {% if active_shopify_code == featured_code %}display:none;{% endif %}" title="Tap to apply {{ featured_code }} ({{ featured_pct }}% OFF)">{{ featured_label }}</button>
+                  <button type="button" id="pageCouponRemoveBtn" onclick="removePageCoupon()" style="border:1px solid #FECACA; background:#FEF2F2; color:#B91C1C; font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:4px; cursor:pointer; {% unless active_shopify_code != blank %}display:none;{% endunless %}" title="Remove applied coupon">&times; Remove</button>
+                </div>
               </div>
               <div style="display: flex; gap: 8px; width: 100%;">
-                <input type="text" id="pageCouponCode" placeholder="Enter coupon code" value="" style="flex: 1; min-width: 0; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; outline: none; background: #FFF; color: #1E1C19; box-sizing: border-box;">
-                <button type="button" id="pageCouponBtn" onclick="applyPageCoupon()" style="padding: 10px 18px; background: #1E1C19; color: #FFF; border: none; border-radius: 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; text-transform: uppercase; flex-shrink: 0;">APPLY</button>
+                <input type="text" id="pageCouponCode" placeholder="Enter coupon code (e.g. {{ featured_code }})" value="{{ active_shopify_code | escape }}" style="flex: 1; min-width: 0; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; outline: none; background: #FFF; color: #1E1C19; box-sizing: border-box;">
+                <button type="button" id="pageCouponBtn" onclick="applyPageCoupon()" style="padding: 10px 18px; background: {% if active_shopify_code != blank %}#15803D{% else %}#1E1C19{% endif %}; color: #FFF; border: none; border-radius: 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; text-transform: uppercase; flex-shrink: 0; transition: background 0.2s;">{% if active_shopify_code != blank %}&#10003; APPLIED{% else %}APPLY{% endif %}</button>
               </div>
-              <div id="pageCouponFeedback" style="font-size: 11.5px; font-weight: 600; margin-top: 8px; display: none; line-height: 1.4;"></div>
+              <div id="pageCouponFeedback" style="font-size: 12px; font-weight: 600; margin-top: 8px; padding: 8px 10px; border-radius: 5px; background: #F0FDF4; border: 1px solid #BBF7D0; color: #15803D; line-height: 1.45; {% unless active_shopify_code != blank and native_discount > 0 %}display: none;{% endunless %}">
+                {% if active_shopify_code != blank and native_discount > 0 %}
+                  &#10003; Coupon <strong>{{ active_shopify_code }}</strong> applied &mdash; You save <strong>&#8377;{{ native_discount | money_without_currency }}</strong>{% if active_shopify_pct > 0 %} ({{ active_shopify_pct }}% OFF){% endif %}!
+                {% endif %}
+              </div>
             </div>
 
-            <!-- Checkout CTA Form & Button (Fully integrated with Shopify Checkout & Razorpay) -->
-            <form action="/cart" method="post" id="cartPageCheckoutForm" onsubmit="var d=document.getElementById('cartFormDiscount'); if(d && !d.value && {{ cart.total_price }} < 499900){ d.value='FIRST500'; } if(typeof window.showMeenuCheckoutTransition==='function') window.showMeenuCheckoutTransition();" style="margin: 0; padding: 0;">
-              <input type="hidden" name="discount" id="cartFormDiscount" value="">
-              <button type="submit" name="checkout" id="pageCheckoutBtn" class="summary-checkout-btn cart__checkout-button" style="width: 100%; border: none; cursor: pointer;">
+            <!-- Checkout CTA Form & Button (Cleanly carries applied coupon to /checkout) -->
+            <form action="/checkout" method="get" id="cartPageCheckoutForm" onsubmit="return handleCartPageCheckout(event);" style="margin: 0; padding: 0;">
+              <input type="hidden" name="discount" id="cartFormDiscount" value="{{ active_shopify_code | escape }}" {% if active_shopify_code == blank %}disabled{% endif %}>
+              <button type="submit" id="pageCheckoutBtn" class="summary-checkout-btn cart__checkout-button" style="width: 100%; border: none; cursor: pointer;">
                 PROCEED TO SECURE CHECKOUT &rarr;
               </button>
             </form>
@@ -356,7 +433,7 @@
               </div>
               <div class="summary-trust-item">
                 <span class="trust-icon">&#128205;</span>
-                <span>Dispatched directly from Chandigarh Atelier</span>
+                <span>Dispatched in 24 Hrs from Mohali Atelier</span>
               </div>
             </div>
 
@@ -370,77 +447,794 @@
 </div>
 
 <script>
-  function applyPageCoupon() {
-    var inp = document.getElementById('pageCouponCode');
-    var feedback = document.getElementById('pageCouponFeedback');
-    var btn = document.getElementById('pageCouponBtn');
-    var formDiscount = document.getElementById('cartFormDiscount');
-    var code = inp ? inp.value.trim().toUpperCase() : '';
-
-    if (!code) {
-      if (feedback) {
-        feedback.style.display = 'block';
-        feedback.style.color = '#B91C1C';
-        feedback.textContent = 'Please enter a coupon code';
-      }
-      return;
+  (function() {
+    var FEATURED_COUPON_CODE = {{ featured_code | json }};
+    var FEATURED_COUPON_PERCENT = {{ featured_pct | json }};
+    var EXPIRED_CODES = { 'FIRST500': true, 'USEUPI100': true, 'UPI100': true, 'RESET': true };
+    var CLIENT_PROMO_RULES = {
+      'BF25': { type: 'percent', value: 25, label: '25% OFF' }
+    };
+    if (FEATURED_COUPON_CODE && FEATURED_COUPON_PERCENT > 0 && !CLIENT_PROMO_RULES[FEATURED_COUPON_CODE]) {
+      CLIENT_PROMO_RULES[FEATURED_COUPON_CODE] = {
+        type: 'percent',
+        value: Number(FEATURED_COUPON_PERCENT),
+        label: Number(FEATURED_COUPON_PERCENT) + '% OFF'
+      };
     }
 
-    if (btn) btn.textContent = 'APPLIED';
-    if (formDiscount) formDiscount.value = code;
+    var latestCartData = {
+      item_count: {{ cart.item_count | default: 0 }},
+      original_total_price: {{ cart.original_total_price | default: 0 }},
+      total_discount: {{ cart.total_discount | default: 0 }},
+      total_price: {{ cart.total_price | default: 0 }},
+      discount_codes: [
+        {% for dc in cart.discount_codes %}
+          { code: {{ dc.code | json }}, applicable: {{ dc.applicable | json }} }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ],
+      cart_level_discount_applications: [
+        {% for disc in cart.cart_level_discount_applications %}
+          {
+            title: {{ disc.title | json }},
+            total_allocated_amount: {{ disc.total_allocated_amount | default: 0 }},
+            value: {{ disc.value | json }},
+            value_type: {{ disc.value_type | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ],
+      items: [
+        {% for item in cart.items %}
+          {
+            key: {{ item.key | json }},
+            quantity: {{ item.quantity | default: 1 }},
+            original_line_price: {{ item.original_line_price | default: 0 }},
+            final_line_price: {{ item.final_line_price | default: 0 }},
+            line_level_discount_allocations: [
+              {% for alloc in item.line_level_discount_allocations %}
+                {
+                  amount: {{ alloc.amount | default: 0 }},
+                  discount_application: {
+                    title: {{ alloc.discount_application.title | json }},
+                    value: {{ alloc.discount_application.value | json }},
+                    value_type: {{ alloc.discount_application.value_type | json }}
+                  }
+                }{% unless forloop.last %},{% endunless %}
+              {% endfor %}
+            ]
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    };
 
-    try {
-      sessionStorage.setItem('meenu_applied_coupon', code);
-    } catch(e) {}
+    var activeAppliedCode = {{ active_shopify_code | json }} || '';
+    var pendingSyncPromise = null;
 
-    if (feedback) {
-      feedback.style.display = 'block';
-      feedback.style.color = '#15803D';
-      feedback.innerHTML = '&#10003; Coupon <strong>' + code + '</strong> applied! Will be applied at checkout.';
+    function formatRs(cents) {
+      var num = Number(cents) || 0;
+      return 'Rs. ' + (num / 100).toLocaleString('en-IN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
     }
-  }
 
-  function initPageCoupon() {
-    try {
-      // Clear legacy USEUPI100/UPI100 so input starts clean
-      var saved = sessionStorage.getItem('meenu_applied_coupon');
-      if (saved === 'USEUPI100' || saved === 'UPI100') {
-        sessionStorage.removeItem('meenu_applied_coupon');
-        saved = null;
+    function formatInr(cents) {
+      var num = Number(cents) || 0;
+      return '₹' + (num / 100).toLocaleString('en-IN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function collectNativeDiscounts(cart) {
+      var map = {};
+      var totalNative = Number(cart && cart.total_discount) || 0;
+
+      if (cart && Array.isArray(cart.cart_level_discount_applications)) {
+        cart.cart_level_discount_applications.forEach(function(d) {
+          var key = (d.title || 'DISCOUNT').trim().toUpperCase();
+          if (!map[key]) {
+            map[key] = {
+              title: key,
+              amount: 0,
+              valueType: d.value_type || '',
+              value: Number(d.value) || 0
+            };
+          }
+          map[key].amount += Number(d.total_allocated_amount) || 0;
+        });
       }
-      if (saved) {
-        var inp = document.getElementById('pageCouponCode');
-        if (inp) inp.value = saved;
-        var btn = document.getElementById('pageCouponBtn');
-        if (btn) btn.textContent = 'APPLIED';
-        var formDiscount = document.getElementById('cartFormDiscount');
-        if (formDiscount) formDiscount.value = saved;
-        var feedback = document.getElementById('pageCouponFeedback');
-        if (feedback) {
-          feedback.style.display = 'block';
-          feedback.style.color = '#15803D';
-          feedback.innerHTML = '&#10003; Coupon <strong>' + saved + '</strong> applied!';
+
+      if (cart && Array.isArray(cart.items)) {
+        cart.items.forEach(function(item) {
+          if (Array.isArray(item.line_level_discount_allocations)) {
+            item.line_level_discount_allocations.forEach(function(alloc) {
+              var app = alloc.discount_application || {};
+              var key = (app.title || 'DISCOUNT').trim().toUpperCase();
+              if (!map[key]) {
+                map[key] = {
+                  title: key,
+                  amount: 0,
+                  valueType: app.value_type || '',
+                  value: Number(app.value) || 0
+                };
+              }
+              map[key].amount += Number(alloc.amount) || 0;
+            });
+          }
+        });
+      }
+
+      return {
+        total: totalNative,
+        byCode: map
+      };
+    }
+
+    function findMatchingNativeCode(cart, code) {
+      if (!code || !cart) return null;
+      var norm = code.trim().toUpperCase();
+      var collected = collectNativeDiscounts(cart);
+      if (collected.byCode[norm] && collected.byCode[norm].amount > 0) {
+        return collected.byCode[norm];
+      }
+      if (Array.isArray(cart.discount_codes)) {
+        for (var i = 0; i < cart.discount_codes.length; i++) {
+          var dc = cart.discount_codes[i];
+          if ((dc.code || '').trim().toUpperCase() === norm) {
+            return {
+              codeMatched: true,
+              applicable: !!dc.applicable,
+              amount: collected.total
+            };
+          }
         }
       }
-    } catch(e) {}
-  }
-  document.addEventListener('DOMContentLoaded', initPageCoupon);
+      return null;
+    }
 
-  function updateCartPageQuantity(lineKey, newQty) {
-    fetch('/cart/change.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: lineKey, quantity: Math.max(0, newQty) })
-    })
-    .then(function() {
-      // Reload page to re-render fresh cart state
-      window.location.reload();
-    })
-    .catch(function(err) {
-      console.error('Failed to update cart line:', err);
-      window.location.reload();
-    });
-  }
+    function computeEffectivePricing(cart, code) {
+      var origSubtotal = Number(cart.original_total_price) || 0;
+      if (!origSubtotal && Array.isArray(cart.items)) {
+        cart.items.forEach(function(it) { origSubtotal += Number(it.original_line_price) || 0; });
+      }
+
+      var nativeInfo = collectNativeDiscounts(cart);
+      var normCode = (code || '').trim().toUpperCase();
+      var discountCents = nativeInfo.total;
+      var payableCents = Math.max(0, origSubtotal - discountCents);
+      var appliedRuleLabel = '';
+      var isApplied = false;
+      var isNativeSynced = false;
+      var rejectedByShopify = false;
+
+      if (normCode) {
+        var nativeMatch = findMatchingNativeCode(cart, normCode);
+        if (nativeMatch && nativeMatch.amount > 0) {
+          isApplied = true;
+          isNativeSynced = true;
+          if (nativeMatch.valueType === 'percentage' && nativeMatch.value > 0) {
+            appliedRuleLabel = Math.round(nativeMatch.value) + '% OFF';
+          }
+        } else if (nativeMatch && nativeMatch.codeMatched && nativeMatch.applicable === false && nativeInfo.total === 0) {
+          rejectedByShopify = true;
+        } else if (CLIENT_PROMO_RULES[normCode]) {
+          // Client preview calculation when manual code hasn't synced into cart.js yet
+          var rule = CLIENT_PROMO_RULES[normCode];
+          var previewBase = payableCents;
+          var extraDiscount = rule.type === 'percent'
+            ? Math.round(previewBase * (rule.value / 100))
+            : Math.min(previewBase, Math.round(rule.value * 100));
+          discountCents += extraDiscount;
+          payableCents = Math.max(0, origSubtotal - discountCents);
+          appliedRuleLabel = rule.label;
+          isApplied = true;
+        } else {
+          // Unknown manual code in preview mode before Shopify verification
+          isApplied = true;
+          appliedRuleLabel = '';
+        }
+      } else if (nativeInfo.total > 0) {
+        var titles = Object.keys(nativeInfo.byCode);
+        if (titles.length > 0) {
+          normCode = titles[0];
+          var dObj = nativeInfo.byCode[normCode];
+          if (dObj && dObj.valueType === 'percentage' && dObj.value > 0) {
+            appliedRuleLabel = Math.round(dObj.value) + '% OFF';
+          }
+        }
+        isApplied = true;
+        isNativeSynced = true;
+      }
+
+      // India 2026 Apparel GST Rule on final discounted payable price:
+      // 5% included = linePayable * 5 / 105 when per-item final price <= ₹2,500 (250000 paise)
+      // 18% included = linePayable * 18 / 118 when per-item final price > ₹2,500
+      var gstCents = 0;
+      var has5 = false;
+      var has18 = false;
+      var nativeFinalTotal = Number(cart.total_price) || origSubtotal;
+      var clientRatio = (!isNativeSynced && discountCents > nativeInfo.total && nativeFinalTotal > 0)
+        ? (payableCents / nativeFinalTotal)
+        : 1;
+
+      if (Array.isArray(cart.items) && cart.items.length > 0) {
+        cart.items.forEach(function(item) {
+          var qty = Number(item.quantity) || 1;
+          var lineBase = Number(item.final_line_price) || Number(item.original_line_price) || 0;
+          var lineFinal = Math.round(lineBase * clientRatio);
+          var perUnitFinal = lineFinal / qty;
+          if (perUnitFinal <= 250000) {
+            has5 = true;
+            gstCents += (lineFinal * 5) / 105;
+          } else {
+            has18 = true;
+            gstCents += (lineFinal * 18) / 118;
+          }
+        });
+      } else if (payableCents > 0) {
+        if (payableCents <= 250000) {
+          has5 = true;
+          gstCents = (payableCents * 5) / 105;
+        } else {
+          has18 = true;
+          gstCents = (payableCents * 18) / 118;
+        }
+      }
+
+      var gstLabel = 'Estimated GST (5% included)';
+      if (has5 && has18) gstLabel = 'Estimated GST (5% / 18% included)';
+      else if (has18) gstLabel = 'Estimated GST (18% included)';
+
+      return {
+        origSubtotal: origSubtotal,
+        discountCents: discountCents,
+        payableCents: payableCents,
+        gstCents: Math.round(gstCents),
+        gstLabel: gstLabel,
+        code: normCode,
+        ruleLabel: appliedRuleLabel,
+        isApplied: isApplied,
+        rejectedByShopify: rejectedByShopify,
+        clientRatio: clientRatio
+      };
+    }
+
+    function setCouponFeedback(type, htmlMessage) {
+      var fb = document.getElementById('pageCouponFeedback');
+      if (!fb) return;
+      if (!htmlMessage) {
+        fb.style.display = 'none';
+        fb.innerHTML = '';
+        return;
+      }
+      fb.style.display = 'block';
+      if (type === 'error') {
+        fb.style.background = '#FEF2F2';
+        fb.style.borderColor = '#FECACA';
+        fb.style.color = '#B91C1C';
+      } else {
+        fb.style.background = '#F0FDF4';
+        fb.style.borderColor = '#BBF7D0';
+        fb.style.color = '#15803D';
+      }
+      fb.innerHTML = htmlMessage;
+    }
+
+    function renderCartPageSummary(cart, code, statusOverride) {
+      var pricing = computeEffectivePricing(cart, code);
+
+      // Header count & tier bar
+      var countEl = document.getElementById('cartPageHeaderCount');
+      if (countEl && typeof cart.item_count === 'number') {
+        countEl.textContent = cart.item_count;
+      }
+
+      // Sync global header / mobile drawer cart badges
+      var badgeEls = document.querySelectorAll('#headerCartCount, .header-cart-pill, .cart-count-badge, .nav-drawer-cart-count, #cartDrawerCount');
+      badgeEls.forEach(function(b) {
+        if (typeof cart.item_count === 'number') {
+          b.textContent = cart.item_count;
+          b.style.display = cart.item_count > 0 ? 'inline-flex' : 'none';
+        }
+      });
+
+      // Goal progress bar (based on original subtotal or cart total)
+      var goalBasis = pricing.origSubtotal;
+      var goalThreshold = 499900;
+      var goalText = document.getElementById('cartPageGoalText');
+      var goalBar = document.getElementById('cartPageProgressBar');
+      if (goalText && goalBar) {
+        if (goalBasis >= goalThreshold || cart.total_price >= goalThreshold) {
+          goalBar.style.width = '100%';
+          goalBar.style.background = '#2E7D32';
+          goalBar.style.boxShadow = '0 0 10px rgba(46, 125, 50, 0.4)';
+          goalText.innerHTML = '🎉 Congratulations! You have unlocked <strong>Flat &#8377;700 OFF</strong> on your order!';
+        } else {
+          var rem = Math.max(0, goalThreshold - goalBasis);
+          var pct = Math.min(100, Math.max(0, (goalBasis / goalThreshold) * 100));
+          goalBar.style.width = pct.toFixed(1) + '%';
+          goalBar.style.background = 'linear-gradient(90deg, #D4AF37, #E5C158)';
+          goalBar.style.boxShadow = 'none';
+          goalText.innerHTML = 'Add ' + formatRs(rem) + ' more to unlock <strong>Flat &#8377;700 OFF</strong> on your order!';
+        }
+      }
+
+      // Update line items quantities & prices cleanly
+      if (Array.isArray(cart.items)) {
+        cart.items.forEach(function(item) {
+          var row = document.querySelector('.cart-page-item[data-line-key="' + item.key + '"]');
+          if (!row) return;
+          var qtySpan = row.querySelector('.qty-step-val');
+          if (qtySpan) {
+            qtySpan.textContent = item.quantity;
+            qtySpan.setAttribute('data-qty', item.quantity);
+          }
+          var mrpEl = row.querySelector('.cart-page-price-mrp');
+          var mainEl = row.querySelector('.cart-page-price-main');
+          var tagEl = row.querySelector('.cart-page-item-discount-tag');
+          var origLine = Number(item.original_line_price) || 0;
+          var lineFinal = Math.round((Number(item.final_line_price) || origLine) * pricing.clientRatio);
+          var lineSaved = Math.max(0, origLine - lineFinal);
+
+          if (mrpEl) {
+            mrpEl.textContent = formatRs(origLine);
+            mrpEl.style.display = lineSaved > 0 ? 'inline' : 'none';
+          }
+          if (mainEl) {
+            mainEl.textContent = formatRs(lineFinal);
+          }
+          if (tagEl) {
+            if (lineSaved > 0 && pricing.code) {
+              tagEl.innerHTML = '<span>&#127991;&#65039; ' + pricing.code + ' (-' + formatInr(lineSaved) + ')</span>';
+              tagEl.style.display = 'block';
+            } else {
+              tagEl.style.display = 'none';
+              tagEl.innerHTML = '';
+            }
+          }
+        });
+      }
+
+      // Order Summary Totals
+      var subEl = document.getElementById('pageSubtotal');
+      var discRow = document.getElementById('pageDiscountRow');
+      var discLabel = document.getElementById('pageDiscountLabel');
+      var discAmt = document.getElementById('pageDiscountAmount');
+      var gstLabelEl = document.getElementById('pageGstLabel');
+      var gstAmtEl = document.getElementById('pageGstAmount');
+      var strikeEl = document.getElementById('pageOriginalTotalStrike');
+      var totalEl = document.getElementById('pageTotal');
+
+      if (subEl) subEl.textContent = formatRs(pricing.origSubtotal);
+
+      if (discRow && discLabel && discAmt) {
+        if (pricing.discountCents > 0) {
+          var labelStr = 'Discount';
+          if (pricing.code) {
+            labelStr += ' (' + pricing.code + (pricing.ruleLabel ? ' &bull; ' + pricing.ruleLabel : '') + ')';
+          }
+          discLabel.innerHTML = labelStr;
+          discAmt.textContent = '- ' + formatInr(pricing.discountCents);
+          discRow.style.display = 'flex';
+        } else {
+          discRow.style.display = 'none';
+        }
+      }
+
+      if (gstLabelEl) gstLabelEl.textContent = pricing.gstLabel;
+      if (gstAmtEl) gstAmtEl.textContent = formatInr(pricing.gstCents);
+
+      if (strikeEl) {
+        strikeEl.textContent = formatRs(pricing.origSubtotal);
+        strikeEl.style.display = pricing.discountCents > 0 ? 'inline' : 'none';
+      }
+      if (totalEl) {
+        totalEl.textContent = formatRs(pricing.payableCents);
+      }
+
+      // Coupon UI Controls
+      var inp = document.getElementById('pageCouponCode');
+      var btn = document.getElementById('pageCouponBtn');
+      var quickBtn = document.getElementById('pageQuickApplyBtn');
+      var removeBtn = document.getElementById('pageCouponRemoveBtn');
+      var formDiscount = document.getElementById('cartFormDiscount');
+
+      if (statusOverride && statusOverride.error) {
+        if (btn) {
+          btn.textContent = 'APPLY';
+          btn.style.background = '#1E1C19';
+        }
+        if (quickBtn) quickBtn.style.display = 'inline-block';
+        if (removeBtn) removeBtn.style.display = 'none';
+        if (formDiscount) {
+          formDiscount.value = '';
+          formDiscount.disabled = true;
+        }
+        setCouponFeedback('error', statusOverride.error);
+        return pricing;
+      }
+
+      if (pricing.code && !pricing.rejectedByShopify) {
+        if (inp && document.activeElement !== inp) inp.value = pricing.code;
+        if (btn) {
+          btn.innerHTML = '&#10003; APPLIED';
+          btn.style.background = '#15803D';
+        }
+        if (quickBtn) {
+          quickBtn.style.display = (pricing.code === FEATURED_COUPON_CODE) ? 'none' : 'inline-block';
+        }
+        if (removeBtn) removeBtn.style.display = 'inline-block';
+        if (formDiscount) {
+          formDiscount.value = pricing.code;
+          formDiscount.disabled = false;
+        }
+        if (pricing.discountCents > 0) {
+          setCouponFeedback(
+            'success',
+            '&#10003; Coupon <strong>' + pricing.code + '</strong> applied &mdash; You save <strong>' +
+            formatInr(pricing.discountCents) + '</strong>' +
+            (pricing.ruleLabel ? ' (' + pricing.ruleLabel + ')' : '') + '!'
+          );
+        } else {
+          setCouponFeedback(
+            'success',
+            '&#10003; Coupon <strong>' + pricing.code + '</strong> applied to your bag.'
+          );
+        }
+      } else {
+        if (btn) {
+          btn.textContent = 'APPLY';
+          btn.style.background = '#1E1C19';
+        }
+        if (quickBtn) quickBtn.style.display = 'inline-block';
+        if (removeBtn) removeBtn.style.display = 'none';
+        if (formDiscount) {
+          formDiscount.value = '';
+          formDiscount.disabled = true;
+        }
+        setCouponFeedback('success', '');
+      }
+
+      return pricing;
+    }
+
+    async function syncDiscountWithShopify(code) {
+      var cleanCode = (code || '').trim().toUpperCase();
+      var freshCart = null;
+
+      // 1. Primary Shopify AJAX Cart update (replaces cart.discount_codes cleanly & avoids dead code stacking)
+      try {
+        var updRes = await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ discount: cleanCode })
+        });
+        if (updRes.ok) {
+          freshCart = await updRes.json();
+        }
+      } catch (e) {}
+
+      // 2. Also hit Shopify's native /discount/CODE endpoint & re-sync /cart.js
+      if (cleanCode) {
+        try {
+          await fetch('/discount/' + encodeURIComponent(cleanCode) + '?redirect=/cart', {
+            method: 'GET',
+            credentials: 'same-origin',
+            cache: 'no-store'
+          });
+          var cartRes = await fetch('/cart.js?t=' + Date.now(), {
+            credentials: 'same-origin',
+            cache: 'no-store'
+          });
+          if (cartRes.ok) {
+            freshCart = await cartRes.json();
+          }
+        } catch (e) {}
+      } else {
+        try {
+          document.cookie = 'discount_code=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        } catch (e) {}
+        if (!freshCart || (Array.isArray(freshCart.discount_codes) && freshCart.discount_codes.length > 0)) {
+          try {
+            await fetch('/discount/RESET?redirect=/cart', {
+              method: 'GET',
+              credentials: 'same-origin',
+              cache: 'no-store'
+            });
+            var clearedRes = await fetch('/cart.js?t=' + Date.now(), {
+              credentials: 'same-origin',
+              cache: 'no-store'
+            });
+            if (clearedRes.ok) {
+              freshCart = await clearedRes.json();
+            }
+          } catch (e) {}
+        }
+      }
+
+      if (freshCart) latestCartData = freshCart;
+      return freshCart;
+    }
+
+    window.quickApplyPageCoupon = function() {
+      var inp = document.getElementById('pageCouponCode');
+      if (inp) inp.value = FEATURED_COUPON_CODE;
+      return window.applyPageCoupon(FEATURED_COUPON_CODE);
+    };
+
+    window.applyPageCoupon = async function(explicitCode, opts) {
+      opts = opts || {};
+      var inp = document.getElementById('pageCouponCode');
+      var btn = document.getElementById('pageCouponBtn');
+      var code = (explicitCode || (inp ? inp.value : '') || '').trim().toUpperCase();
+
+      if (!code) {
+        renderCartPageSummary(latestCartData, activeAppliedCode, {
+          error: 'Please enter a coupon code (e.g. <strong>' + FEATURED_COUPON_CODE + '</strong>).'
+        });
+        return;
+      }
+
+      if (EXPIRED_CODES[code]) {
+        try { sessionStorage.removeItem('meenu_applied_coupon'); } catch (e) {}
+        activeAppliedCode = '';
+        if (inp) inp.value = '';
+        syncDiscountWithShopify('');
+        renderCartPageSummary(latestCartData, '', {
+          error: 'Coupon <strong>' + code + '</strong> has expired. Tap <strong>' + FEATURED_COUPON_CODE + '</strong> above for Flat ' + FEATURED_COUPON_PERCENT + '% OFF!'
+        });
+        return;
+      }
+
+      activeAppliedCode = code;
+      if (inp) inp.value = code;
+      try { sessionStorage.setItem('meenu_applied_coupon', code); } catch (e) {}
+
+      if (btn) {
+        btn.textContent = 'APPLYING...';
+        btn.disabled = true;
+      }
+
+      // Immediate responsive preview before network roundtrip completes
+      renderCartPageSummary(latestCartData, code);
+
+      var syncTask = syncDiscountWithShopify(code);
+      pendingSyncPromise = syncTask;
+      var syncedCart = await syncTask;
+      if (pendingSyncPromise === syncTask) pendingSyncPromise = null;
+
+      if (btn) btn.disabled = false;
+
+      if (syncedCart) {
+        var checkMatch = findMatchingNativeCode(syncedCart, code);
+        if (checkMatch && checkMatch.codeMatched && checkMatch.applicable === false && (syncedCart.total_discount || 0) === 0) {
+          activeAppliedCode = '';
+          try { sessionStorage.removeItem('meenu_applied_coupon'); } catch (e) {}
+          await syncDiscountWithShopify('');
+          renderCartPageSummary(latestCartData, '', {
+            error: 'Coupon code <strong>' + code + '</strong> is not valid or not applicable to items in your bag.'
+          });
+          return;
+        }
+        renderCartPageSummary(syncedCart, code);
+      } else {
+        renderCartPageSummary(latestCartData, code);
+      }
+
+      if (!opts.silent && typeof showMeenuToast === 'function') {
+        showMeenuToast('✓ Coupon ' + code + ' applied!');
+      }
+    };
+
+    window.removePageCoupon = async function() {
+      var inp = document.getElementById('pageCouponCode');
+      var removeBtn = document.getElementById('pageCouponRemoveBtn');
+      if (removeBtn) removeBtn.disabled = true;
+
+      activeAppliedCode = '';
+      if (inp) inp.value = '';
+      try { sessionStorage.removeItem('meenu_applied_coupon'); } catch (e) {}
+
+      // Remove ?discount=... from URL without page reload
+      try {
+        var url = new URL(window.location.href);
+        if (url.searchParams.has('discount')) {
+          url.searchParams.delete('discount');
+          window.history.replaceState({}, '', url.pathname + (url.search ? url.search : '') + url.hash);
+        }
+      } catch (e) {}
+
+      renderCartPageSummary(latestCartData, '');
+      var syncTask = syncDiscountWithShopify('');
+      pendingSyncPromise = syncTask;
+      var syncedCart = await syncTask;
+      if (pendingSyncPromise === syncTask) pendingSyncPromise = null;
+
+      if (removeBtn) removeBtn.disabled = false;
+      if (syncedCart) {
+        renderCartPageSummary(syncedCart, '');
+      }
+
+      if (typeof showMeenuToast === 'function') {
+        showMeenuToast('Coupon removed');
+      }
+    };
+
+    window.stepCartPageItem = function(lineKey, delta) {
+      var row = document.querySelector('.cart-page-item[data-line-key="' + lineKey + '"]');
+      var qtySpan = row ? row.querySelector('.qty-step-val') : null;
+      var currentQty = qtySpan ? parseInt(qtySpan.getAttribute('data-qty') || qtySpan.textContent, 10) || 1 : 1;
+      var nextQty = Math.max(0, currentQty + delta);
+      return window.updateCartPageQuantity(lineKey, nextQty);
+    };
+
+    window.updateCartPageQuantity = async function(lineKey, newQty) {
+      var row = document.querySelector('.cart-page-item[data-line-key="' + lineKey + '"]');
+      if (row) row.style.opacity = '0.65';
+
+      try {
+        var res = await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ id: lineKey, quantity: Math.max(0, newQty) })
+        });
+        if (!res.ok) throw new Error('Cart update failed');
+        var cart = await res.json();
+        latestCartData = cart;
+
+        if (!cart.items || cart.item_count === 0 || (newQty <= 0 && !cart.items.some(function(i) { return i.key === lineKey; }))) {
+          window.location.reload();
+          return;
+        }
+        if (row) row.style.opacity = '1';
+        renderCartPageSummary(cart, activeAppliedCode);
+      } catch (err) {
+        console.error('Failed to update cart line:', err);
+        window.location.reload();
+      }
+    };
+
+    window.handleCartPageCheckout = function(e) {
+      var formDiscount = document.getElementById('cartFormDiscount');
+      var codeToUse = activeAppliedCode;
+      if (!codeToUse) {
+        try {
+          var saved = sessionStorage.getItem('meenu_applied_coupon');
+          if (saved && !EXPIRED_CODES[saved.trim().toUpperCase()]) {
+            codeToUse = saved.trim().toUpperCase();
+          }
+        } catch (err) {}
+      }
+
+      if (typeof window.showMeenuCheckoutTransition === 'function') {
+        window.showMeenuCheckoutTransition();
+      }
+
+      if (pendingSyncPromise) {
+        if (e && e.preventDefault) e.preventDefault();
+        pendingSyncPromise.finally(function() {
+          window.location.href = codeToUse ? '/checkout?discount=' + encodeURIComponent(codeToUse) : '/checkout';
+        });
+        return false;
+      }
+
+      if (formDiscount) {
+        if (codeToUse && !EXPIRED_CODES[codeToUse]) {
+          formDiscount.value = codeToUse;
+          formDiscount.disabled = false;
+        } else {
+          formDiscount.value = '';
+          formDiscount.disabled = true;
+        }
+      }
+      return true;
+    };
+
+    function readDiscountCookie() {
+      try {
+        var m = document.cookie.match(/(?:^|;\s*)discount_code=([^;]+)/);
+        return m ? decodeURIComponent(m[1]).trim().toUpperCase() : '';
+      } catch (e) {
+        return '';
+      }
+    }
+
+    async function initPageCoupon() {
+      var inp = document.getElementById('pageCouponCode');
+      if (inp) {
+        inp.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            window.applyPageCoupon();
+          }
+        });
+      }
+
+      try {
+        var urlCode = '';
+        try {
+          var params = new URLSearchParams(window.location.search);
+          urlCode = (params.get('discount') || '').trim().toUpperCase();
+        } catch (e) {}
+
+        var saved = '';
+        try {
+          saved = (sessionStorage.getItem('meenu_applied_coupon') || '').trim().toUpperCase();
+          if (EXPIRED_CODES[saved]) {
+            sessionStorage.removeItem('meenu_applied_coupon');
+            saved = '';
+          }
+        } catch (e) {}
+
+        var cookieCode = readDiscountCookie();
+        if (EXPIRED_CODES[cookieCode]) cookieCode = '';
+
+        // 1. Always fetch freshest /cart.js in case back-navigation or /discount/ URL changed server cart
+        try {
+          var res = await fetch('/cart.js?t=' + Date.now(), { credentials: 'same-origin', cache: 'no-store' });
+          if (res.ok) {
+            latestCartData = await res.json();
+          }
+        } catch (e) {}
+
+        // Identify any currently applicable native discount code in cart.js
+        var serverApplicableCode = '';
+        if (Array.isArray(latestCartData.discount_codes)) {
+          for (var i = 0; i < latestCartData.discount_codes.length; i++) {
+            var dc = latestCartData.discount_codes[i];
+            var c = (dc.code || '').trim().toUpperCase();
+            if (dc.applicable && c && !EXPIRED_CODES[c]) {
+              serverApplicableCode = c;
+              break;
+            }
+          }
+        }
+        if (!serverApplicableCode) {
+          var nativeInfo = collectNativeDiscounts(latestCartData);
+          var keys = Object.keys(nativeInfo.byCode);
+          if (keys.length > 0 && !EXPIRED_CODES[keys[0]]) {
+            serverApplicableCode = keys[0];
+          }
+        }
+
+        // Strip expired/dead codes from Shopify cart if no valid code is applied
+        var hasDeadCodesOnly = !serverApplicableCode &&
+          Array.isArray(latestCartData.discount_codes) &&
+          latestCartData.discount_codes.some(function(dc) {
+            return EXPIRED_CODES[(dc.code || '').trim().toUpperCase()] && !dc.applicable;
+          });
+        if (hasDeadCodesOnly && !urlCode && !saved) {
+          await syncDiscountWithShopify('');
+        }
+
+        var targetCode = (urlCode && !EXPIRED_CODES[urlCode])
+          ? urlCode
+          : (serverApplicableCode || saved || cookieCode);
+
+        if (targetCode) {
+          activeAppliedCode = targetCode;
+          try { sessionStorage.setItem('meenu_applied_coupon', targetCode); } catch (e) {}
+          if (targetCode !== serverApplicableCode) {
+            await window.applyPageCoupon(targetCode, { silent: true });
+          } else {
+            renderCartPageSummary(latestCartData, targetCode);
+          }
+        } else {
+          renderCartPageSummary(latestCartData, '');
+        }
+      } catch (err) {
+        renderCartPageSummary(latestCartData, activeAppliedCode);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPageCoupon);
+    } else {
+      initPageCoupon();
+    }
+  })();
 </script>
 
 {% schema %}

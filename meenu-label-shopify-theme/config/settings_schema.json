@@ -49,5 +49,41 @@
         "default": "meenulabel24@gmail.com"
       }
     ]
+  },
+  {
+    "name": "Cart & Checkout Offers",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_upi_discount_banner",
+        "label": "Show UPI Instant Discount Notice in Cart",
+        "info": "Enable only when a Razorpay UPI Instant Discount offer is active in your Razorpay Dashboard.",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "upi_discount_amount",
+        "label": "UPI Discount Label Amount",
+        "default": "₹100"
+      },
+      {
+        "type": "text",
+        "id": "featured_coupon_code",
+        "label": "Featured Quick-Apply Coupon Code",
+        "default": "BF25"
+      },
+      {
+        "type": "text",
+        "id": "featured_coupon_label",
+        "label": "Quick-Apply Button Label",
+        "default": "APPLY BF25 (25% OFF)"
+      },
+      {
+        "type": "number",
+        "id": "featured_coupon_percent",
+        "label": "Featured Coupon Discount % (for instant cart preview)",
+        "default": 25
+      }
+    ]
   }
 ]

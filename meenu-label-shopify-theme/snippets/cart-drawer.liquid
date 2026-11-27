@@ -1,3 +1,19 @@
+{% assign drawer_featured_code = settings.featured_coupon_code | default: 'BF25' | strip | upcase %}
+{% assign drawer_featured_pct = settings.featured_coupon_percent | default: 25 | plus: 0 %}
+{% assign drawer_active_code = '' %}
+{% for disc in cart.discount_applications %}
+  {% if drawer_active_code == blank and disc.title != blank %}
+    {% assign drawer_active_code = disc.title | strip | upcase %}
+  {% endif %}
+{% endfor %}
+{% if drawer_active_code == blank and cart.discount_codes.size > 0 %}
+  {% for dc in cart.discount_codes %}
+    {% if dc.applicable and drawer_active_code == blank %}
+      {% assign drawer_active_code = dc.code | strip | upcase %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
 <div class="cart-backdrop" id="CartBackdrop" onclick="toggleCartDrawer()"></div>
 <div class="cart-drawer" id="CartDrawer">
   <div class="cart-header">
@@ -6,17 +22,17 @@
   </div>
 
   <!-- Tiered Cart Goal Progress Bar (Flat ₹700 OFF at ₹4,999) -->
-  {% assign cart_total = cart.total_price %}
+  {% assign cart_goal_basis = cart.original_total_price | default: cart.total_price %}
   {% assign goal_threshold = 499900 %}
   {% assign is_goal_unlocked = false %}
-  {% if cart_total >= goal_threshold %}
+  {% if cart_goal_basis >= goal_threshold or cart.total_price >= goal_threshold %}
     {% assign is_goal_unlocked = true %}
   {% endif %}
-  {% assign remaining_cents = goal_threshold | minus: cart_total %}
+  {% assign remaining_cents = goal_threshold | minus: cart_goal_basis %}
   {% if remaining_cents < 0 %}
     {% assign remaining_cents = 0 %}
   {% endif %}
-  {% assign progress_pct = cart_total | times: 100.0 | divided_by: goal_threshold %}
+  {% assign progress_pct = cart_goal_basis | times: 100.0 | divided_by: goal_threshold %}
   {% if progress_pct > 100 %}
     {% assign progress_pct = 100 %}
   {% endif %}
@@ -66,100 +82,238 @@
   </div>
 
   <div class="cart-footer" id="cartDrawerFooter" {% if cart.item_count == 0 %}style="display:none;"{% endif %}>
+    <div style="display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">
+      <span>Bag Subtotal</span>
+      <span id="cartDrawerOriginalSubtotal">{{ cart.original_total_price | money }}</span>
+    </div>
+    <div id="cartDrawerDiscountRow" style="display: {% if cart.total_discount > 0 %}flex{% else %}none{% endif %}; justify-content: space-between; font-size: 13px; font-weight: 700; color: #15803D; margin-bottom: 6px;">
+      <span id="cartDrawerDiscountLabel">Discount{% if drawer_active_code != blank %} ({{ drawer_active_code }}){% endif %}</span>
+      <span id="cartDrawerDiscountAmount">- &#8377;{{ cart.total_discount | money_without_currency }}</span>
+    </div>
     <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; margin-bottom: 10px;">
-      <span>Subtotal</span>
+      <span>Total Payable</span>
       <span id="cartDrawerSubtotal">{{ cart.total_price | money }}</span>
     </div>
 
     <!-- Coupon Apply System in Drawer -->
     <div style="margin-bottom: 10px;">
       <div style="display: flex; gap: 6px;">
-        <input type="text" id="cartDrawerCouponInput" placeholder="Enter coupon code" style="flex: 1; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; background: #FFF; outline: none; color: #1E1C19;">
-        <button type="button" id="cartDrawerCouponBtn" onclick="applyCartDrawerCoupon()" style="padding: 8px 14px; background: #1E1C19; color: #FFF; border: none; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase;">APPLY</button>
+        <input type="text" id="cartDrawerCouponInput" placeholder="Enter coupon code (e.g. {{ drawer_featured_code }})" value="{{ drawer_active_code | escape }}" style="flex: 1; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; background: #FFF; outline: none; color: #1E1C19;">
+        <button type="button" id="cartDrawerCouponBtn" onclick="applyCartDrawerCoupon()" style="padding: 8px 14px; background: {% if drawer_active_code != blank %}#15803D{% else %}#1E1C19{% endif %}; color: #FFF; border: none; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase;">{% if drawer_active_code != blank %}&#10003; APPLIED{% else %}APPLY{% endif %}</button>
       </div>
-      <div style="display:flex; align-items:center; gap:6px; margin-top:6px;">
-        <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Available Offer:</span>
-        <button type="button" onclick="quickApplyDrawerCoupon('FIRST500')" style="background:#FAF8F5; border:1px dashed #D4AF37; border-radius:12px; padding:2px 8px; font-size:10px; font-weight:700; color:#1E1C19; cursor:pointer; display:inline-flex; align-items:center; gap:3px;">
-          <span>✨ FIRST500</span>
-          <span style="color:#B48A28; font-size:9.5px;">(FLAT ₹500 OFF)</span>
-        </button>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-top:6px;">
+        <div id="cartDrawerQuickOfferWrap" style="display:{% if drawer_active_code == drawer_featured_code %}none{% else %}flex{% endif %}; align-items:center; gap:6px;">
+          <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Offer:</span>
+          <button type="button" onclick="quickApplyDrawerCoupon('{{ drawer_featured_code }}')" style="background:#FFFBEB; border:1px dashed #D97706; border-radius:12px; padding:2px 8px; font-size:10px; font-weight:700; color:#8C6212; cursor:pointer; display:inline-flex; align-items:center; gap:3px;">
+            <span>APPLY {{ drawer_featured_code }} ({{ drawer_featured_pct }}% OFF)</span>
+          </button>
+        </div>
+        <button type="button" id="cartDrawerRemoveCouponBtn" onclick="removeCartDrawerCoupon()" style="display:{% if drawer_active_code != blank %}inline-block{% else %}none{% endif %}; background:#FEF2F2; border:1px solid #FECACA; color:#B91C1C; border-radius:4px; padding:2px 8px; font-size:10px; font-weight:700; cursor:pointer;">&times; Remove</button>
       </div>
-      <div id="cartDrawerCouponFeedback" style="font-size: 11px; font-weight: 600; margin-top: 4px; display: none;"></div>
+      <div id="cartDrawerCouponFeedback" style="font-size: 11px; font-weight: 600; margin-top: 6px; color: #15803D; {% unless drawer_active_code != blank and cart.total_discount > 0 %}display: none;{% endunless %}">
+        {% if drawer_active_code != blank and cart.total_discount > 0 %}
+          &#10003; Coupon <strong>{{ drawer_active_code }}</strong> applied &mdash; You save &#8377;{{ cart.total_discount | money_without_currency }}!
+        {% endif %}
+      </div>
     </div>
 
-    <div style="font-size: 11px; color: #166534; background: #EBF7EE; border: 1px solid #BBF7D0; padding: 6px 10px; border-radius: 4px; margin-bottom: 12px; text-align: center; font-weight: 600; line-height: 1.4;">
-      ⚡ Pay via <strong>UPI</strong> at checkout to get <strong>Flat &#8377;100 Instant Discount</strong>
-    </div>
-    <form action="/cart" method="post" id="cartDrawerCheckoutForm" onsubmit="if(typeof window.showMeenuCheckoutTransition==='function') window.showMeenuCheckoutTransition();" style="margin: 0; padding: 0;">
-      <input type="hidden" name="discount" id="cartDrawerDiscountInput" value="">
-      <button type="submit" name="checkout" class="modal-btn-primary cart__checkout-button" style="width: 100%; text-align: center; display: block; box-sizing: border-box; text-decoration: none; border: none; cursor: pointer;">
+    {% if settings.enable_upi_discount_banner %}
+      <div style="font-size: 11px; color: #166534; background: #EBF7EE; border: 1px solid #BBF7D0; padding: 6px 10px; border-radius: 4px; margin-bottom: 12px; text-align: center; font-weight: 600; line-height: 1.4;">
+        ⚡ Pay via <strong>UPI</strong> at checkout to get <strong>Flat {{ settings.upi_discount_amount | default: '&#8377;100' }} Instant Discount</strong>
+      </div>
+    {% endif %}
+
+    <form action="/checkout" method="get" id="cartDrawerCheckoutForm" onsubmit="return handleCartDrawerCheckout(event);" style="margin: 0; padding: 0;">
+      <input type="hidden" name="discount" id="cartDrawerDiscountInput" value="{{ drawer_active_code | escape }}" {% if drawer_active_code == blank %}disabled{% endif %}>
+      <button type="submit" class="modal-btn-primary cart__checkout-button" style="width: 100%; text-align: center; display: block; box-sizing: border-box; text-decoration: none; border: none; cursor: pointer;">
         PROCEED TO CHECKOUT &rarr;
       </button>
     </form>
     <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 10px;">
-      🔒 256-Bit SSL Encrypted Checkout &bull; Free Pan-India Delivery
+      🔒 256-Bit SSL Encrypted Checkout &bull; Dispatches from Mohali Atelier
     </div>
   </div>
 </div>
 
 <script>
-  function quickApplyDrawerCoupon(code) {
-    var inp = document.getElementById('cartDrawerCouponInput');
-    if (inp) inp.value = code;
-    applyCartDrawerCoupon();
-  }
+  (function() {
+    var EXPIRED_DRAWER_CODES = { 'FIRST500': true, 'USEUPI100': true, 'UPI100': true, 'RESET': true };
+    var DRAWER_PROMO_RULES = { 'BF25': { pct: 25, label: '25% OFF' } };
 
-  function applyCartDrawerCoupon() {
-    var inp = document.getElementById('cartDrawerCouponInput');
-    var feedback = document.getElementById('cartDrawerCouponFeedback');
-    var btn = document.getElementById('cartDrawerCouponBtn');
-    var discountInput = document.getElementById('cartDrawerDiscountInput');
-    var code = inp ? inp.value.trim().toUpperCase() : '';
-
-    if (!code) {
-      if (feedback) {
-        feedback.style.display = 'block';
-        feedback.style.color = '#B91C1C';
-        feedback.textContent = 'Please enter a coupon code';
-      }
-      return;
+    function fmtDrawerInr(cents) {
+      var n = Number(cents) || 0;
+      return '₹' + (n / 100).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function fmtDrawerRs(cents) {
+      var n = Number(cents) || 0;
+      return 'Rs. ' + (n / 100).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    if (btn) btn.textContent = 'APPLIED';
-    if (discountInput) discountInput.value = code;
+    function updateDrawerCouponSummary(cart, code) {
+      var origCents = Number(cart.original_total_price) || Number(cart.total_price) || 0;
+      var discCents = Number(cart.total_discount) || 0;
+      var norm = (code || '').trim().toUpperCase();
 
-    try {
-      sessionStorage.setItem('meenu_applied_coupon', code);
-    } catch(e) {}
-
-    if (feedback) {
-      feedback.style.display = 'block';
-      feedback.style.color = '#15803D';
-      feedback.innerHTML = '&#10003; Coupon <strong>' + code + '</strong> applied! Will be applied at checkout.';
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', function() {
-    try {
-      var saved = sessionStorage.getItem('meenu_applied_coupon');
-      if (saved === 'USEUPI100' || saved === 'UPI100') {
-        sessionStorage.removeItem('meenu_applied_coupon');
-        saved = null;
+      if (discCents === 0 && norm && DRAWER_PROMO_RULES[norm]) {
+        discCents = Math.round(origCents * (DRAWER_PROMO_RULES[norm].pct / 100));
       }
-      if (saved) {
-        var inp = document.getElementById('cartDrawerCouponInput');
-        if (inp) inp.value = saved;
-        var btn = document.getElementById('cartDrawerCouponBtn');
-        if (btn) btn.textContent = 'APPLIED';
-        var discountInput = document.getElementById('cartDrawerDiscountInput');
-        if (discountInput) discountInput.value = saved;
-        var feedback = document.getElementById('cartDrawerCouponFeedback');
-        if (feedback) {
-          feedback.style.display = 'block';
-          feedback.style.color = '#15803D';
-          feedback.innerHTML = '&#10003; Coupon <strong>' + saved + '</strong> applied!';
+      var finalCents = Math.max(0, origCents - discCents);
+
+      var origEl = document.getElementById('cartDrawerOriginalSubtotal');
+      var discRow = document.getElementById('cartDrawerDiscountRow');
+      var discLabel = document.getElementById('cartDrawerDiscountLabel');
+      var discAmt = document.getElementById('cartDrawerDiscountAmount');
+      var subEl = document.getElementById('cartDrawerSubtotal');
+      var fb = document.getElementById('cartDrawerCouponFeedback');
+      var quickWrap = document.getElementById('cartDrawerQuickOfferWrap');
+      var removeBtn = document.getElementById('cartDrawerRemoveCouponBtn');
+      var btn = document.getElementById('cartDrawerCouponBtn');
+      var discInp = document.getElementById('cartDrawerDiscountInput');
+
+      if (origEl) origEl.textContent = fmtDrawerRs(origCents);
+      if (subEl) subEl.textContent = fmtDrawerRs(finalCents);
+
+      if (discRow && discLabel && discAmt) {
+        if (discCents > 0) {
+          var ruleTxt = (norm && DRAWER_PROMO_RULES[norm]) ? ' &bull; ' + DRAWER_PROMO_RULES[norm].label : '';
+          discLabel.innerHTML = 'Discount' + (norm ? ' (' + norm + ruleTxt + ')' : '');
+          discAmt.textContent = '- ' + fmtDrawerInr(discCents);
+          discRow.style.display = 'flex';
+        } else {
+          discRow.style.display = 'none';
         }
       }
-    } catch(e) {}
-  });
+
+      if (norm) {
+        if (btn) {
+          btn.innerHTML = '&#10003; APPLIED';
+          btn.style.background = '#15803D';
+        }
+        if (quickWrap) quickWrap.style.display = (norm === '{{ drawer_featured_code }}') ? 'none' : 'flex';
+        if (removeBtn) removeBtn.style.display = 'inline-block';
+        if (discInp) {
+          discInp.value = norm;
+          discInp.disabled = false;
+        }
+        if (fb) {
+          fb.style.display = 'block';
+          fb.style.color = '#15803D';
+          fb.innerHTML = discCents > 0
+            ? '&#10003; Coupon <strong>' + norm + '</strong> applied &mdash; You save <strong>' + fmtDrawerInr(discCents) + '</strong>!'
+            : '&#10003; Coupon <strong>' + norm + '</strong> applied!';
+        }
+      } else {
+        if (btn) {
+          btn.textContent = 'APPLY';
+          btn.style.background = '#1E1C19';
+        }
+        if (quickWrap) quickWrap.style.display = 'flex';
+        if (removeBtn) removeBtn.style.display = 'none';
+        if (discInp) {
+          discInp.value = '';
+          discInp.disabled = true;
+        }
+        if (fb) fb.style.display = 'none';
+      }
+    }
+
+    window.quickApplyDrawerCoupon = function(code) {
+      var inp = document.getElementById('cartDrawerCouponInput');
+      if (inp) inp.value = code;
+      window.applyCartDrawerCoupon();
+    };
+
+    window.applyCartDrawerCoupon = async function() {
+      var inp = document.getElementById('cartDrawerCouponInput');
+      var feedback = document.getElementById('cartDrawerCouponFeedback');
+      var btn = document.getElementById('cartDrawerCouponBtn');
+      var code = inp ? inp.value.trim().toUpperCase() : '';
+
+      if (!code) {
+        if (feedback) {
+          feedback.style.display = 'block';
+          feedback.style.color = '#B91C1C';
+          feedback.textContent = 'Please enter a coupon code';
+        }
+        return;
+      }
+      if (EXPIRED_DRAWER_CODES[code]) {
+        try { sessionStorage.removeItem('meenu_applied_coupon'); } catch (e) {}
+        if (feedback) {
+          feedback.style.display = 'block';
+          feedback.style.color = '#B91C1C';
+          feedback.textContent = 'Code ' + code + ' has expired. Use {{ drawer_featured_code }} instead!';
+        }
+        return;
+      }
+
+      if (btn) btn.textContent = 'APPLYING...';
+      try { sessionStorage.setItem('meenu_applied_coupon', code); } catch (e) {}
+
+      var cart = null;
+      try {
+        var r = await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ discount: code })
+        });
+        if (r.ok) cart = await r.json();
+      } catch (e) {}
+
+      try {
+        await fetch('/discount/' + encodeURIComponent(code) + '?redirect=/cart', { credentials: 'same-origin', cache: 'no-store' });
+        var fr = await fetch('/cart.js?t=' + Date.now(), { credentials: 'same-origin', cache: 'no-store' });
+        if (fr.ok) cart = await fr.json();
+      } catch (e) {}
+
+      if (cart) updateDrawerCouponSummary(cart, code);
+    };
+
+    window.removeCartDrawerCoupon = async function() {
+      var inp = document.getElementById('cartDrawerCouponInput');
+      if (inp) inp.value = '';
+      try { sessionStorage.removeItem('meenu_applied_coupon'); } catch (e) {}
+      var cart = null;
+      try {
+        var r = await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ discount: '' })
+        });
+        if (r.ok) cart = await r.json();
+      } catch (e) {}
+      if (cart) updateDrawerCouponSummary(cart, '');
+    };
+
+    window.handleCartDrawerCheckout = function() {
+      if (typeof window.showMeenuCheckoutTransition === 'function') {
+        window.showMeenuCheckoutTransition();
+      }
+      var discInp = document.getElementById('cartDrawerDiscountInput');
+      if (discInp && (!discInp.value || EXPIRED_DRAWER_CODES[discInp.value.toUpperCase()])) {
+        discInp.value = '';
+        discInp.disabled = true;
+      }
+      return true;
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      try {
+        var saved = (sessionStorage.getItem('meenu_applied_coupon') || '').trim().toUpperCase();
+        if (EXPIRED_DRAWER_CODES[saved]) {
+          sessionStorage.removeItem('meenu_applied_coupon');
+          saved = '';
+        }
+        if (saved && document.getElementById('cartDrawerCouponInput')) {
+          document.getElementById('cartDrawerCouponInput').value = saved;
+          fetch('/cart.js?t=' + Date.now(), { credentials: 'same-origin', cache: 'no-store' })
+            .then(function(r) { return r.json(); })
+            .then(function(c) { updateDrawerCouponSummary(c, saved); })
+            .catch(function() {});
+        }
+      } catch (e) {}
+    });
+  })();
 </script>

@@ -14,6 +14,11 @@
     "color_accent": "#9E7D47",
     "whatsapp_number": "918511616133",
     "contact_email": "meenulabel24@gmail.com",
+    "enable_upi_discount_banner": false,
+    "upi_discount_amount": "₹100",
+    "featured_coupon_code": "BF25",
+    "featured_coupon_label": "APPLY BF25 (25% OFF)",
+    "featured_coupon_percent": 25,
     "sections": {
       "announcement-bar": {
         "type": "announcement-bar",

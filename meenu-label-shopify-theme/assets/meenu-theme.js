@@ -270,9 +270,9 @@ function updateWishlistUI() {
    3. CART DRAWER & SHOPIFY AJAX CART CONTROLS
    ========================================================================= */
 function formatMoney(cents) {
-  if (isNaN(cents)) return '₹0';
-  var rupees = Math.round(cents / 100);
-  return '₹' + rupees.toLocaleString('en-IN');
+  if (isNaN(cents)) return 'Rs. 0.00';
+  var num = Number(cents) / 100;
+  return 'Rs. ' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function openCartDrawer() {
@@ -320,7 +320,21 @@ function updateCartUI(cart) {
   var drawerCount = document.getElementById('cartDrawerCount');
   if (drawerCount) drawerCount.textContent = cart.item_count || 0;
 
-  // 4. Cart subtotal
+  // 4. Cart subtotal & discount sync
+  var origSubtotalEl = document.getElementById('cartDrawerOriginalSubtotal');
+  if (origSubtotalEl) origSubtotalEl.textContent = formatMoney(cart.original_total_price || cart.total_price);
+
+  var drawerDiscRow = document.getElementById('cartDrawerDiscountRow');
+  var drawerDiscAmt = document.getElementById('cartDrawerDiscountAmount');
+  if (drawerDiscRow && drawerDiscAmt) {
+    if (cart.total_discount > 0) {
+      drawerDiscAmt.textContent = '- ₹' + (cart.total_discount / 100).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      drawerDiscRow.style.display = 'flex';
+    } else {
+      drawerDiscRow.style.display = 'none';
+    }
+  }
+
   var subtotalEl = document.getElementById('cartDrawerSubtotal');
   if (subtotalEl) subtotalEl.textContent = formatMoney(cart.total_price);
 
@@ -329,7 +343,7 @@ function updateCartUI(cart) {
   var goalText = document.getElementById('cartDrawerGoalText');
   var progressBar = document.getElementById('cartDrawerProgressBar');
   if (goalWrap && goalText && progressBar) {
-    var totalCents = cart.total_price || 0;
+    var totalCents = cart.original_total_price || cart.total_price || 0;
     var itemCount = cart.item_count || 0;
     var goalThresholdCents = 499900;
 
@@ -1759,11 +1773,20 @@ window.addEventListener('DOMContentLoaded', restoreGlobalCartBackupIfNeeded);
 window.addEventListener('pageshow', restoreGlobalCartBackupIfNeeded);
 
 /* =========================================================================
-   GLOBAL PROMO CODE / COUPON MANAGER (AUTO-APPLIED TO BUY NOW & CART)
+   GLOBAL PROMO CODE / COUPON MANAGER (SYNCED WITH SHOPIFY CART & CHECKOUT)
    ========================================================================= */
 function applyGlobalCoupon(code) {
   if (!code) return;
   code = code.trim().toUpperCase();
+  var EXPIRED = { 'FIRST500': true, 'USEUPI100': true, 'UPI100': true, 'RESET': true };
+  if (EXPIRED[code]) {
+    try { sessionStorage.removeItem('meenu_applied_coupon'); } catch(e) {}
+    if (typeof showMeenuToast === 'function') {
+      showMeenuToast('Code "' + code + '" has expired. Use BF25 for 25% OFF!');
+    }
+    return;
+  }
+
   try {
     sessionStorage.setItem('meenu_applied_coupon', code);
     if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
@@ -1771,12 +1794,30 @@ function applyGlobalCoupon(code) {
     }
   } catch(e) {}
 
+  // If on dedicated cart page, trigger full live discount sync & summary update
+  if (typeof window.applyPageCoupon === 'function' && document.getElementById('pageCouponCode')) {
+    window.applyPageCoupon(code);
+    return;
+  }
+
+  // Background sync with Shopify Cart API & native /discount/ endpoint
+  try {
+    fetch('/cart/update.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ discount: code })
+    }).catch(function() {});
+    fetch('/discount/' + encodeURIComponent(code) + '?redirect=/cart', {
+      credentials: 'same-origin',
+      cache: 'no-store'
+    }).catch(function() {});
+  } catch(e) {}
+
   if (typeof showMeenuToast === 'function') {
-    showMeenuToast('✓ Code "' + code + '" applied! Auto-discounted at checkout.');
+    showMeenuToast('✓ Code "' + code + '" applied! Live savings active in bag.');
   } else if (typeof showToast === 'function') {
-    showToast('✓ Code "' + code + '" applied! Auto-discounted at checkout.');
-  } else {
-    alert('✓ Code "' + code + '" applied! Auto-discounted at checkout.');
+    showToast('✓ Code "' + code + '" applied! Live savings active in bag.');
   }
 
   // Sync PDP if present
@@ -1786,10 +1827,13 @@ function applyGlobalCoupon(code) {
   if (pdpStatus) {
     pdpStatus.style.display = 'block';
     pdpStatus.style.color = '#15803D';
-    pdpStatus.innerHTML = '&#10003; Coupon <strong>' + code + '</strong> applied! Will auto-apply on Buy Now & Cart. <a href="javascript:void(0)" onclick="removePdpCoupon()" style="color:#B91C1C;margin-left:8px;text-decoration:underline;font-size:11px;">Remove</a>';
+    pdpStatus.innerHTML = '&#10003; Coupon <strong>' + code + '</strong> applied! <a href="javascript:void(0)" onclick="removePdpCoupon()" style="color:#B91C1C;margin-left:8px;text-decoration:underline;font-size:11px;">Remove</a>';
   }
 
   // Sync Cart Drawer discount input if present
   var cartDiscountInput = document.querySelector('input[name="discount"]');
-  if (cartDiscountInput) cartDiscountInput.value = code;
+  if (cartDiscountInput) {
+    cartDiscountInput.value = code;
+    cartDiscountInput.disabled = false;
+  }
 }
