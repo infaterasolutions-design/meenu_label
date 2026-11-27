@@ -4,7 +4,7 @@
     <div class="ann-left">
       <span>&#9889; BLACK FRIDAY SALE LIVE &bull; MOHALI ATELIER</span>
     </div>
-    <div class="ann-center" id="annDesktopCenter" style="position:relative; height:24px; min-width:340px; display:flex; align-items:center; justify-content:center;">
+    <div class="ann-center" id="annDesktopCenter" style="position:relative; height:26px; min-width:460px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
       <!-- Desktop Item 1: Black Friday BF25 Hero Offer -->
       <div class="ann-desk-item active" onclick="applyGlobalCoupon('BF25')" style="cursor:pointer;" title="Click to apply Black Friday 25% OFF">
         <div class="upi-ann-badge">
@@ -66,6 +66,12 @@
 </div>
 
 <style>
+  .announcement-bar .upi-ann-badge,
+  .announcement-bar .upi-code-pill,
+  .announcement-bar .ann-left,
+  .announcement-bar .ann-right {
+    white-space: nowrap !important;
+  }
   .ann-desktop-row {
     display: flex;
     width: 100%;
