@@ -1,0 +1,69 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-bespoke-atelier",
+      "blocks": {
+        "reel_1": {
+          "type": "adda_reel",
+          "settings": {
+            "craft_title": "Dabka & French Knot Work on Ivory Chanderi",
+            "duration_tag": "0:09",
+            "craft_category": "Zardozi & Dabka"
+          }
+        },
+        "reel_2": {
+          "type": "adda_reel",
+          "settings": {
+            "craft_title": "Gulabi Resham Booti Hand Shading",
+            "duration_tag": "0:11",
+            "craft_category": "Resham Floral"
+          }
+        },
+        "reel_3": {
+          "type": "adda_reel",
+          "settings": {
+            "craft_title": "Delicate Scallop Cut-Work Jaali",
+            "duration_tag": "0:08",
+            "craft_category": "Cut-Work Jaali"
+          }
+        },
+        "reel_4": {
+          "type": "adda_reel",
+          "settings": {
+            "craft_title": "Antiqued Tilla Ghera Border Finishing",
+            "duration_tag": "0:10",
+            "craft_category": "Ghera Borders"
+          }
+        },
+        "reel_5": {
+          "type": "adda_reel",
+          "settings": {
+            "craft_title": "Pure Silk Satin-Stitch Floral Motif",
+            "duration_tag": "0:07",
+            "craft_category": "Resham Floral"
+          }
+        },
+        "reel_6": {
+          "type": "adda_reel",
+          "settings": {
+            "craft_title": "Mohali Adda Kasab & Pearl Detailing",
+            "duration_tag": "0:12",
+            "craft_category": "Zardozi & Dabka"
+          }
+        }
+      },
+      "block_order": [
+        "reel_1",
+        "reel_2",
+        "reel_3",
+        "reel_4",
+        "reel_5",
+        "reel_6"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

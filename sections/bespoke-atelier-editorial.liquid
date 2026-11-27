@@ -1,0 +1,784 @@
+{% comment %}
+  Meenu Label — Homepage Editorial Showcase: Bespoke Atelier Walkthrough
+  Placed between #collection (Signature Silhouettes) and #values (Brand Value Strip)
+{% endcomment %}
+
+{%- assign raw_wa = section.settings.whatsapp_number | default: settings.whatsapp_number | default: '918511616133' -%}
+{%- assign wa_digits = raw_wa | remove: '+' | remove: ' ' | remove: '-' | remove: '(' | remove: ')' -%}
+{%- if section.settings.fallback_image != blank -%}
+  {%- assign poster_src = section.settings.fallback_image | image_url: width: 900 -%}
+{%- elsif section.settings.explainer_video != blank and section.settings.explainer_video.preview_image != blank -%}
+  {%- assign poster_src = section.settings.explainer_video.preview_image | image_url: width: 900 -%}
+{%- else -%}
+  {%- assign poster_src = 'campaign_sukhna.jpg' | asset_url -%}
+{%- endif -%}
+
+<section id="bespoke-atelier" class="bespoke-ed-section" aria-labelledby="bespoke-ed-heading-{{ section.id }}">
+  <div class="bespoke-ed-header">
+    <span class="bespoke-ed-eyebrow">{{ section.settings.eyebrow }}</span>
+    <h2 class="bespoke-ed-title" id="bespoke-ed-heading-{{ section.id }}">
+      {{ section.settings.heading_main }}
+      {% if section.settings.heading_accent != blank %}
+        <span class="bespoke-ed-accent">{{ section.settings.heading_accent }}</span>
+      {% endif %}
+    </h2>
+    {% if section.settings.subheading != blank %}
+      <p class="bespoke-ed-sub">{{ section.settings.subheading }}</p>
+    {% endif %}
+  </div>
+
+  <div class="bespoke-ed-card">
+    <!-- Left Column: Spoken Explainer Video Player (4:5 vertical frame) -->
+    <div class="bespoke-ed-media-col">
+      <div class="bespoke-ed-video-frame" data-bespoke-player="{{ section.id }}">
+        {% if section.settings.explainer_video != blank %}
+          <video
+            class="bespoke-ed-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            poster="{{ poster_src }}"
+            aria-label="{{ section.settings.video_alt | default: 'Meenu Label Bespoke Atelier Walkthrough from Mohali & Chandigarh' | escape }}">
+            {% for source in section.settings.explainer_video.sources %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endfor %}
+            {% if section.settings.subtitle_vtt_url != blank %}
+              <track
+                kind="subtitles"
+                srclang="en"
+                label="English"
+                src="{{ section.settings.subtitle_vtt_url }}"
+                default>
+            {% endif %}
+          </video>
+        {% else %}
+          <img
+            src="{{ poster_src }}"
+            alt="{{ section.settings.video_alt | default: 'Meenu Label Mohali & Chandigarh Atelier wooden adda embroidery' | escape }}"
+            class="bespoke-ed-fallback-img"
+            loading="lazy"
+            width="900"
+            height="1125">
+        {% endif %}
+
+        <span class="bespoke-ed-location-tag">Mohali &amp; Chandigarh Atelier</span>
+
+        {% if section.settings.explainer_video != blank %}
+          <button
+            type="button"
+            class="bespoke-ed-sound-pill"
+            data-bespoke-sound-btn
+            aria-label="Tap to hear the bespoke process with sound from start">
+            <span class="bespoke-ed-sound-icon" aria-hidden="true">&#128266;</span>
+            <span>{{ section.settings.sound_pill_text | default: 'TAP TO HEAR THE PROCESS (WITH SOUND)' }}</span>
+          </button>
+        {% else %}
+          <a
+            href="/pages/bespoke#adda-reels"
+            class="bespoke-ed-sound-pill"
+            aria-label="Watch live Mohali adda karigar reels">
+            <span class="bespoke-ed-sound-icon" aria-hidden="true">&#9654;</span>
+            <span>WATCH MOHALI ADDA WALKTHROUGH</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Right Column: Story, 3 Takeaways, Mini Adda Strip & CTAs -->
+    <div class="bespoke-ed-content-col">
+      <div class="bespoke-ed-story-kicker">
+        <span class="bespoke-ed-dot" aria-hidden="true"></span>
+        <span>PERSONALIZED COUTURE &bull; BY PRIVATE COMMISSION</span>
+      </div>
+
+      {% if section.settings.intro_copy != blank %}
+        <p class="bespoke-ed-intro">{{ section.settings.intro_copy }}</p>
+      {% endif %}
+
+      <ol class="bespoke-ed-takeaways">
+        <li class="bespoke-ed-takeaway">
+          <span class="bespoke-ed-num">01.</span>
+          <div class="bespoke-ed-takeaway-body">
+            <strong>{{ section.settings.takeaway_1_title }}</strong>
+            {% if section.settings.takeaway_1_desc != blank %}
+              <span>{{ section.settings.takeaway_1_desc }}</span>
+            {% endif %}
+          </div>
+        </li>
+        <li class="bespoke-ed-takeaway">
+          <span class="bespoke-ed-num">02.</span>
+          <div class="bespoke-ed-takeaway-body">
+            <strong>{{ section.settings.takeaway_2_title }}</strong>
+            {% if section.settings.takeaway_2_desc != blank %}
+              <span>{{ section.settings.takeaway_2_desc }}</span>
+            {% endif %}
+          </div>
+        </li>
+        <li class="bespoke-ed-takeaway">
+          <span class="bespoke-ed-num">03.</span>
+          <div class="bespoke-ed-takeaway-body">
+            <strong>{{ section.settings.takeaway_3_title }}</strong>
+            {% if section.settings.takeaway_3_desc != blank %}
+              <span>{{ section.settings.takeaway_3_desc }}</span>
+            {% endif %}
+          </div>
+        </li>
+      </ol>
+
+      <!-- Mini Live Karigar Adda Strip (9:16 thumbs linking directly to /pages/bespoke#adda-reels) -->
+      <div class="bespoke-ed-mini-block">
+        <div class="bespoke-ed-mini-head">
+          <span>INSIDE THE MOHALI &amp; CHANDIGARH ADDA</span>
+          <a href="/pages/bespoke#adda-reels" class="bespoke-ed-mini-link">View All Live Reels &rarr;</a>
+        </div>
+        <div class="bespoke-ed-mini-strip">
+          {%- assign fallback_assets = 'craft_chanderi.jpg,campaign_balcony.jpg,craft_organza.jpg,campaign_cafe.jpg' | split: ',' -%}
+          {%- assign fallback_labels = 'Zardozi & Dabka,Resham Floral,Cut-Work Jaali,Ghera Borders' | split: ',' -%}
+          {%- if section.blocks.size > 0 -%}
+            {%- for block in section.blocks limit: 4 -%}
+              {%- assign idx = forloop.index0 -%}
+              {%- assign mini_img = fallback_assets[idx] | asset_url -%}
+              {%- if block.settings.thumb_image != blank -%}
+                {%- assign mini_img = block.settings.thumb_image | image_url: width: 360 -%}
+              {%- endif -%}
+              <a href="/pages/bespoke#adda-reels" class="bespoke-ed-mini-thumb" title="{{ block.settings.label | default: fallback_labels[idx] | escape }}" {{ block.shopify_attributes }}>
+                <img src="{{ mini_img }}" alt="{{ block.settings.label | default: fallback_labels[idx] | escape }}" loading="lazy" width="180" height="320">
+                <span class="bespoke-ed-mini-play" aria-hidden="true">&#9654;</span>
+                <span class="bespoke-ed-mini-cap">{{ block.settings.label | default: fallback_labels[idx] }}</span>
+              </a>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for idx in (0..3) -%}
+              {%- assign mini_img = fallback_assets[idx] | asset_url -%}
+              <a href="/pages/bespoke#adda-reels" class="bespoke-ed-mini-thumb" title="{{ fallback_labels[idx] | escape }}">
+                <img src="{{ mini_img }}" alt="{{ fallback_labels[idx] | escape }}" loading="lazy" width="180" height="320">
+                <span class="bespoke-ed-mini-play" aria-hidden="true">&#9654;</span>
+                <span class="bespoke-ed-mini-cap">{{ fallback_labels[idx] }}</span>
+              </a>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+      </div>
+
+      <!-- Dual Action Buttons -->
+      <div class="bespoke-ed-cta-row">
+        <a href="/pages/bespoke" class="bespoke-ed-btn-primary">
+          {{ section.settings.primary_cta_label | default: 'EXPLORE BESPOKE ATELIER & LIVE REELS' }} &rarr;
+        </a>
+        <a
+          href="https://wa.me/{{ wa_digits }}?text={{ 'Hello Meenu Label Mohali & Chandigarh Atelier! I would like to discuss a custom bespoke commission.' | url_encode }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="bespoke-ed-btn-secondary">
+          {{ section.settings.secondary_cta_label | default: 'CONSULT ON WHATSAPP' }}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bespoke-ed-section {
+    max-width: 1440px;
+    margin: 24px auto 80px;
+    padding: 0 36px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-variant-numeric: lining-nums proportional-nums;
+    box-sizing: border-box;
+  }
+  .bespoke-ed-section * {
+    box-sizing: border-box;
+  }
+  .bespoke-ed-header {
+    text-align: center;
+    margin-bottom: 34px;
+  }
+  .bespoke-ed-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #9E7D47;
+    margin-bottom: 8px;
+  }
+  .bespoke-ed-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(28px, 3.4vw, 42px);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #141210;
+    margin: 0 0 10px;
+    line-height: 1.18;
+  }
+  .bespoke-ed-title .bespoke-ed-accent {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    color: #B83A3A;
+    text-transform: none;
+    font-weight: 600;
+  }
+  .bespoke-ed-sub {
+    font-size: 13px;
+    color: #7A7267;
+    letter-spacing: 0.06em;
+    max-width: 660px;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+
+  .bespoke-ed-card {
+    background: #FFFFFF;
+    border: 1px solid #E8E2D8;
+    border-radius: 12px;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: minmax(300px, 410px) 1fr;
+    gap: 40px;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(20, 18, 16, 0.04);
+  }
+
+  .bespoke-ed-video-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: 10px;
+    border: 1px solid #E8E2D8;
+    overflow: hidden;
+    background: #141210;
+    cursor: pointer;
+  }
+  .bespoke-ed-video,
+  .bespoke-ed-fallback-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .bespoke-ed-location-tag {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(20, 18, 16, 0.82);
+    backdrop-filter: blur(8px);
+    color: #E8D3B9;
+    border: 1px solid rgba(232, 211, 185, 0.35);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .bespoke-ed-sound-pill {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: calc(100% - 28px);
+    max-width: 340px;
+    padding: 11px 16px;
+    background: #141210;
+    color: #E8D3B9;
+    border: 1px solid #E8D3B9;
+    border-radius: 30px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    transition: background 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+    text-align: center;
+  }
+  .bespoke-ed-sound-pill:hover {
+    background: #1E1C19;
+    transform: translateX(-50%) translateY(-1px);
+  }
+  .bespoke-ed-video-frame.is-playing-sound .bespoke-ed-sound-pill {
+    display: none;
+  }
+
+  .bespoke-ed-content-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .bespoke-ed-story-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: #9E7D47;
+    text-transform: uppercase;
+  }
+  .bespoke-ed-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #B83A3A;
+    display: inline-block;
+  }
+  .bespoke-ed-intro {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: #4A443D;
+    margin: 0;
+  }
+
+  .bespoke-ed-takeaways {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .bespoke-ed-takeaway {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #FAF8F5;
+    border: 1px solid #E8E2D8;
+    border-radius: 8px;
+  }
+  .bespoke-ed-num {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #9E7D47;
+    line-height: 1.1;
+    flex-shrink: 0;
+  }
+  .bespoke-ed-takeaway-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .bespoke-ed-takeaway-body strong {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #141210;
+    line-height: 1.35;
+  }
+  .bespoke-ed-takeaway-body span {
+    font-size: 12.5px;
+    color: #7A7267;
+    line-height: 1.45;
+  }
+
+  .bespoke-ed-mini-block {
+    background: #F3EFE8;
+    border: 1px solid #E8E2D8;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .bespoke-ed-mini-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #141210;
+  }
+  .bespoke-ed-mini-link {
+    color: #9E7D47;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  .bespoke-ed-mini-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .bespoke-ed-mini-thumb {
+    position: relative;
+    aspect-ratio: 9 / 16;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #E8E2D8;
+    display: block;
+    background: #141210;
+    text-decoration: none;
+  }
+  .bespoke-ed-mini-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+  }
+  .bespoke-ed-mini-thumb:hover img {
+    transform: scale(1.05);
+  }
+  .bespoke-ed-mini-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(20, 18, 16, 0.72);
+    border: 1px solid rgba(232, 211, 185, 0.65);
+    color: #FAF8F5;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 2px;
+  }
+  .bespoke-ed-mini-cap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 18px 6px 6px;
+    background: linear-gradient(to top, rgba(20, 18, 16, 0.88), transparent);
+    color: #FAF8F5;
+    font-size: 9.5px;
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bespoke-ed-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 2px;
+  }
+  .bespoke-ed-btn-primary {
+    flex: 1 1 260px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 22px;
+    background: #141210;
+    color: #FAF8F5;
+    border: 1px solid #141210;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .bespoke-ed-btn-primary:hover {
+    background: #2E2925;
+    transform: translateY(-1px);
+  }
+  .bespoke-ed-btn-secondary {
+    flex: 0 1 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 22px;
+    background: transparent;
+    color: #9E7D47;
+    border: 1.5px solid #9E7D47;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .bespoke-ed-btn-secondary:hover {
+    background: #9E7D47;
+    color: #FFFFFF;
+  }
+
+  @media (max-width: 960px) {
+    .bespoke-ed-card {
+      grid-template-columns: 1fr;
+      padding: 20px;
+      gap: 24px;
+    }
+    .bespoke-ed-video-frame {
+      max-width: 420px;
+      margin: 0 auto;
+    }
+  }
+  @media (max-width: 768px) {
+    .bespoke-ed-section {
+      margin: 16px auto 48px;
+      padding: 0 14px;
+    }
+    .bespoke-ed-header {
+      margin-bottom: 20px;
+    }
+    .bespoke-ed-eyebrow {
+      font-size: 9.5px;
+      letter-spacing: 0.16em;
+    }
+    .bespoke-ed-title {
+      font-size: clamp(22px, 5.5vw, 26px);
+    }
+    .bespoke-ed-sub {
+      font-size: 12px;
+    }
+    .bespoke-ed-card {
+      padding: 14px;
+      gap: 18px;
+    }
+    .bespoke-ed-sound-pill {
+      font-size: 10px;
+      padding: 10px 12px;
+    }
+    .bespoke-ed-takeaway {
+      padding: 11px 12px;
+      gap: 10px;
+    }
+    .bespoke-ed-num {
+      font-size: 17px;
+    }
+    .bespoke-ed-takeaway-body strong {
+      font-size: 12.5px;
+    }
+    .bespoke-ed-mini-block {
+      padding: 12px;
+    }
+    .bespoke-ed-mini-strip {
+      gap: 8px;
+    }
+    .bespoke-ed-cta-row {
+      flex-direction: column;
+    }
+    .bespoke-ed-btn-primary,
+    .bespoke-ed-btn-secondary {
+      width: 100%;
+      flex: none;
+      font-size: 11px;
+      padding: 13px 16px;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var wrapper = document.querySelector('[data-bespoke-player="{{ section.id }}"]');
+    if (!wrapper) return;
+    var video = wrapper.querySelector('video');
+    var pill = wrapper.querySelector('[data-bespoke-sound-btn]');
+    if (!video || !pill) return;
+
+    function activateSpokenWalkthrough(e) {
+      if (wrapper.classList.contains('is-playing-sound')) return;
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      try {
+        video.currentTime = 0;
+      } catch (err) {}
+      video.muted = false;
+      video.loop = false;
+      video.controls = true;
+      wrapper.classList.add('is-playing-sound');
+      var playPromise = video.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(function () {});
+      }
+    }
+
+    pill.addEventListener('click', activateSpokenWalkthrough);
+    wrapper.addEventListener('click', function (e) {
+      if (!wrapper.classList.contains('is-playing-sound') && e.target !== pill && !pill.contains(e.target)) {
+        activateSpokenWalkthrough(e);
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Bespoke Atelier Editorial",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "WATCH HOW IT WORKS • PERSONAL ATELIER WALKTHROUGH"
+    },
+    {
+      "type": "text",
+      "id": "heading_main",
+      "label": "Heading (Main Uppercase)",
+      "default": "FROM KARIGAR WOODEN ADDA TO"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading (Italic Accent)",
+      "default": "Bespoke Couture"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "No factory inventory. Every commissioned piece is custom dyed and hand-embroidered at our Mohali & Chandigarh Atelier."
+    },
+    {
+      "type": "header",
+      "content": "Spoken Explainer Video"
+    },
+    {
+      "type": "video",
+      "id": "explainer_video",
+      "label": "4:5 Explainer Walkthrough Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_image",
+      "label": "Fallback Poster Image (if no video yet)"
+    },
+    {
+      "type": "url",
+      "id": "subtitle_vtt_url",
+      "label": "Optional Subtitle (.vtt) File URL"
+    },
+    {
+      "type": "text",
+      "id": "sound_pill_text",
+      "label": "Overlay Sound Button Label",
+      "default": "TAP TO HEAR THE PROCESS (WITH SOUND)"
+    },
+    {
+      "type": "text",
+      "id": "video_alt",
+      "label": "Video / Poster Alt Text",
+      "default": "Meenu Label Mohali & Chandigarh Atelier Walkthrough"
+    },
+    {
+      "type": "header",
+      "content": "Editorial Story & Takeaways"
+    },
+    {
+      "type": "textarea",
+      "id": "intro_copy",
+      "label": "Story Copy",
+      "default": "Step inside our Mohali & Chandigarh Atelier where master karigars stretch pure silks over timber addas, hand-dye custom shades approved by daylight video, and cut silhouettes exclusively to your fit."
+    },
+    {
+      "type": "text",
+      "id": "takeaway_1_title",
+      "label": "Takeaway 01 Title",
+      "default": "Your Design or Our Adda Archives — Zero Limitations"
+    },
+    {
+      "type": "text",
+      "id": "takeaway_1_desc",
+      "label": "Takeaway 01 Description",
+      "default": "Share your inspiration sketch or reinterpret our heritage zardozi, resham, or cut-work motifs."
+    },
+    {
+      "type": "text",
+      "id": "takeaway_2_title",
+      "label": "Takeaway 02 Title",
+      "default": "Live Daylight Dye & Shade Video Approval Before Stitching"
+    },
+    {
+      "type": "text",
+      "id": "takeaway_2_desc",
+      "label": "Takeaway 02 Description",
+      "default": "Inspect real fabric & thread swatches in natural daylight on WhatsApp before the needle touches cloth."
+    },
+    {
+      "type": "text",
+      "id": "takeaway_3_title",
+      "label": "Takeaway 03 Title",
+      "default": "Zero-Tape Flat Suit Fit & Mohali Karigar Progress Clips"
+    },
+    {
+      "type": "text",
+      "id": "takeaway_3_desc",
+      "label": "Takeaway 03 Description",
+      "default": "Send simple measurements of your best-fitting suit or book a private Mohali & Chandigarh studio session."
+    },
+    {
+      "type": "header",
+      "content": "Action Buttons & Concierge"
+    },
+    {
+      "type": "text",
+      "id": "primary_cta_label",
+      "label": "Primary CTA Label",
+      "default": "EXPLORE BESPOKE ATELIER & LIVE REELS"
+    },
+    {
+      "type": "text",
+      "id": "secondary_cta_label",
+      "label": "Secondary CTA Label",
+      "default": "CONSULT ON WHATSAPP"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "WhatsApp Number Override (digits with country code)",
+      "default": "918511616133"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "mini_preview",
+      "name": "Mini Adda Preview Card",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "thumb_image",
+          "label": "9:16 Preview Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Caption",
+          "default": "Zardozi & Dabka"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bespoke Atelier Editorial",
+      "blocks": [
+        { "type": "mini_preview", "settings": { "label": "Zardozi & Dabka" } },
+        { "type": "mini_preview", "settings": { "label": "Resham Floral" } },
+        { "type": "mini_preview", "settings": { "label": "Cut-Work Jaali" } },
+        { "type": "mini_preview", "settings": { "label": "Ghera Borders" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -30,6 +30,10 @@
       "type": "featured-collection",
       "settings": {}
     },
+    "bespoke_atelier": {
+      "type": "bespoke-atelier-editorial",
+      "settings": {}
+    },
     "values": {
       "type": "value-props",
       "settings": {}
@@ -44,6 +48,7 @@
     "campaign_edit",
     "craftsmanship",
     "collection",
+    "bespoke_atelier",
     "values",
     "founder"
   ]
