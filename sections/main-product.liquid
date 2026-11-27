@@ -265,6 +265,8 @@
         </div>
       {% endform %}
 
+      {% render 'pincode-edd' %}
+
       <!-- Atelier Promise & Trust Assurance Box -->
       <div class="atelier-trust-box" style="background:#FAF9F6; border:1px solid #E8E4DE; border-radius:12px; padding:16px 20px; margin-top:16px;">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #EFECE6;">
@@ -313,16 +315,6 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Pincode Checker -->
-      <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:14px 16px; margin-top:14px;">
-        <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; color:var(--text-muted); margin-bottom:8px;">Check Express Dispatch to Your Pincode</div>
-        <div style="display:flex; gap:8px;">
-          <input type="text" id="pdpPincodeInput" class="pdp-pincode-input" placeholder="Enter 6-digit Pincode (e.g. 160017)" maxlength="6" inputmode="numeric" pattern="[0-9]*" style="flex:1; padding:10px 14px; border:1px solid var(--border-color); border-radius:4px; font-size:16px; outline:none; background:#FFF; color:var(--text-main); -webkit-text-size-adjust:100%;">
-          <button type="button" onclick="checkPdpPincode()" style="padding:10px 18px; background:var(--text-main); color:#FFF; border:none; border-radius:4px; font-size:12px; font-weight:700; cursor:pointer; letter-spacing:0.05em; touch-action:manipulation;">CHECK</button>
-        </div>
-        <div id="pdpPincodeResult" style="font-size:12px; margin-top:8px; font-weight:600; display:none;"></div>
       </div>
 
       <!-- Accordions -->
@@ -1736,26 +1728,6 @@
       item.classList.add('open');
       if (content) content.style.display = 'block';
       if (icon) icon.innerHTML = '&minus;';
-    }
-  }
-
-  function checkPdpPincode() {
-    var val = (document.getElementById('pdpPincodeInput').value || '').trim();
-    var res = document.getElementById('pdpPincodeResult');
-    if (!res) return;
-    res.style.display = 'block';
-    if (!/^[1-9][0-9]{5}$/.test(val)) {
-      res.style.color = '#C95D63';
-      res.textContent = 'Please enter a valid 6-digit Indian pincode.';
-      return;
-    }
-    var tricity = ['160017','160018','160019','160020','160022','160036','160047','160055','160059','160062','160070','160071','140603','134109','134112','134113'];
-    if (tricity.indexOf(val) !== -1 || val.startsWith('160') || val.startsWith('134') || val.startsWith('140')) {
-      res.style.color = '#1B5E20';
-      res.textContent = 'Eligible for Free 24-Hr Express Dispatch from Sector 17-C Studio.';
-    } else {
-      res.style.color = '#C5A059';
-      res.textContent = 'Eligible for Free Priority Air Courier across India (Delivered in 2-4 days).';
     }
   }
 
