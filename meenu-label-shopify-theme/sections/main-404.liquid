@@ -1,9 +1,25 @@
+<style>
+  .route-virtual-404 #standard404Content { display: none !important; }
+</style>
+<script>
+  (function () {
+    var p = window.location.pathname.toLowerCase();
+    if (p.indexOf('bespoke') !== -1 || p.indexOf('my-orders') !== -1 || p.indexOf('orders') !== -1 || p.indexOf('account') !== -1) {
+      document.documentElement.classList.add('route-virtual-404');
+    }
+  })();
+</script>
+
 <div id="custom404AccountHubContainer" style="display:none; width:100%;">
   {% render 'snitch-account-hub' %}
 </div>
 
 <div id="custom404MyOrdersContainer" style="display:none; width:100%;">
   {% render 'my-orders-view' %}
+</div>
+
+<div id="custom404BespokeContainer" style="display:none; width:100%;">
+  {% render 'bespoke-atelier-content', section: section %}
 </div>
 
 <div id="standard404Content" class="page-404-container" style="max-width: 720px; margin: 80px auto; padding: 40px 20px; text-align: center; min-height: 50vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -29,6 +45,22 @@
 <script>
   if (window.location.pathname.indexOf('jaipur-chanderi-silk-festive-suit') !== -1) {
     window.location.replace('/products/the-royal-wine-chanderi-festive-suit');
+  } else if (window.location.pathname.toLowerCase().indexOf('bespoke') !== -1) {
+    var bespokeCont = document.getElementById('custom404BespokeContainer');
+    var std404 = document.getElementById('standard404Content');
+    if (bespokeCont && std404) {
+      bespokeCont.style.display = 'block';
+      std404.style.display = 'none';
+      document.title = 'Bespoke Atelier \u2022 Made to Order \u2014 Meenu Label';
+      if (window.location.hash) {
+        var target = document.querySelector(window.location.hash);
+        if (target) {
+          setTimeout(function () {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 80);
+        }
+      }
+    }
   } else if (window.location.pathname.indexOf('my-orders') !== -1 || window.location.pathname.indexOf('orders') !== -1) {
     var ordersCont = document.getElementById('custom404MyOrdersContainer');
     var std404 = document.getElementById('standard404Content');
