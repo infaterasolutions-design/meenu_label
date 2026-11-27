@@ -338,39 +338,6 @@ function updateCartUI(cart) {
   var subtotalEl = document.getElementById('cartDrawerSubtotal');
   if (subtotalEl) subtotalEl.textContent = formatMoney(cart.total_price);
 
-  // 4b. Tiered Goal Progress Bar in Cart Drawer (Flat ₹700 OFF at ₹4,999)
-  var goalWrap = document.getElementById('cartDrawerGoalWrap');
-  var goalText = document.getElementById('cartDrawerGoalText');
-  var progressBar = document.getElementById('cartDrawerProgressBar');
-  if (goalWrap && goalText && progressBar) {
-    var totalCents = cart.original_total_price || cart.total_price || 0;
-    var itemCount = cart.item_count || 0;
-    var goalThresholdCents = 499900;
-
-    if (itemCount === 0) {
-      goalWrap.style.display = 'none';
-    } else {
-      goalWrap.style.display = 'block';
-
-      if (totalCents >= goalThresholdCents) {
-        // Condition B: Goal unlocked!
-        progressBar.style.width = '100%';
-        progressBar.style.background = '#2E7D32';
-        progressBar.style.boxShadow = '0 0 10px rgba(46, 125, 50, 0.4)';
-        goalText.innerHTML = '🎉 Congratulations! You have unlocked <strong>Flat &#8377;700 OFF</strong> on your order!';
-      } else {
-        // Condition A: Goal in progress
-        var progressPct = Math.min(100, Math.max(0, (totalCents / goalThresholdCents) * 100));
-        var remainingCents = goalThresholdCents - totalCents;
-        progressBar.style.width = progressPct.toFixed(1) + '%';
-        progressBar.style.background = 'linear-gradient(90deg, #D4AF37, #E5C158)';
-        progressBar.style.boxShadow = 'none';
-        var remainingFormatted = formatMoney(remainingCents);
-        goalText.innerHTML = 'Add ' + remainingFormatted + ' more to unlock <strong>Flat &#8377;700 OFF</strong> on your order!';
-      }
-    }
-  }
-
   // 5. Cart line items body
   var bodyEl = document.getElementById('cartDrawerBody');
   var footerEl = document.getElementById('cartDrawerFooter');
@@ -711,7 +678,7 @@ var STORE_POLICIES = {
   },
   shipping: {
     title: "Shipping & Delivery Policy",
-    html: "<h3>Pan-India Priority Dispatch</h3><p>Every Meenu Label garment is hand-inspected, steam-pressed, wrapped in protective butter paper, and packed in our signature atelier box before dispatch from our Chandigarh warehouse.</p><h3>Delivery Timelines</h3><ul><li><strong>Chandigarh Tricity (Chandigarh, Mohali, Panchkula):</strong> 24 to 48 Hours Priority Express Delivery.</li><li><strong>Metro Cities (Delhi-NCR, Mumbai, Bengaluru, Jaipur, Hyderabad, Pune, Kolkata):</strong> 2 to 4 Business Days.</li><li><strong>Rest of India:</strong> 3 to 6 Business Days across 26,000+ serviceable pincodes.</li></ul><h3>Shipping Charges</h3><ul><li><strong>Prepaid Orders (UPI, GPay, PhonePe, Cards, NetBanking):</strong> 100% FREE Express Delivery across India.</li><li><strong>First Order Welcome Perk:</strong> Enjoy Flat ₹500 OFF on your first order with code <strong>FIRST500</strong>.</li></ul><h3>Cash on Delivery (COD) Terms</h3><p>Cash on Delivery is available across all serviceable Indian pincodes. To prevent transit cancellations, all COD orders undergo automated WhatsApp / Phone verification prior to dispatch.</p><h3>Order Tracking</h3><p>As soon as your package is dispatched, you will receive an automated tracking link via SMS & WhatsApp to monitor live doorstep delivery.</p>"
+    html: "<h3>Pan-India Priority Dispatch</h3><p>Every Meenu Label garment is hand-inspected, steam-pressed, wrapped in protective butter paper, and packed in our signature atelier box before dispatch from our Chandigarh warehouse.</p><h3>Delivery Timelines</h3><ul><li><strong>Chandigarh Tricity (Chandigarh, Mohali, Panchkula):</strong> 24 to 48 Hours Priority Express Delivery.</li><li><strong>Metro Cities (Delhi-NCR, Mumbai, Bengaluru, Jaipur, Hyderabad, Pune, Kolkata):</strong> 2 to 4 Business Days.</li><li><strong>Rest of India:</strong> 3 to 6 Business Days across 26,000+ serviceable pincodes.</li></ul><h3>Shipping Charges</h3><ul><li><strong>Prepaid Orders (UPI, GPay, PhonePe, Cards, NetBanking):</strong> 100% FREE Express Delivery across India.</li><li><strong>Black Friday Sale Offer:</strong> Enjoy Flat 25% OFF sitewide with code <strong>BF25</strong> (Limited Time).</li></ul><h3>Cash on Delivery (COD) Terms</h3><p>Cash on Delivery is available across all serviceable Indian pincodes. To prevent transit cancellations, all COD orders undergo automated WhatsApp / Phone verification prior to dispatch.</p><h3>Order Tracking</h3><p>As soon as your package is dispatched, you will receive an automated tracking link via SMS & WhatsApp to monitor live doorstep delivery.</p>"
   },
   exchange: {
     title: "Atelier Sizing Guarantee & Exchange Terms",

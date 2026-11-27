@@ -21,36 +21,6 @@
     <button type="button" onclick="toggleCartDrawer()" style="background: none; border: none; font-size: 26px; cursor: pointer; color: var(--text-main); line-height: 1; padding: 4px;" aria-label="Close Bag">&times;</button>
   </div>
 
-  <!-- Tiered Cart Goal Progress Bar (Flat ₹700 OFF at ₹4,999) -->
-  {% assign cart_goal_basis = cart.original_total_price | default: cart.total_price %}
-  {% assign goal_threshold = 499900 %}
-  {% assign is_goal_unlocked = false %}
-  {% if cart_goal_basis >= goal_threshold or cart.total_price >= goal_threshold %}
-    {% assign is_goal_unlocked = true %}
-  {% endif %}
-  {% assign remaining_cents = goal_threshold | minus: cart_goal_basis %}
-  {% if remaining_cents < 0 %}
-    {% assign remaining_cents = 0 %}
-  {% endif %}
-  {% assign progress_pct = cart_goal_basis | times: 100.0 | divided_by: goal_threshold %}
-  {% if progress_pct > 100 %}
-    {% assign progress_pct = 100 %}
-  {% endif %}
-
-  <div class="cart-drawer-goal-wrap" id="cartDrawerGoalWrap" style="background: #FAF9F6; border: 1px solid #E8E4DE; border-radius: 10px; padding: 12px 16px; margin: 12px 16px 0 16px; box-sizing: border-box; {% if cart.item_count == 0 %}display:none;{% endif %}">
-    <div id="cartDrawerGoalText" style="font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 13.5px; color: #1C1B1A; text-align: center; line-height: 1.45; margin-bottom: 10px;">
-      {% if is_goal_unlocked %}
-        🎉 Congratulations! You have unlocked <strong>Flat &#8377;700 OFF</strong> on your order!
-      {% else %}
-        Add {{ remaining_cents | money }} more to unlock <strong>Flat &#8377;700 OFF</strong> on your order!
-      {% endif %}
-    </div>
-    <!-- Progress Bar Track -->
-    <div style="background: #EFECE6; height: 8px; border-radius: 10px; overflow: hidden; position: relative; width: 100%;">
-      <div id="cartDrawerProgressBar" style="height: 100%; border-radius: 10px; width: {{ progress_pct }}%; transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease, box-shadow 0.35s ease; {% if is_goal_unlocked %}background: #2E7D32; box-shadow: 0 0 10px rgba(46, 125, 50, 0.4);{% else %}background: linear-gradient(90deg, #D4AF37, #E5C158); box-shadow: none;{% endif %}"></div>
-    </div>
-  </div>
-
   <div class="cart-body" id="cartDrawerBody">
     {% if cart.item_count > 0 %}
       {% for item in cart.items %}

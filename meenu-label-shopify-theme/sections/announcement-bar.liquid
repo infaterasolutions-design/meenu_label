@@ -2,23 +2,23 @@
   <!-- Desktop Layout: 3-column side-by-side -->
   <div class="ann-desktop-row">
     <div class="ann-left">
-      <span>&#9889; DEBUT DROP 01 LIVE &bull; CHANDIGARH ATELIER</span>
+      <span>&#9889; BLACK FRIDAY SALE LIVE &bull; MOHALI ATELIER</span>
     </div>
-    <div class="ann-center" id="annDesktopCenter" style="position:relative; height:24px; min-width:320px; display:flex; align-items:center; justify-content:center;">
-      <!-- Desktop Item 1: FIRST500 Hero Offer -->
-      <div class="ann-desk-item active" onclick="applyGlobalCoupon('FIRST500')" style="cursor:pointer;" title="Click to auto-apply ₹500 discount">
+    <div class="ann-center" id="annDesktopCenter" style="position:relative; height:24px; min-width:340px; display:flex; align-items:center; justify-content:center;">
+      <!-- Desktop Item 1: Black Friday BF25 Hero Offer -->
+      <div class="ann-desk-item active" onclick="applyGlobalCoupon('BF25')" style="cursor:pointer;" title="Click to apply Black Friday 25% OFF">
         <div class="upi-ann-badge">
           <span style="font-size:12px; margin-right:3px;">✨</span>
-          <span>FLAT &#8377;500 OFF ON FIRST ORDER</span>
-          <span class="upi-code-pill">CODE: FIRST500</span>
+          <span>BLACK FRIDAY SALE &bull; FLAT 25% OFF</span>
+          <span class="upi-code-pill">CODE: BF25</span>
         </div>
       </div>
-      <!-- Desktop Item 2: Tiered Cart Discount -->
-      <div class="ann-desk-item" style="cursor:pointer;" title="Add 2 suits to save Flat ₹700">
+      <!-- Desktop Item 2: Limited Time Black Friday Highlight -->
+      <div class="ann-desk-item" onclick="applyGlobalCoupon('BF25')" style="cursor:pointer;" title="Click to apply code BF25">
         <div class="upi-ann-badge">
-          <span style="font-size:12px; margin-right:3px;">🎁</span>
-          <span>FLAT &#8377;700 OFF ON 2+ SUITS</span>
-          <span class="upi-code-pill">AUTO-APPLIED IN CART</span>
+          <span style="font-size:12px; margin-right:3px;">⏳</span>
+          <span>LIMITED TIME (NOV 27 &ndash; 30) &bull; USE</span>
+          <span class="upi-code-pill">BF25</span>
         </div>
       </div>
     </div>
@@ -30,32 +30,32 @@
 
   <!-- Mobile Auto-Slider Ticker: Cycles smoothly between key updates -->
   <div class="ann-mobile-ticker" id="annMobileTicker">
-    <!-- Item 1: FIRST500 Hero Discount -->
-    <div class="ticker-item active" onclick="applyGlobalCoupon('FIRST500')" style="cursor:pointer;" title="Click to auto-apply ₹500 discount">
+    <!-- Item 1: Black Friday BF25 Discount -->
+    <div class="ticker-item active" onclick="applyGlobalCoupon('BF25')" style="cursor:pointer;" title="Click to apply Black Friday 25% OFF">
       <div class="upi-ann-badge" style="margin: 0 auto;">
         <span style="font-size:11px; margin-right:3px;">✨</span>
-        <span>FLAT &#8377;500 OFF &bull; USE CODE:</span>
-        <span class="upi-code-pill">FIRST500</span>
+        <span>BLACK FRIDAY: FLAT 25% OFF &bull; CODE:</span>
+        <span class="upi-code-pill">BF25</span>
       </div>
     </div>
 
-    <!-- Item 2: Tiered Cart Discount -->
-    <div class="ticker-item" style="cursor:pointer;" title="Add 2 suits to save Flat ₹700">
+    <!-- Item 2: Limited Time Nov 27-30 -->
+    <div class="ticker-item" onclick="applyGlobalCoupon('BF25')" style="cursor:pointer;" title="Click to apply code BF25">
       <div class="upi-ann-badge" style="margin: 0 auto;">
-        <span style="font-size:11px; margin-right:3px;">🎁</span>
-        <span>FLAT &#8377;700 OFF ON 2+ SUITS</span>
-        <span class="upi-code-pill">AUTO-APPLIED</span>
+        <span style="font-size:11px; margin-right:3px;">⏳</span>
+        <span>LIMITED TIME (NOV 27&ndash;30) &bull; CODE:</span>
+        <span class="upi-code-pill">BF25</span>
       </div>
     </div>
 
-    <!-- Item 3: Chandigarh Atelier -->
+    <!-- Item 3: Mohali Atelier Dispatch -->
     <div class="ticker-item">
-      <span>&#9889; DEBUT DROP 01 LIVE &bull; CHANDIGARH ATELIER</span>
+      <span>&#9889; READY STOCK &bull; DISPATCHES IN 24 HRS FROM MOHALI</span>
     </div>
 
     <!-- Item 4: Free Pan-India Shipping -->
     <div class="ticker-item">
-      <span>&#9992;&#65039; FREE PAN-INDIA EXPRESS DELIVERY &bull; NO MINIMUM</span>
+      <span>&#9992;&#65039; FREE PAN-INDIA EXPRESS DELIVERY &bull; COD &amp; UPI</span>
     </div>
 
     <!-- Item 5: Size & 7-Day Exchange -->
@@ -149,9 +149,9 @@
       }
     } catch(e) {}
     if (typeof showMeenuToast === 'function') {
-      showMeenuToast('✓ Code "' + code + '" applied! Auto-discounted at checkout.');
+      showMeenuToast('✓ Code "' + code + '" applied! Live savings active in bag.');
     } else {
-      alert('✓ Code "' + code + '" applied! Auto-discounted at checkout.');
+      alert('✓ Code "' + code + '" applied! Live savings active in bag.');
     }
   };
 

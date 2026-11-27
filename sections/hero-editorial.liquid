@@ -21,6 +21,14 @@
   user-select: none !important;
   -webkit-user-drag: none !important;
 }
+@media (min-width: 769px) {
+  .snitch-hero-viewport {
+    width: 100% !important;
+    max-width: 1500px !important;
+    aspect-ratio: 1824 / 862 !important;
+    height: auto !important;
+  }
+}
 @media (max-width: 768px) {
   .snitch-hero-viewport {
     height: calc(100vw * 1.25) !important;
@@ -31,7 +39,7 @@
   }
   .slider-chevron { display: none !important; }
   .snitch-slide.snitch-slide-hero1 {
-    background-image: url('{{ "banner_modern_ethnic_mob.jpg" | asset_url }}') !important;
+    background-image: url('{{ "banner_black_friday_mob.jpg" | asset_url }}') !important;
     background-position: center center !important;
   }
 }
@@ -40,8 +48,8 @@
   <div class="snitch-hero-viewport" id="heroSlider">
     <div class="snitch-track" id="sliderTrack">
       
-      <!-- Slide 1: Modern Ethnic Elegance (LCP Preloaded Hero Banner) -->
-      <div class="snitch-slide snitch-slide-hero1" data-href="/collections/all" onclick="handleHeroSlideClick(this, event)" style="background-image: url('{{ 'banner_modern_ethnic.jpg' | asset_url }}'); cursor: pointer;" title="Shop Modern Ethnic Elegance">
+      <!-- Slide 1: Black Friday Sale (LCP Preloaded Hero Banner) -->
+      <div class="snitch-slide snitch-slide-hero1" data-href="/collections/all" data-coupon="BF25" onclick="handleHeroSlideClick(this, event)" style="background-image: url('{{ 'banner_black_friday.jpg' | asset_url }}'); cursor: pointer;" title="Black Friday Sale - Flat 25% OFF • Code: BF25">
       </div>
 
       <!-- Slide 2: Grace in Every Drape (Deferred Lazy Background) -->
@@ -167,6 +175,11 @@
         window.heroSliderDragged = false;
         if (e && e.preventDefault) e.preventDefault();
         return;
+      }
+      var promo = el.getAttribute('data-coupon');
+      if (promo) {
+        try { sessionStorage.setItem('meenu_applied_coupon', promo.trim().toUpperCase()); } catch(err) {}
+        if (typeof applyGlobalCoupon === 'function') applyGlobalCoupon(promo);
       }
       var url = el.getAttribute('data-href');
       if (url) window.location.href = url;
