@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -6,21 +15,7 @@
     },
     "campaign_edit": {
       "type": "campaign-edit",
-      "settings": {
-        "card1_title": "The Royal Wine Chanderi Festive Suit",
-        "card1_price": "₹2,799",
-        "card1_mrp": "₹4,499",
-        "card1_discount": "38% OFF",
-        "card1_fabric": "Handcrafted Chanderi & Zari",
-        "card1_subtitle": "Handcrafted Chanderi & Zari Trim",
-        "card1_url": "/products/the-royal-wine-chanderi-festive-suit",
-        "card2_title": "Mustard Crepe Angrakha Co-ord",
-        "card2_subtitle": "Gold Gota Trim with Side Tie-Up Tassels",
-        "card2_url": "/collections/co-ord-sets",
-        "card3_title": "White Porcelain Floral Wrap Dress",
-        "card3_subtitle": "Featherlight Georgette with Circular Waist Belt",
-        "card3_url": "/collections/dresses"
-      }
+      "settings": {}
     },
     "craftsmanship": {
       "type": "craftsmanship-spotlight",
